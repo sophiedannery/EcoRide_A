@@ -1,15 +1,15 @@
 INSERT INTO user (email, roles, password, pseudo, credits, statut, date_creation) 
 VALUES
-('admin@ecoride.com', '["ROLE_ADMIN"]', 'azerty', 'Administrateur', NULL, 'admin', '2025-01-10 09:00:00'),
-('employe1@ecoride.com', '["ROLE_EMPLOYEE"]', 'azerty', 'Employe1', NULL, 'employe', '2025-02-15 19:00:00'),
-('employe2@ecoride.com', '["ROLE_EMPLOYEE"]', 'azerty', 'Employe2', NULL, 'employe', '2025-02-15 20:00:00'),
-('maddie@ecoride.com', '["ROLE_USER"]', 'azerty', 'Maddie', 20, 'passager_chauffeur', '2025-02-15 20:00:00'),
-('raph@ecoride.com', '["ROLE_USER"]', 'azerty', 'Raph', 100, 'passager_chauffeur', '2025-02-12 20:00:00'),
-('sophie@ecoride.com', '["ROLE_USER"]', 'azerty', 'Sophie', 80, 'passager_chauffeur', '2025-02-15 20:00:00'),
-('laura@ecoride.com', '["ROLE_USER"]', 'azerty', 'Laura', 300, 'passager_chauffeur', '2025-03-25 20:00:00'),
-('cle@ecoride.com', '["ROLE_USER"]', 'azerty', 'Cle', 180, 'passager_chauffeur', '2025-04-30 20:00:00'),
-('vin@ecoride.com', '["ROLE_USER"]', 'azerty', 'Vin', 120, 'passager_chauffeur', '2025-05-02 20:00:00'),
-('luca@ecoride.com', '["ROLE_USER"]', 'azerty', 'Luca', 50, 'passager_chauffeur', '2025-05-02 20:00:00');
+('admin@ecoride.com', '["ROLE_ADMIN"]', '$2y$13$wHeJOKFmaPzQfM0W9BUKh.DAPrF6//siPt.vcgKG0U/UYqFESOfiK', 'Administrateur', NULL, 'admin', '2025-01-10 09:00:00'),
+('employe1@ecoride.com', '["ROLE_EMPLOYEE"]', '$2y$13$Rbr435okRfnXHXevl6OO0upRw.gXgtQYqzlOgTrH0ck3us0fD6qja', 'Employe1', NULL, 'employe', '2025-02-15 19:00:00'),
+('employe2@ecoride.com', '["ROLE_EMPLOYEE"]', '$2y$13$4IZltolXtOdyK2XJYetVle9o/biOxdjyboLoROKkcDqUqlhsxoFwq', 'Employe2', NULL, 'employe', '2025-02-15 20:00:00'),
+('maddie@ecoride.com', '["ROLE_USER"]', '$2y$13$WxIEnq7ee1q/fqop67qcg.SpXf9mwjnm7RoYSZM15P36RP8uiLe8a', 'Maddie', 20, 'passager_chauffeur', '2025-02-15 20:00:00'),
+('raph@ecoride.com', '["ROLE_USER"]', '$2y$13$7.qfuF3yqV9CrMDkfMKdPOtl53HsbL5Ee4uXyPQ6ZTS/1zXbkkcG6', 'Raph', 100, 'passager_chauffeur', '2025-02-12 20:00:00'),
+('sophie@ecoride.com', '["ROLE_USER"]', '$2y$13$r2W7PAquHneg5.8y8i3nQOEtSeWh3vUJBwlpsBMWi/eBZDdS8EzMW', 'Sophie', 80, 'passager_chauffeur', '2025-02-15 20:00:00'),
+('laura@ecoride.com', '["ROLE_USER"]', '$2y$13$QzJOJmYCcviJrVo6wqWw6OYLtpWLPoyeLCJGxNgdvVB97bPE9fFm6', 'Laura', 300, 'passager_chauffeur', '2025-03-25 20:00:00'),
+('cle@ecoride.com', '["ROLE_USER"]', '$2y$13$7Z.gl8.WiPW2ox1jj6kx7.15fg0/TppyrLkahRpUnUlDaMuqaLrAW', 'Cle', 180, 'passager_chauffeur', '2025-04-30 20:00:00'),
+('vin@ecoride.com', '["ROLE_USER"]', '$2y$13$lXob9hJYex79F2UKwupH0.PDzP2SdPMbgSdr5hwD7rzglScqFKBkS', 'Vin', 120, 'passager_chauffeur', '2025-05-02 20:00:00'),
+('luca@ecoride.com', '["ROLE_USER"]', '$2y$13$HwHY2EtAym07LWofVuThyuZx6UTy3C6Wbv4ExxrvQT5unlkAaIwFW', 'Luca', 50, 'passager_chauffeur', '2025-05-02 20:00:00');
 
 INSERT INTO preference (libelle) 
 VALUES
