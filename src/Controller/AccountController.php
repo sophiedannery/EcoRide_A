@@ -101,8 +101,6 @@ final class AccountController extends AbstractController
                 }
             }
 
-
-
             $em->flush();
             $this->addFlash('success', 'Préférences enregistrées.');
             return $this->redirectToRoute('app_account');
