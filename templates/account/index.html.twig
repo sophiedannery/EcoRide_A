@@ -15,6 +15,44 @@
 		crédits.
 	</p>
 
+	<h2>Mes véhicules</h2>
+
+	<a href="{{ path('app_account_vehicule_new')}}" class="btn btn-primary mb-3">Ajouter une voiture</a>
+
+	{% if vehicules is empty %}
+		<p>Vous n'avez pas encore de véhicule enregistré.</p>
+	{% else %}
+
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Plaque</th>
+					<th>1ère immat.</th>
+					<th>Marque</th>
+					<th>Modèle</th>
+					<th>Couleur</th>
+					<th>Places</th>
+					<th>Energie</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for v in vehicules %}
+					<tr>
+						<td>{{ v.immatriculation }}</td>
+						<td>{{ v.datePremiereImmatriculation|date('d/m/Y') }}</td>
+						<td>{{ v.marque }}</td>
+						<td>{{ v.modele }}</td>
+						<td>{{ v.couleur }}</td>
+						<td>{{ v.placesDisponibles }}</td>
+						<td>{{ v.energie }}</td>
+
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+
+	{% endif %}
+
 
 	<h2>Mon historique de réservation</h2>
 
@@ -46,8 +84,8 @@
 						<td>{{ r.reservation_statut }}</td>
 						<td>{{ r.credits_utilises }}</td>
 						{# <td>
-																																											<a href="{{ path('app_trajet_detail', {id: r.trajetId}) }}" class="btn btn-sm btn-primary">Détails</a>
-																																										</td> #}
+																																																																			<a href="{{ path('app_trajet_detail', {id: r.trajetId}) }}" class="btn btn-sm btn-primary">Détails</a>
+																																																																		</td> #}
 					</tr>
 				{% endfor %}
 

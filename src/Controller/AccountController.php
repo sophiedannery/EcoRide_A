@@ -18,6 +18,7 @@ final class AccountController extends AbstractController
 
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
+        $vehicules = $user->getVehicules();
 
         $history = $reservation_repository->findHistoryByUser($user->getId());
 
@@ -27,6 +28,7 @@ final class AccountController extends AbstractController
         return $this->render('account/index.html.twig', [
             'history' => $history,
             'driverTrips' => $driverTrips,
+            'vehicules' => $vehicules,
         ]);
     }
 }
