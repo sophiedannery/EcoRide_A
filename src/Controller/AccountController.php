@@ -2,9 +2,12 @@
 
 namespace App\Controller;
 
+use App\Form\UserPreferenceType;
 use App\Repository\ReservationRepository;
 use App\Repository\TrajetRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -29,6 +32,28 @@ final class AccountController extends AbstractController
             'history' => $history,
             'driverTrips' => $driverTrips,
             'vehicules' => $vehicules,
+        ]);
+    }
+
+
+    #[Route('/account/preferences', name: 'app_account_preferences', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_USER')]
+    public function preferences(Request $request, EntityManagerInterface $em): Response
+    {
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
+        $form = $this->createForm(UserPreferenceType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->flush();
+            $this->addFlash('success', 'Préférences enregistrées.');
+            return $this->redirectToRoute('app_account');
+        }
+
+        return $this->render('account/preferences.html.twig', [
+            'form' => $form->createView(),
         ]);
     }
 }

@@ -54,6 +54,20 @@
 	{% endif %}
 
 
+	<h2>Mes préférences</h2>
+
+	{% if app.user.preferences is empty %}
+		<p>Aucune préférence définie.</p>
+	{% else %}
+		<ul>
+			{% for p in app.user.preferences %}
+				<li>{{ p.libelle }}</li>
+			{% endfor %}
+		</ul>
+	{% endif %}
+	<a href="{{ path('app_account_preferences')}}" class="btn btn-outline-primary">Modifier mes préférences</a>
+
+
 	<h2>Mon historique de réservation</h2>
 
 	{% if history is empty %}
@@ -84,8 +98,8 @@
 						<td>{{ r.reservation_statut }}</td>
 						<td>{{ r.credits_utilises }}</td>
 						{# <td>
-																																																																			<a href="{{ path('app_trajet_detail', {id: r.trajetId}) }}" class="btn btn-sm btn-primary">Détails</a>
-																																																																		</td> #}
+																																																																																					<a href="{{ path('app_trajet_detail', {id: r.trajetId}) }}" class="btn btn-sm btn-primary">Détails</a>
+																																																																																				</td> #}
 					</tr>
 				{% endfor %}
 
