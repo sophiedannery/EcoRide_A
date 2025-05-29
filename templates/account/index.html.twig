@@ -49,8 +49,8 @@
 						<td>{{ r.reservation_statut }}</td>
 						<td>{{ r.credits_utilises }}</td>
 						{# <td>
-																			<a href="{{ path('app_trajet_detail', {id: r.trajetId}) }}" class="btn btn-sm btn-primary">Détails</a>
-																		</td> #}
+																																					<a href="{{ path('app_trajet_detail', {id: r.trajetId}) }}" class="btn btn-sm btn-primary">Détails</a>
+																																				</td> #}
 					</tr>
 				{% endfor %}
 
@@ -59,5 +59,39 @@
 
 	{% endif %}
 
+
+	<h2>Mes trajets en tant que chauffeur</h2>
+
+	{% if driverTrips is empty %}
+		<p>Vous n'avez créé aucun trajet pour le moment.</p>
+	{% else %}
+
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>Départ → Arrivée</th>
+					<th>Date départ</th>
+					<th>Prix</th>
+					<th>Places</th>
+					<th>Statut</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for t in driverTrips %}
+					<tr>
+						<td>{{ t.adresse_depart }}
+							→
+							{{ t.adresse_arrivee }}</td>
+						<td>{{ t.date_depart }}</td>
+						<td>{{ t.prix }}
+							crédits</td>
+						<td>{{ t.places_restantes }}</td>
+						<td>{{ t.statut_trajet }}</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+
+	{% endif %}
 
 {% endblock %}

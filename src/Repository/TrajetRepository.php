@@ -208,6 +208,29 @@ class TrajetRepository extends ServiceEntityRepository
         return new \DateTimeImmutable($row['next_date']);
     }
 
+    public function findTripsByDriver(int $driverId): array
+    {
+
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = <<<SQL
+        SELECT 
+            t.id AS id_trajet,
+            t.adresse_depart,
+            t.adresse_arrivee, 
+            DATE_FORMAT(t.date_depart, '%Y-%m-%d %H:%i') AS date_depart,
+            DATE_FORMAT(t.date_arrivee, '%Y-%m-%d %H:%i') AS date_arrivee,
+            t.prix, 
+            t.places_restantes, 
+            IF(t.date_depart > NOW(), 'A venir', 'Passé') AS statut_trajet
+        FROM trajet as t 
+        WHERE t.chauffeur_id = ?
+        ORDER BY t.date_depart DESC
+        SQL;
+
+        return $conn->executeQuery($sql, [$driverId])->fetchAllAssociative();
+    }
+
     //    /**
     //     * @return Trajet[] Returns an array of Trajet objects
     //     */
