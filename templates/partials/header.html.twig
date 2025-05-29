@@ -19,7 +19,17 @@
 		{% if is_granted('ROLE_ADMIN') %}
 			<div class="col-md-3 text-end">
 				<button type="button" class="btn btn-outline-primary me-2">
-					<a href="#">ADMIN</a>
+					<a href=" {{ path( 'app_admin') }} ">ADMIN</a>
+				</button>
+				<button type="button" class="btn btn-primary">
+					<a href=" {{ path( 'app_logout') }} ">DECONNEXION</a>
+				</button>
+			</div>
+
+		{% elseif is_granted('ROLE_EMPLOYEE') %}
+			<div class="col-md-3 text-end">
+				<button type="button" class="btn btn-outline-primary me-2">
+					<a href=" {{ path( 'app_employee') }} ">EMPLOYEE</a>
 				</button>
 				<button type="button" class="btn btn-primary">
 					<a href=" {{ path( 'app_logout') }} ">DECONNEXION</a>

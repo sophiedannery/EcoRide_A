@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon Espace
+{% endblock %}
+
+{% block body %}
+
+	<h1>Bonjour,
+		{{app.user.pseudo}}
+		!
+	</h1>
+
+	<p>Vous avez actuellement
+		{{ app.user.credits }}
+		crédits.
+	</p>
+
+
+{% endblock %}
