@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Preference;
 use App\Form\UserPreferenceType;
+use App\Repository\PreferenceRepository;
 use App\Repository\ReservationRepository;
 use App\Repository\TrajetRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -38,7 +40,7 @@ final class AccountController extends AbstractController
 
     #[Route('/account/preferences', name: 'app_account_preferences', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_USER')]
-    public function preferences(Request $request, EntityManagerInterface $em): Response
+    public function preferences(Request $request, EntityManagerInterface $em, PreferenceRepository $prefRepo): Response
     {
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
@@ -63,7 +65,19 @@ final class AccountController extends AbstractController
             $user->addPreference($smokingPref);
             $user->addPreference($animalPref);
 
+            $others = $form->get('otherPreferences')->getData();
+            if ($others) {
+                foreach ($others as $label) {
+                    $pref = $prefRepo->findOneBy(['libelle' => $label]);
+                    if (!$pref) {
+                        $pref = new Preference();
+                        $pref->setLibelle($label);
+                        $em->persist($pref);
+                    }
 
+                    $user->addPreference($pref);
+                }
+            }
 
 
 
