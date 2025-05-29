@@ -47,6 +47,26 @@ final class AccountController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            /** @var User $user */
+            $user = $this->getUser();
+
+            $smokingPref = $form->get('smokingPreference')->getData();
+            $animalPref = $form->get('animalPreference')->getData();
+
+            foreach ($user->getPreferences() as $pref) {
+                if (in_array($pref->getLibelle(), ['Fumeur', 'Non-fumeur', 'Avec animaux', 'Sans animaux'])) {
+                    $user->removePreference($pref);
+                }
+            }
+
+            $user->addPreference($smokingPref);
+            $user->addPreference($animalPref);
+
+
+
+
+
             $em->flush();
             $this->addFlash('success', 'Préférences enregistrées.');
             return $this->redirectToRoute('app_account');

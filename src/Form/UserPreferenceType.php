@@ -14,19 +14,39 @@ class UserPreferenceType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('preferences', EntityType::class, [
+            ->add('smokingPreference', EntityType::class, [
                 'class' => Preference::class,
                 'choice_label' => 'libelle',
-                'multiple' => true,
+                'query_builder' => function ($repo) {
+                    return $repo->createQueryBuilder('p')
+                        ->where('p.libelle IN (:vals)')
+                        ->setParameter('vals', ['Fumeur', 'Non-fumeur']);
+                },
+                'multiple' => false,
                 'expanded' => true,
-                'label' => 'Mes préférences de chauffeur',
-            ]);
+                'mapped' => false,
+                'label' => 'Fumeur ?',
+            ])
+            ->add('animalPreference', EntityType::class, [
+                'class' => Preference::class,
+                'choice_label' => 'libelle',
+                'query_builder' => function ($repo) {
+                    return $repo->createQueryBuilder('p')
+                        ->where('p.libelle IN (:vals)')
+                        ->setParameter('vals', ['Avec animaux', 'Sans animaux']);
+                },
+                'multiple' => false,
+                'expanded' => true,
+                'mapped' => false,
+                'label' => 'Animaux ?',
+            ])
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            User::class,
+            'data_class' => User::class,
         ]);
     }
 }
