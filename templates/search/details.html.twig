@@ -23,98 +23,116 @@
 
 			<h6 class="card-subtitle mb-2 text-body-secondary">
 				<i class="bi bi-calendar3"></i>
-				Départ
-				{{ trip.date_depart|date('d/m/Y H:i') }}</p>
-			Arrivée
-			{{ trip.date_arrivee|date('d/m/Y H:i') }}</p>
-	</h6>
-
-
-	<p class="card-text mb-2">
-		<i class="bi bi-coin"></i>
-		{{ trip.prix }}
-		crédits
-		<br>
-		<i class="bi bi-people-fill"></i>
-		{{ trip.places_restantes }}
-		place{{ trip.places_restantes > 1 ? 's' }}
-		restante{{ trip.places_restantes > 1 ? 's' }}
-
-		{% if trip.vehicule_energie == 'electrique' %}
-			<span class="badge bg-success fs-6">
-				<i class="bi bi-tree"></i>
-				Voyage écologique
-			</span>
-		{% endif %}
-	</p>
-
-	<div>
-		<diV>
-			<h6 class="cart-title">
-				A propos du chauffeur
+				<p>Départ
+					{{ trip.date_depart|date('d/m/Y H:i') }}</p>
+				<p>Arrivée
+					{{ trip.date_arrivee|date('d/m/Y H:i') }}</p>
 			</h6>
 
+
 			<p class="card-text mb-2">
-				Pseudo :
-				{{ trip.chauffeur }}
+				<i class="bi bi-coin"></i>
+				{{ trip.prix }}
+				crédits
 				<br>
+				<i class="bi bi-people-fill"></i>
+				{{ trip.places_restantes }}
+				place{{ trip.places_restantes > 1 ? 's' }}
+				restante{{ trip.places_restantes > 1 ? 's' }}
 
-				{% if avgRating is not null %}
-					Note moyenne :
-					{{ avgRating|round(1, 'floor' )}}/5
-				{% else %}
-					<p>Pas encore de note pour ce chauffeur</p>
+				{% if trip.vehicule_energie == 'electrique' %}
+					<span class="badge bg-success fs-6">
+						<i class="bi bi-tree"></i>
+						Voyage écologique
+					</span>
 				{% endif %}
-				<br>
+			</p>
 
-				Avis :
-				{% if reviews is empty %}
-					Aucun avis pour ce chauffeur
-				{% else %}
-					{% for a in reviews %}
-						{{a.passagers}}
-						: le
-						{{ a.date_creation|date('d/m/Y H:i')}}. Note :
-						{{a.note}}/5
+			<div>
+				<diV>
+					<h6 class="cart-title">
+						A propos du chauffeur
+					</h6>
 
-						{% if a.commentaire %}
-							{{a.commentaire}}
+					<p class="card-text mb-2">
+						Pseudo :
+						{{ trip.chauffeur }}
+						<br>
+
+						{% if avgRating is not null %}
+							Note moyenne :
+							{{ avgRating|round(1, 'floor' )}}/5
+						{% else %}
+							<p>Pas encore de note pour ce chauffeur</p>
 						{% endif %}
-					{% endfor %}
-				{% endif %}
-				<br>
+						<br>
 
-				Préférences :
-				{% if preferences is empty %}
-					Aucune préférence renseignée par le chauffeur.
-				{% else %}
-					{% for libelle in preferences %}
-						{{ libelle }}
-					{% endfor %}
-				{% endif %}
-			</p>
-		</div>
+						Avis :
+						{% if reviews is empty %}
+							Aucun avis pour ce chauffeur
+						{% else %}
+							{% for a in reviews %}
+								{{a.passager}}
+								: le
+								{{ a.date_creation|date('d/m/Y H:i')}}. Note :
+								{{a.note}}/5
 
+								{% if a.commentaire %}
+									{{a.commentaire}}
+								{% endif %}
+							{% endfor %}
+						{% endif %}
+						<br>
 
-		<diV>
-			<h6 class="cart-title">
-				A propos du véhicule
-			</h6>
-			<p class="card-text mb-2">
-				<br>
-				Marque :
-				{{trip.vehicule_marque}}
-				<br>
-				Modèle :
-				{{trip.vehicule_modele}}
-				<br>
-				{# Electrique :{{ trip.vehicule_electrique ? 'Oui' : 'Non' }} #}
-			</p>
-		</div>
-
-	</div>
+						Préférences :
+						{% if preferences is empty %}
+							Aucune préférence renseignée par le chauffeur.
+						{% else %}
+							{% for libelle in preferences %}
+								{{ libelle }}
+							{% endfor %}
+						{% endif %}
+					</p>
+				</div>
 
 
-	<a href="#" class="btn btn-primary">Réserver ce trajet</a>
-</p></div><div class="card-footer text-body-secondary">
-Trajet posté le</div></div><div class="text-center m-5"><a class="btn btn-secondary btn-lg px-4 me-md-2" href="/">Retour à l'accueil</a></div>{% endblock %}
+				<diV>
+					<h6 class="cart-title">
+						A propos du véhicule
+					</h6>
+					<p class="card-text mb-2">
+						<br>
+						Marque :
+						{{trip.vehicule_marque}}
+						<br>
+						Modèle :
+						{{trip.vehicule_modele}}
+						<br>
+						{# Electrique :{{ trip.vehicule_electrique ? 'Oui' : 'Non' }} #}
+					</p>
+				</div>
+
+			</div>
+
+
+			<form method="post" action="{{ path('app_trajet_participer', {id: trip.id_trajet} ) }}" onsubmit="return confirm('Confirmez-vous votre participation ? Coût : {{ trip.prix}} crédits');">
+				<input type="hidden" name="_token" value="{{ csrf_token('participate' ~ trip.id_trajet) }}">
+
+				{% set notEnoughCredits = app.user.credits is not null and app.user.credits < trip.prix %}
+
+				<button class="btn btn-success" {% if notEnoughCredits %} disabled title="Crédits insuffisants" {% endif %}>Participer à ce trajet</button>
+				{% if notEnoughCredits %}
+					<p>Crédits insuffisants
+					{% endif %}
+				</form>
+
+
+				<div class="card-footer text-body-secondary">
+					Trajet posté le</div>
+
+			</div>
+
+			<div class="text-center m-5">
+				<a class="btn btn-secondary btn-lg px-4 me-md-2" href="/">Retour à l'accueil</a>
+			</div>
+		{% endblock %}
