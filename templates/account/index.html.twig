@@ -16,4 +16,48 @@
 	</p>
 
 
+	<h2>Mon historique de réservation</h2>
+
+	{% if history is empty %}
+		<p>Vous n'avez aucune réservation pour le moment.</p>
+	{% else %}
+
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>ID Réservation</th>
+					<th>Trajet</th>
+					<th>Date de départ</th>
+					<th>Statut</th>
+					<th>Crédits utilisés</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for r in history %}
+					<tr>
+						<td>{{ r.reservation_id }}</td>
+						<td>
+							{{ r.adresse_depart }}
+							→
+							{{ r.adresse_arrivee }}
+							<br>
+							Chauffeur :
+							{{ r.chauffeur_pseudo }}
+						</td>
+						<td>{{ r.date_depart|date('d/m/Y H:i') }}</td>
+						<td>{{ r.reservation_statut }}</td>
+						<td>{{ r.credits_utilises }}</td>
+						{# <td>
+																			<a href="{{ path('app_trajet_detail', {id: r.trajetId}) }}" class="btn btn-sm btn-primary">Détails</a>
+																		</td> #}
+					</tr>
+				{% endfor %}
+
+			</tbody>
+		</table>
+
+	{% endif %}
+
+
 {% endblock %}
