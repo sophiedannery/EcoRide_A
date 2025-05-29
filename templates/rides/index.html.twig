@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Covoiturages
+{% endblock %}
+
+{% block body %}
+
+	<form method="GET" action="{{ path('app_search') }}" class=" p-4 p-md-4 border rounded-3 bg-body-tertiary">
+		<div class="form-floating mb-3 ">
+			<input name="depart" type="text" class="form-control" required id="depart" value="{{ app.request.query.get('depart') }}">
+			<label id="depart">Départ</label>
+		</div>
+		<div class="form-floating mb-3">
+			<input name="arrivee" type="text" class="form-control" required id="arrivee" value="{{ app.request.query.get('arrivee') }}">
+			<label id="arrivee">Arrivée</label>
+		</div>
+		<div class="form-floating mb-3">
+			<input name="date" type="date" class="form-control" required id="date" value="{{ app.request.query.get('date') }}">
+			<label id="date">Date</label>
+		</div>
+
+		<button class="w-100 btn btn-lg btn-primary" type="submit">
+			<i class="bi bi-search"></i>
+			Rechercher</button>
+		<hr class="my-4">
+
+
+	</form>
+
+{% endblock %}
