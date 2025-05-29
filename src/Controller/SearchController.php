@@ -43,15 +43,36 @@ final class SearchController extends AbstractController
 
         $trajets = $trajet_repository->searchTrips($from, $to, $date, $eco, $maxPrice, $maxDuration, $minRating);
 
-        // $nextDate = null;
-        // if (empty($trajets)) {
-        //     $nextDate = $trajet_repository->findNextAvailableTripDate($from, $to, $date);
-        // }
+        $nextDate = null;
+        if (empty($trajets)) {
+            $nextDate = $trajet_repository->findNextAvailableTripDate($from, $to, $date);
+        }
 
 
         return $this->render('search/results.html.twig', [
             'trajets' => $trajets,
-            // 'nextDate' => $nextDate,
+            'nextDate' => $nextDate,
+        ]);
+    }
+
+    #[Route('/trajet/{id}', name: 'app_trajet_detail', requirements: ['id' => '\d+'])]
+    public function detail(int $id, TrajetRepository $repo): Response
+    {
+
+        $trip = $repo->findTripById($id);
+        if (empty($trip)) {
+            throw $this->createNotFoundException("Trajet #$id introuvable");
+        }
+
+        $reviews = $repo->getTripReviews($id);
+        $preferences = $repo->getDriverPreferences($trip['chauffeur_id']);
+        $avgRating = $repo->getDriverAverageRating($trip['chauffeur_id']);
+
+        return $this->render('search/details.html.twig', [
+            'trip' => $trip,
+            'reviews' => $reviews,
+            'preferences' => $preferences,
+            'avgRating' => $avgRating,
         ]);
     }
 }

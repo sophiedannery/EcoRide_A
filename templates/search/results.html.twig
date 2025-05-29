@@ -54,12 +54,12 @@
 		<div class="text-center m-5">
 			<h2>Aucun trajet trouvé</h2>
 
-			{# {% if nextDate is not null %}
-																<p>Le prochain trajet disponible est prévu le
-																	{{ nextDate|date('d/m/Y H:i')}}</p>
-																<a href="{{ path('app_search', {depart: app.request.query.get('depart'), arrivee: app.request.query.get('arrivee'), date: nextDate|date('Y-m-d') }) }}" class="btn btn-outline-primary">Rechercher pour cette date</a>
-												
-															{% endif %} #}
+			{% if nextDate is not null %}
+				<p>Le prochain trajet disponible est prévu le
+					{{ nextDate|date('d/m/Y H:i')}}</p>
+				<a href="{{ path('app_search', {depart: app.request.query.get('depart'), arrivee: app.request.query.get('arrivee'), date: nextDate|date('Y-m-d') }) }}" class="btn btn-outline-primary">Rechercher pour cette date</a>
+
+			{% endif %}
 
 
 		</div>
@@ -113,17 +113,17 @@
 									Pas encore de note pour ce chauffeur.
 								{% endif %}
 								{# {% if t.vehicule_electrique %}
-																									<span class="badge bg-success fs-6">
-																										<i class="bi bi-tree"></i>
-																										Voyage écologique
-																									</span>
-																								{% endif %} #}
+																																									<span class="badge bg-success fs-6">
+																																										<i class="bi bi-tree"></i>
+																																										Voyage écologique
+																																									</span>
+																																								{% endif %} #}
 							</div>
-							{# <div class="card-footer bg-transparent border-top-0 text-center">
-															<a href="{{path('app_trajet_detail', {id: t.id_trajet} ) }}" class="btn btn-outline-primary btn-sm">
-																Voir le trajet
-															</a>
-														</div> #}
+							<div class="card-footer bg-transparent border-top-0 text-center">
+								<a href="{{path('app_trajet_detail', {id: t.id_trajet} ) }}" class="btn btn-outline-primary btn-sm">
+									Voir le trajet
+								</a>
+							</div>
 						</div>
 					</div>
 				</div>

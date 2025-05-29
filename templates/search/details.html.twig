@@ -1,0 +1,120 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails du trajet #{{ trip.id_trajet }}
+{% endblock %}
+
+{% block body %}
+
+	<h2>
+		Détails du trajet
+		{{ trip.chauffeur }}</h2>
+
+	<div class="card text-center">
+
+
+		<div class="card-body">
+
+			<h5 class="card-title">
+				<i class="bi bi-geo-fill text-success"></i>
+				{{trip.adresse_depart}}
+				<i class="bi bi-arrow-right mx-1"></i>
+				<i class="bi bi-geo-alt-fill text-danger"></i>
+				{{trip.adresse_arrivee}}</h5>
+
+			<h6 class="card-subtitle mb-2 text-body-secondary">
+				<i class="bi bi-calendar3"></i>
+				Départ
+				{{ trip.date_depart|date('d/m/Y H:i') }}</p>
+			Arrivée
+			{{ trip.date_arrivee|date('d/m/Y H:i') }}</p>
+	</h6>
+
+
+	<p class="card-text mb-2">
+		<i class="bi bi-coin"></i>
+		{{ trip.prix }}
+		crédits
+		<br>
+		<i class="bi bi-people-fill"></i>
+		{{ trip.places_restantes }}
+		place{{ trip.places_restantes > 1 ? 's' }}
+		restante{{ trip.places_restantes > 1 ? 's' }}
+
+		{# {% if trip.vehicule_electrique %}
+							<span class="badge bg-success fs-6">
+								<i class="bi bi-tree"></i>
+								Voyage écologique
+							</span>
+						{% endif %} #}
+	</p>
+
+	<div>
+		<diV>
+			<h6 class="cart-title">
+				A propos du chauffeur
+			</h6>
+
+			<p class="card-text mb-2">
+				Pseudo :
+				{{ trip.chauffeur }}
+				<br>
+
+				{% if avgRating is not null %}
+					Note moyenne :
+					{{ avgRating|round(1, 'floor' )}}/5
+				{% else %}
+					<p>Pas encore de note pour ce chauffeur</p>
+				{% endif %}
+				<br>
+
+				Avis :
+				{% if reviews is empty %}
+					Aucun avis pour ce chauffeur
+				{% else %}
+					{% for a in reviews %}
+						{{a.passagers}}
+						: le
+						{{ a.date_creation|date('d/m/Y H:i')}}. Note :
+						{{a.note}}/5
+
+						{% if a.commentaire %}
+							{{a.commentaire}}
+						{% endif %}
+					{% endfor %}
+				{% endif %}
+				<br>
+
+				Préférences :
+				{% if preferences is empty %}
+					Aucune préférence renseignée par le chauffeur.
+				{% else %}
+					{% for libelle in preferences %}
+						{{ libelle }}
+					{% endfor %}
+				{% endif %}
+			</p>
+		</div>
+
+
+		<diV>
+			<h6 class="cart-title">
+				A propos du véhicule
+			</h6>
+			<p class="card-text mb-2">
+				<br>
+				Marque :
+				{{trip.vehicule_marque}}
+				<br>
+				Modèle :
+				{{trip.vehicule_modele}}
+				<br>
+				{# Electrique :{{ trip.vehicule_electrique ? 'Oui' : 'Non' }} #}
+			</p>
+		</div>
+
+	</div>
+
+
+	<a href="#" class="btn btn-primary">Réserver ce trajet</a>
+</p></div><div class="card-footer text-body-secondary">
+Trajet posté le</div></div><div class="text-center m-5"><a class="btn btn-secondary btn-lg px-4 me-md-2" href="/">Retour à l'accueil</a></div>{% endblock %}
