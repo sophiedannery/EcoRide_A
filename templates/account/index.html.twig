@@ -10,6 +10,15 @@
 		!
 	</h1>
 
+	<p>Staut :
+		{{ app.user.statut}}</p>
+
+	{{ form_start(statutForm) }}
+	{{ form_widget(statutForm) }}
+	<button class="btn btn-primary">Mettre à jour votre statut</button>
+	{{ form_end(statutForm) }}
+
+
 	<p>Vous avez actuellement
 		{{ app.user.credits }}
 		crédits.
@@ -98,8 +107,8 @@
 						<td>{{ r.reservation_statut }}</td>
 						<td>{{ r.credits_utilises }}</td>
 						{# <td>
-																																																																																											<a href="{{ path('app_trajet_detail', {id: r.trajetId}) }}" class="btn btn-sm btn-primary">Détails</a>
-																																																																																										</td> #}
+																																																																																																													<a href="{{ path('app_trajet_detail', {id: r.trajetId}) }}" class="btn btn-sm btn-primary">Détails</a>
+																																																																																																												</td> #}
 					</tr>
 				{% endfor %}
 

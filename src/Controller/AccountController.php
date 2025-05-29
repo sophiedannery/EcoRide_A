@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Preference;
 use App\Form\UserPreferenceType;
+use App\Form\UserStatutType;
 use App\Repository\PreferenceRepository;
 use App\Repository\ReservationRepository;
 use App\Repository\TrajetRepository;
@@ -18,19 +19,40 @@ final class AccountController extends AbstractController
 {
     #[Route('/account', name: 'app_account')]
     #[IsGranted('ROLE_USER')]
-    public function index(ReservationRepository $reservation_repository, TrajetRepository $trajet_repository): Response
+    public function index(Request $request, EntityManagerInterface $em, ReservationRepository $reservation_repository, TrajetRepository $trajet_repository): Response
     {
 
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
+
+        $statutForm = $this->createForm(UserStatutType::class, $user);
+        $statutForm->handleRequest($request);
+
+        if ($statutForm->isSubmitted() && $statutForm->isValid()) {
+            $em->flush();
+
+            if (in_array($user->getStatut(), ['chauffeur', 'passager_chauffeur'], true)) {
+                $needsVehicule = $user->getVehicules()->isEmpty();
+                $needsPreferences = $user->getPreferences()->isEmpty();
+                if ($needsVehicule || $needsPreferences) {
+                    $this->addFlash('warning', 'En tant que chauffeur, vous devez ajouter une voiture'
+                        . ($needsVehicule && $needsPreferences ? ' et des préférences.' : ($needsVehicule ? ' puis ajouter une voiture.' : ' puis définir vos préférences.')));
+                    return $this->redirectToRoute($needsVehicule ? 'app_account_vehicule_new' : 'app_account_preferences');
+                }
+            }
+
+            $this->addFlash('success', 'Statut mis à jour');
+            return $this->redirectToRoute('app_account');
+        }
+
+
         $vehicules = $user->getVehicules();
-
         $history = $reservation_repository->findHistoryByUser($user->getId());
-
         $driverTrips = $trajet_repository->findTripsByDriver($user->getId());
 
 
         return $this->render('account/index.html.twig', [
+            'statutForm' => $statutForm,
             'history' => $history,
             'driverTrips' => $driverTrips,
             'vehicules' => $vehicules,
