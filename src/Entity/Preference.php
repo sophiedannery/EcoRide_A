@@ -18,7 +18,7 @@ class Preference
     /**
      * @var Collection<int, User>
      */
-    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'preferences')]
+    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'preferences')]
     private Collection $user;
 
     #[ORM\Column(length: 255)]

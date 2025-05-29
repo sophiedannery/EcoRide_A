@@ -87,7 +87,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, Preference>
      */
-    #[ORM\ManyToMany(targetEntity: Preference::class, mappedBy: 'user')]
+    #[ORM\ManyToMany(targetEntity: Preference::class, inversedBy: 'user')]
+    #[ORM\JoinTable(name: 'preference_user')]
     private Collection $preferences;
 
     public function __construct()
