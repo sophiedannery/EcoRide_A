@@ -27,7 +27,7 @@
 		<div class="row gx-3 gy-2 align-items-end">
 			<div class="col-auto">
 				<div class="form-check">
-					<input class="form-check-input" type="checkbox" name="eco" id="eco" {{ app.request.query.get('eco') ? 'checked' : '' }}>
+					<input class="form-check-input" type="checkbox" name="eco" id="eco" value="1" {{ app.request.query.get('eco') ? 'checked' : '' }}>
 					<label class="form-check-label" for="eco">Voyage écologique</label>
 				</div>
 			</div>
@@ -112,12 +112,15 @@
 								{% else %}
 									Pas encore de note pour ce chauffeur.
 								{% endif %}
-								{# {% if t.vehicule_electrique %}
-																																									<span class="badge bg-success fs-6">
-																																										<i class="bi bi-tree"></i>
-																																										Voyage écologique
-																																									</span>
-																																								{% endif %} #}
+
+
+								{% if t.energie == 'electrique' %}
+									<span class="badge bg-success fs-6">
+										<i class="bi bi-tree"></i>
+										Voyage écologique
+									</span>
+								{% endif %}
+
 							</div>
 							<div class="card-footer bg-transparent border-top-0 text-center">
 								<a href="{{path('app_trajet_detail', {id: t.id_trajet} ) }}" class="btn btn-outline-primary btn-sm">

@@ -18,8 +18,7 @@ final class SearchController extends AbstractController
         $to = $request->query->get('arrivee', '');
         $date = new \DateTime($request->query->get('date', 'now'));
 
-        $ecoParam = $request->query->get('eco');
-        $eco = $ecoParam !== null;
+        $eco = $request->query->getBoolean('eco');
 
         $maxPriceParam = $request->query->get('maxPrice');
         $maxPrice = ($maxPriceParam !== null && $maxPriceParam !== '') ? (int) $maxPriceParam : null;
