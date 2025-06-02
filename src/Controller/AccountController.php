@@ -50,6 +50,12 @@ final class AccountController extends AbstractController
         $history = $reservation_repository->findHistoryByUser($user->getId());
         $driverTrips = $trajet_repository->findTripsByDriver($user->getId());
 
+        foreach ($driverTrips as &$trip) {
+            $tripId = $trip['id_trajet'];
+            $passagers = $reservation_repository->findPassengerPseudoByTrajet($tripId);
+            $trip['passagers'] = $passagers;
+        }
+
 
         return $this->render('account/index.html.twig', [
             'statutForm' => $statutForm,

@@ -4,7 +4,9 @@ namespace App\Repository;
 
 use App\Entity\Reservation;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Mapping\Id;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\CssSelector\Node\PseudoNode;
 
 /**
  * @extends ServiceEntityRepository<Reservation>
@@ -21,7 +23,7 @@ class ReservationRepository extends ServiceEntityRepository
         $conn = $this->getEntityManager()->getConnection();
 
         $sql = <<<'SQL'
-        SELECT r.id AS reservation_id,
+SELECT r.id AS reservation_id,
             DATE_FORMAT(r.date_confirmation, '%Y-%m-%d %H:%i') AS date_confirmation,
             r.statut AS reservation_statut,
             r.credits_utilises AS credits_utilises,
@@ -32,16 +34,33 @@ class ReservationRepository extends ServiceEntityRepository
             DATE_FORMAT(t.date_arrivee, '%Y-%m-%d %H:%i') AS date_arrivee,
             t.prix,
             u.pseudo AS chauffeur_pseudo
-        FROM reservation as r 
-        JOIN trajet AS t ON r.trajet_id = t.id 
-        JOIN `user` AS u ON t.chauffeur_id = u.id 
-        WHERE r.passager_id = ?
-        ORDER BY r.date_confirmation DESC
-        SQL;
+FROM reservation as r 
+JOIN trajet AS t ON r.trajet_id = t.id 
+JOIN `user` AS u ON t.chauffeur_id = u.id 
+WHERE r.passager_id = ?
+ORDER BY r.date_confirmation DESC
+SQL;
 
         $rows = $conn->executeQuery($sql, [$userId])->fetchAllAssociative();
 
         return $rows;
+    }
+
+    public function findPassengerPseudoByTrajet(int $trajetId): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+
+        $sql = <<<'SQL'
+SELECT u.pseudo 
+FROM reservation  r  
+JOIN `user` u ON r.passager_id = u.id 
+WHERE r.trajet_id = ?
+SQL;
+
+        $rows = $conn->executeQuery($sql, [$trajetId])->fetchAllAssociative();
+
+        return array_column($rows, 'pseudo');
     }
 
 
