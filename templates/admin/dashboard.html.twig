@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tableau de bord Admin
+{% endblock %}
+
+{% block body %}
+	<h1>Nombre de covoiturage par jour</h1>
+
+	<canvas id="trajetsChart" width="800" height="400"></canvas>
+
+
+	<a href="{{ path('app_admin')}}">retour</a>
+
+{% endblock %}
+
+
+{% block javascripts %}
+	{{ parent() }}
+	<script>
+
+		const labels = {{ labels|json_encode|raw }};
+const dataValues = {{ data|json_encode|raw }};
+
+const ctx = document.getElementById('trajetsChart').getContext('2d');
+
+new Chart(ctx, {
+type: 'bar',
+data: {
+labels: labels,
+datasets: [
+{
+label: 'Covoiturages aujourd\'hui',
+data: dataValues,
+backgroundColor: 'rgba(75, 192, 192, 0.5)',
+borderColor: 'rgba(75, 192, 192, 1)',
+borderWidth: 1
+}
+]
+},
+options: {
+scales: {
+x: {
+title: {
+display: true,
+text: 'Date'
+}
+},
+y: {
+beginAtZero: true,
+ticks: {
+stepSize: 10
+},
+title: {
+display: true,
+text: 'Nombre de trajets'
+}
+}
+}
+}
+});
+	</script>
+{% endblock %}

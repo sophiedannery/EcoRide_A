@@ -232,6 +232,36 @@ class TrajetRepository extends ServiceEntityRepository
         return $conn->executeQuery($sql, [$driverId])->fetchAllAssociative();
     }
 
+
+
+
+
+    public function findCountByDate(): array
+    {
+
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = <<<SQL
+        SELECT 
+            DATE(t.date_depart) AS jour,
+            COUNT(*) AS total
+        FROM trajet t
+        WHERE t.statut = 'confirmé'
+        GROUP BY DATE (t.date_depart)
+        ORDER BY DATE (t.date_depart) ASC                        
+        SQL;
+
+        $rows = $conn->executeQuery($sql)->fetchAllAssociative();
+        $result = [];
+        foreach ($rows as $row) {
+            $result[$row['jour']] = (int) $row['total'];
+        }
+
+        return $result;
+    }
+
+
+
     //    /**
     //     * @return Trajet[] Returns an array of Trajet objects
     //     */
