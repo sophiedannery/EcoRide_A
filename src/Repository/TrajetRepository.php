@@ -225,6 +225,7 @@ class TrajetRepository extends ServiceEntityRepository
             IF(t.date_depart > NOW(), 'A venir', 'Passé') AS statut_trajet
         FROM trajet as t 
         WHERE t.chauffeur_id = ?
+        AND t.statut <> 'annulé'
         ORDER BY t.date_depart DESC
         SQL;
 

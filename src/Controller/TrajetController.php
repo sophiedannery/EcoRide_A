@@ -3,7 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Trajet;
+use App\Entity\Transaction;
 use App\Form\TrajetType;
+use App\Repository\ReservationRepository;
+use App\Repository\TrajetRepository;
 use App\Repository\VehiculeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -58,5 +61,63 @@ final class TrajetController extends AbstractController
         return $this->render('account/trajet_new.html.twig', [
             'form' => $form->createView(),
         ]);
+    }
+
+
+
+
+
+    #[Route('/trajet/{id}/annuler', name: 'app_trajet_annuler')]
+    public function annulerTrajet(int $id, Request $request, EntityManagerInterface $em, TrajetRepository $trajetRepo, ReservationRepository $reservationRepo): Response
+    {
+
+        if (!$this->isCsrfTokenValid('cancel_trajet' . $id, $request->request->get('_token'))) {
+            $this->addFlash('error', 'Token invalide.');
+            return $this->redirectToRoute('app_account');
+        }
+
+        $trajet = $trajetRepo->find($id);
+        if (!$trajet) {
+            $this->addFlash('error', 'Trajet introuvable.');
+            return $this->redirectToRoute('app_account');
+        }
+
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
+        if ($trajet->getChauffeur()->getId() !== $user->getId()) {
+            $this->addFlash('error', 'Vous ne pouvez pas annuler ce trajet.');
+            return $this->redirectToRoute('app_account');
+        }
+
+        $reservations = $reservationRepo->findBy(['trajet' => $trajet]);
+
+        foreach ($reservations as $reservation) {
+            $passager = $reservation->getPassager();
+            $creditsUtilises = $reservation->getCreditsUtilises();
+
+            $passager->setCredits($passager->getCredits() + $creditsUtilises);
+
+            $transaction = new Transaction();
+            $transaction
+                ->setUser($user)
+                ->setTrajet($trajet)
+                ->setMontant($creditsUtilises)
+                ->setType('remboursement_passager_annulation_chauffeur');
+            $em->persist($transaction);
+
+            foreach ($reservation->getAvis() as $avi) {
+                $em->remove($avi);
+            }
+
+            $em->remove($reservation);
+        }
+
+        $trajet->setStatut('annulé');
+
+        $em->flush();
+        $this->addFlash('success', 'Le trajet a été annulé et tous les passagers remboursés.');
+
+        return $this->redirectToRoute('app_account');
     }
 }

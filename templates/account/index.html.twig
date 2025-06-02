@@ -130,6 +130,7 @@
 	<th>Prix</th>
 	<th>Places</th>
 	<th>Statut</th>
+	<th>Actions</th>
 </tr></thead><tbody>
 {% for t in driverTrips %}
 	<tr>
@@ -141,5 +142,15 @@
 			crédits</td>
 		<td>{{ t.places_restantes }}</td>
 		<td>{{ t.statut_trajet }}</td>
+		<td>
+
+			{% if t.statut_trajet is not same as('annulé')%}
+				<form method='post' action="{{ path('app_trajet_annuler', {'id': t.id_trajet}) }}" onsubmit="return confirm('Annuler définitivement ce trajet et rembourser tous les passagers ?')" ;>
+					<input type="hidden" name="_token" value="{{ csrf_token('cancel_trajet' ~ t.id_trajet) }}">
+					<button class="btn btn-sm btn-danger">Annuler le trajet</button>
+				</form>
+			{% endif %}
+
+		</td>
 	</tr>
 {% endfor %}</tbody></table>{% endif %}{% endblock %}
