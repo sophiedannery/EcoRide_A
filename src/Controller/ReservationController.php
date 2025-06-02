@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Reservation;
 use App\Entity\Transaction;
+use App\Repository\ReservationRepository;
 use App\Repository\TrajetRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -92,6 +93,53 @@ final class ReservationController extends AbstractController
 
         $this->addFlash('success', 'Votre réservation est confirmée !');
 
+
+        return $this->redirectToRoute('app_account');
+    }
+
+    #[Route('/reservation/{id}/annuler', name: 'app_reservation_annuler', methods: ['POST'])]
+    public function annulerReservation(int $id, Request $request, ReservationRepository $reservationRepo, TrajetRepository $trajetRepo, EntityManagerInterface $em): Response
+    {
+        if (!$this->isCsrfTokenValid('cancel_reservation' . $id, $request->request->get('_token'))) {
+            $this->addFlash('error', 'Token invalide.');
+            return $this->redirectToRoute('app_account');
+        }
+
+        /** @var Reservation|null $reservation */
+        $reservation = $reservationRepo->find($id);
+
+        if (!$reservation) {
+            $this->addFlash('error', 'Réservation introuvable.');
+            return $this->redirectToRoute('app_account');
+        }
+
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
+        if ($reservation->getPassager()->getId() !== $user->getId()) {
+            $this->addFlash('error', 'Vous ne pouvez pas annuler cette réservation.');
+            return $this->redirectToRoute('app_account');
+        }
+
+        $trajet = $reservation->getTrajet();
+
+        $creditsUtilises = $reservation->getCreditsUtilises();
+        $user->setCredits($user->getCredits() + $creditsUtilises);
+
+        $trajet->setPlacesRestantes($trajet->getPlacesRestantes() + 1);
+
+        $transaction = new Transaction();
+        $transaction
+            ->setUser($user)
+            ->setTrajet($trajet)
+            ->setMontant($creditsUtilises)
+            ->setType('remboursement_passager_annulation');
+        $em->persist($transaction);
+
+        $em->remove($reservation);
+
+        $em->flush();
+        $this->addFlash('success', 'Votre réservation a bien été annulé et vos crédits remboursés.');
 
         return $this->redirectToRoute('app_account');
     }

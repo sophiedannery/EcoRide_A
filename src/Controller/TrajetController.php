@@ -25,6 +25,7 @@ final class TrajetController extends AbstractController
         }
 
         $trajet = new Trajet();
+
         $form = $this->createForm(TrajetType::class, $trajet, [
             'user' => $user,
         ]);
