@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Transaction;
 use App\Repository\TrajetRepository;
+use App\Repository\TransactionRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,11 +16,14 @@ final class AdminController extends AbstractController
 {
     #[Route('/admin', name: 'app_admin')]
     #[IsGranted('ROLE_ADMIN')]
-    public function index(UserRepository $userRepository): Response
+    public function index(UserRepository $userRepository, TransactionRepository $transactionRepo): Response
     {
+        $totalCommission = $transactionRepo->getTotalCommissionPlateform();
 
 
-        return $this->render('admin/index.html.twig', []);
+        return $this->render('admin/index.html.twig', [
+            'totalCommission' => $totalCommission,
+        ]);
     }
 
 

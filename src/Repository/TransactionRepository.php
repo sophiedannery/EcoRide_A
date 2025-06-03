@@ -16,6 +16,25 @@ class TransactionRepository extends ServiceEntityRepository
         parent::__construct($registry, Transaction::class);
     }
 
+
+    public function getTotalCommissionPlateform(): int
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = <<<SQL
+        SELECT COALESCE(SUM(t.montant), 0) AS total_commission
+        FROM `transaction` t
+        WHERE t.type = ?
+        SQL;
+
+        $row = $conn->executeQuery($sql, ['commission_plateforme'])->fetchAssociative();
+
+        return (int) ($row['total_commission'] ?? 0);
+    }
+
+
+
+
     //    /**
     //     * @return Transaction[] Returns an array of Transaction objects
     //     */
