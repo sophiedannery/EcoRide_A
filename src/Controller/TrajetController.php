@@ -13,6 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class TrajetController extends AbstractController
 {
@@ -117,6 +118,79 @@ final class TrajetController extends AbstractController
 
         $em->flush();
         $this->addFlash('success', 'Le trajet a été annulé et tous les passagers remboursés.');
+
+        return $this->redirectToRoute('app_account');
+    }
+
+
+
+
+
+    #[Route('/account/trajet/{id}/demarrer', name: 'app_trajet_demarrer', methods: ['POST'])]
+    #[IsGranted('ROLE_USER')]
+    public function demarrer(int $id, Request $request, EntityManagerInterface $em, TrajetRepository $trajetRepo): Response
+    {
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
+        $trajet = $trajetRepo->find($id);
+
+        if (!$trajet) {
+            $this->addFlash('error', 'Trajet introuvable');
+            return $this->redirectToRoute('app_account');
+        }
+
+        if ($trajet->getChauffeur()->getId() !== $user->getId()) {
+            $this->addFlash('error', 'Vous n\'êtes pas autorisé à démarrer ce trajet.');
+            return $this->redirectToRoute('app_account');
+        }
+
+        $aujourdhui = new \DateTimeImmutable('today');
+        if ($trajet->getStatut() !== 'confirmé' || $trajet->getDateDepart()->format('Y-m-d') !== $aujourdhui->format('Y-m-d')) {
+            $this->addFlash('warning', 'Ce trajet n\'est pas encore disponible pour démarrage.');
+            return $this->redirectToRoute('app_account');
+        }
+
+
+        $trajet->setStatut('en_cours');
+        $em->flush();
+        $this->addFlash('success', 'Trajet démarré. Bon voyage !');
+
+        return $this->redirectToRoute('app_account');
+    }
+
+
+
+
+    #[Route('/account/trajet/{id}/arriver', name: 'app_trajet_arriver', methods: ['POST'])]
+    #[IsGranted('ROLE_USER')]
+    public function arriver(int $id, Request $request, EntityManagerInterface $em, TrajetRepository $trajetRepo, ReservationRepository $reservationRepo): Response
+    {
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
+        $trajet = $trajetRepo->find($id);
+
+        if (!$trajet) {
+            $this->addFlash('error', 'Trajet introuvable');
+            return $this->redirectToRoute('app_account');
+        }
+
+        if ($trajet->getChauffeur()->getId() !== $user->getId()) {
+            $this->addFlash('error', 'Vous n\'êtes pas autorisé à clore ce trajet.');
+            return $this->redirectToRoute('app_account');
+        }
+
+        if ($trajet->getStatut() !== 'en_cours') {
+            $this->addFlash('warning', 'Impossible de clore un trajet qui n\'est pas en cours.');
+            return $this->redirectToRoute('app_account');
+        }
+
+
+        $trajet->setStatut('terminé');
+        $em->flush();
+
+        $this->addFlash('success', 'Trajet terminé. Les passagers peuvent maintenant valider.');
 
         return $this->redirectToRoute('app_account');
     }

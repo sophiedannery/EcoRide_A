@@ -221,7 +221,8 @@ class TrajetRepository extends ServiceEntityRepository
             DATE_FORMAT(t.date_depart, '%Y-%m-%d %H:%i') AS date_depart,
             DATE_FORMAT(t.date_arrivee, '%Y-%m-%d %H:%i') AS date_arrivee,
             t.prix, 
-            t.places_restantes, 
+            t.places_restantes,
+            t.statut AS statut_reel,
             IF(t.date_depart > NOW(), 'A venir', 'Passé') AS statut_trajet
         FROM trajet as t 
         WHERE t.chauffeur_id = ?
