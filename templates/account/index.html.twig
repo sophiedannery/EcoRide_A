@@ -10,6 +10,10 @@
 	!
 </h1>
 
+<br>
+<br>
+<br>
+
 <p>Staut :
 	{{ app.user.statut}}</p>
 
@@ -19,14 +23,30 @@
 {{ form_end(statutForm) }}
 
 
+<br>
+<br>
+<br>
+
+
 <p>Vous avez actuellement
 	{{ app.user.credits }}
 	crédits.
 </p>
 
 
+<br>
+<br>
+<br>
+
+
 <h2>Ajouter un trajet</h2>
 <a href="{{ path('account_trajet_new')}}" class="btn btn-success mb-4">Nouveau trajet</a>
+
+
+<br>
+<br>
+<br>
+
 
 <h2>Mes véhicules</h2>
 
@@ -67,6 +87,11 @@
 {% endif %}
 
 
+<br>
+<br>
+<br>
+
+
 <h2>Mes préférences</h2>
 
 {% if app.user.preferences is empty %}
@@ -81,7 +106,12 @@
 <a href="{{ path('app_account_preferences')}}" class="btn btn-outline-primary">Modifier mes préférences</a>
 
 
-<h2>Mon historique de réservation</h2>
+<br>
+<br>
+<br>
+
+
+<h2>Mes réservations</h2>
 
 {% if history is empty %}
 	<p>Vous n'avez aucune réservation pour le moment.</p>
@@ -113,96 +143,84 @@
 					<td>{{ r.credits_utilises }}</td>
 					<td>
 						{% if r.reservation_statut == 'confirmée' %}
-							<form method='post' action="{{ path('app_reservation_annuler', {'id': r.reservation_id}) }}" onsubmit="return confirm('Voulez-vous vraiment annuler cette réservation ?')" ;>
+							<form method='post' action="{{ path('app_reservation_annuler', {'id': r.reservation_id}) }}" onsubmit="return confirm('Voulez-vous vraiment annuler cette réservation ?')">
 								<input type="hidden" name="_token" value="{{ csrf_token('cancel_reservation' ~ r.reservation_id) }}">
 								<button class="btn btn-sm btn-danger">Annuler</button>
 							</form>
 						{% endif %}
-					</td>
-				</tr>
-			{% endfor %}
-		</tbody>
-	</table>
-{% endif %}
 
-
-<h2>Mes trajets en tant que chauffeur</h2>
-{% if driverTrips is empty %}
-	<p>Vous n'avez créé aucun trajet pour le moment.</p>
-{% else %}
-	<table class="table table-striped">
-		<thead>
-			<tr>
-				<th>Départ → Arrivée</th>
-				<th>Date départ</th>
-				<th>Prix</th>
-				<th>Places</th>
-				<th>Statut</th>
-				<th>Passagers</th>
-				<th>Statut</th>
-				<th>Actions</th>
-			</tr>
-		</thead>
-		<tbody>
-			{% for t in driverTrips %}
-				<tr>
-					<td>{{ t.adresse_depart }}
-						→
-						{{ t.adresse_arrivee }}</td>
-					<td>{{ t.date_depart }}</td>
-					<td>{{ t.prix }}
-						crédits</td>
-					<td>{{ t.places_restantes }}</td>
-					<td>{{ t.statut_trajet }}</td>
-					<td>
-						{% if t.passagers is empty %}
-							<em>Aucun passager</em>
-						{% else %}
-							{{ t.passagers|join(', ')}}
-						{% endif %}
-					</td>
-					<td>
-
-						{% set departDate = t.date_depart[:10] %}
-						{% set today = 'now'|date('Y-m-d') %}
-
-
-						{% if t.statut_reel == 'confirmé' and departDate == today %}
-							<form method='post' action="{{ path('app_trajet_demarrer', {'id': t.id_trajet}) }}" onsubmit="return confirm('Voulez-vous démarrer ce trajet ?')" ;>
-								<input type="hidden" name="_token" value="{{ csrf_token('trajet_demarrer' ~ t.id_trajet) }}">
-								<button class="btn btn-sm btn-primary">Démarrer</button>
+						{% if r.reservation_statut == 'confirmée' and r.statut_trajet == 'terminé' %}
+							<form method='post' action="{{ path('app_reservation_valider', {'id': r.reservation_id}) }}" onsubmit="return confirm('Tout s\'est bien passé ? Validez pour payer le chauffeur.')">
+								<input type="hidden" name="_token" value="{{ csrf_token('reservation_valider' ~ r.reservation_id) }}">
+								<button class="btn btn-sm btn-success">Valider</button>
 							</form>
-						{% elseif t.statut_reel == 'confirmé' and departDate != today %}
-							<button class="btn btn-sm btn-primary" disabled>Démarrer</button>
-						{% endif %}
-
-						{% if t.statut_reel == 'en_cours' %}
-							<form method='post' action="{{ path('app_trajet_arriver', {'id': t.id_trajet}) }}" onsubmit="return confirm('Êtes-vous arrivé à destination ?')" ;>
-								<input type="hidden" name="_token" value="{{ csrf_token('trajet_arriver' ~ t.id_trajet) }}">
-								<button class="btn btn-sm btn-success">Arrivée à destination</button>
-							</form>
-						{% endif %}
-
-						{% if t.statut_reel == 'terminé' %}
-							<button class="btn btn-sm btn-success" disabled>En attente de validation</button>
-						{% endif %}
-
-						{% if t.statut_reel == 'validé' %}
-							<button class="btn btn-sm btn-success" disabled>Trajet terminé</button>
 						{% endif %}
 					</td>
 				</tr>
-			</p>
+			</td>
 		</tbody>
-	</td>
-	<td>
+	</tr>
+{% endfor %}</tbody></table>{% endif %}<br><br><br><h2>Mes trajets en tant que chauffeur</h2>{% if driverTrips is empty %}<p>Vous n'avez créé aucun trajet pour le moment.</p>{% else %}<table class="table table-striped"><thead>
+<tr>
+	<th>Départ → Arrivée</th>
+	<th>Date départ</th>
+	<th>Prix</th>
+	<th>Places</th>
+	<th>Statut</th>
+	<th>Passagers</th>
+	<th>Statut</th>
+	<th>Actions</th>
+</tr></thead><tbody>
+{% for t in driverTrips %}
+	<tr>
+		<td>{{ t.adresse_depart }}
+			→
+			{{ t.adresse_arrivee }}</td>
+		<td>{{ t.date_depart }}</td>
+		<td>{{ t.prix }}
+			crédits</td>
+		<td>{{ t.places_restantes }}</td>
+		<td>{{ t.statut_trajet }}</td>
+		<td>
+			{% if t.passagers is empty %}
+				<em>Aucun passager</em>
+			{% else %}
+				{{ t.passagers|join(', ')}}
+			{% endif %}
+		</td>
+		<td>
 
-		{% if t.statut_trajet is not same as('annulé')%}
-			<form method='post' action="{{ path('app_trajet_annuler', {'id': t.id_trajet}) }}" onsubmit="return confirm('Annuler définitivement ce trajet et rembourser tous les passagers ?')" ;>
-				<input type="hidden" name="_token" value="{{ csrf_token('cancel_trajet' ~ t.id_trajet) }}">
-				<button class="btn btn-sm btn-danger">Annuler le trajet</button>
-			</form>
-		{% endif %}
+			{% set departDate = t.date_depart[:10] %}
+			{% set today = 'now'|date('Y-m-d') %}
 
-	</td>
-</tr>{% endfor %}</tbody></table>{% endif %}{% endblock %}
+
+			{% if t.statut_reel == 'confirmé' and departDate == today %}
+				<form method='post' action="{{ path('app_trajet_demarrer', {'id': t.id_trajet}) }}" onsubmit="return confirm('Voulez-vous démarrer ce trajet ?')" ;>
+					<input type="hidden" name="_token" value="{{ csrf_token('trajet_demarrer' ~ t.id_trajet) }}">
+					<button class="btn btn-sm btn-primary">Démarrer</button>
+				</form>
+			{% elseif t.statut_reel == 'confirmé' and departDate != today %}
+				<button class="btn btn-sm btn-primary" disabled>Démarrer</button>
+			{% endif %}
+
+			{% if t.statut_reel == 'en_cours' %}
+				<form method='post' action="{{ path('app_trajet_arriver', {'id': t.id_trajet}) }}" onsubmit="return confirm('Êtes-vous arrivé à destination ?')" ;>
+					<input type="hidden" name="_token" value="{{ csrf_token('trajet_arriver' ~ t.id_trajet) }}">
+					<button class="btn btn-sm btn-success">Arrivée à destination</button>
+				</form>
+			{% endif %}
+
+			{% if t.statut_reel == 'terminé' %}
+				<button class="btn btn-sm btn-success" disabled>En attente de validation</button>
+			{% endif %}
+
+			{% if t.statut_reel == 'validé' %}
+				<button class="btn btn-sm btn-success" disabled>Trajet terminé</button>
+			{% endif %}
+		</td>
+	</tr>
+</p></tbody></td><td>{% if t.statut_trajet is not same as('annulé')%}
+<form method='post' action="{{ path('app_trajet_annuler', {'id': t.id_trajet}) }}" onsubmit="return confirm('Annuler définitivement ce trajet et rembourser tous les passagers ?')" ;>
+	<input type="hidden" name="_token" value="{{ csrf_token('cancel_trajet' ~ t.id_trajet) }}">
+	<button class="btn btn-sm btn-danger">Annuler le trajet</button>
+</form>{% endif %}</td></tr>{% endfor %}</tr></tbody></tbody></table>{% endif %} {% endblock %}

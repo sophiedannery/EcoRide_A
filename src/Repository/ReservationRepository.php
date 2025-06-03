@@ -33,6 +33,7 @@ SELECT r.id AS reservation_id,
             DATE_FORMAT(t.date_depart, '%Y-%m-%d %H:%i') AS date_depart,
             DATE_FORMAT(t.date_arrivee, '%Y-%m-%d %H:%i') AS date_arrivee,
             t.prix,
+            t.statut AS statut_trajet,
             u.pseudo AS chauffeur_pseudo
 FROM reservation as r 
 JOIN trajet AS t ON r.trajet_id = t.id 
