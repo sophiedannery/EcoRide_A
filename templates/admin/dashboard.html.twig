@@ -9,22 +9,33 @@
 		au
 		{{ labels[6]|date('d/m/Y') }}</h1>
 
+	<p>Si le graphique ne s'affiche pas, actualisez-la page.</p>
 
-	<a href="{{ path('app_admin_dashboard', { week_start: preWeek}) }}" class="btn btn_outline-secondary">Semaine précédente</a>
-	<a href="{{ path('app_admin_dashboard', { week_start: nextWeek}) }}" class="btn btn-outline-secondary">Semaine suivante</a>
+
+	<a href="{{ path('app_admin_dashboard', { week_start: preWeek}) }}" class="btn btn_outline-secondary" data-turbo="false">Semaine précédente</a>
+	<a href="{{ path('app_admin_dashboard', { week_start: nextWeek}) }}" class="btn btn-outline-secondary" data-turbo="false">Semaine suivante</a>
 
 	<canvas id="trajetsChart" width="800" height="400"></canvas>
 
 	<a href="{{ path('app_admin')}}">retour</a>
 
-{% endblock %}
+
+	{% block javascripts %}
+		{{ parent() }}
 
 
-{% block javascripts %}
-	{{ parent() }}
-	<script>
+		<script>
 
-		const labelsRaw = {{ labels|json_encode|raw }};
+			if (typeof window.trajetsChartInstance === 'undefined') {
+window.trajetsChartInstance = null;
+}
+
+function initTrajetsChart() {
+if (window.trajetsChartInstance) {
+window.trajetsChartInstance.destroy();
+}
+
+const labelsRaw = {{ labels|json_encode|raw }};
 const dataValuesRaw = {{ data|json_encode|raw }};
 
 const labels = labelsRaw.map(dateStr => {
@@ -38,7 +49,7 @@ const dataValues = dataValuesRaw;
 
 const ctx = document.getElementById('trajetsChart').getContext('2d');
 
-new Chart(ctx, {
+window.trajetsChartInstance = new Chart(ctx, {
 type: 'bar',
 data: {
 labels: labels,
@@ -74,5 +85,12 @@ text: 'Nombre de trajets'
 }
 }
 });
-	</script>
+
+}
+
+document.addEventListener('DOMContentLoaded', initTrajetsChart);
+		</script>
+	{% endblock %}
+
+
 {% endblock %}
