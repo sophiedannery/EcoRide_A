@@ -32,6 +32,34 @@ class TransactionRepository extends ServiceEntityRepository
         return (int) ($row['total_commission'] ?? 0);
     }
 
+    public function findCreditsByDate(\DateTimeInterface $startDate, \DateTimeInterface $endDate): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = <<<SQL
+        SELECT 
+            DATE(t.date_transaction) AS jour,
+            COALESCE(SUM(t.montant), 0) AS total
+        FROM `transaction` t
+        WHERE t.type = 'commission_plateforme'
+            AND DATE(t.date_transaction) BETWEEN ? AND ?
+        GROUP BY DATE (t.date_transaction)
+        ORDER BY DATE (t.date_transaction) ASC
+        SQL;
+
+        $rows = $conn->executeQuery($sql, [
+            $startDate->format('Y-m-d'),
+            $endDate->format('Y-m-d'),
+        ])->fetchAllAssociative();
+
+        $result = [];
+        foreach ($rows as $row) {
+            $result[$row['jour']] = (int) $row['total'];
+        }
+
+        return $result;
+    }
+
 
 
 

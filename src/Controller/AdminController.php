@@ -76,4 +76,54 @@ final class AdminController extends AbstractController
             'startWeek' => $startOfWeek->format('Y-m-d'),
         ]);
     }
+
+    #[Route('/admin/dashboard-credit', name: 'app_admin_dashboard_credit')]
+    #[IsGranted('ROLE_ADMIN')]
+    public function dashboard_credit(Request $request, TransactionRepository $transactionRepo): Response
+    {
+
+        $wkParam = $request->query->get('week_start');
+        if ($wkParam) {
+            try {
+                $startOfWeek = new \DateTimeImmutable($wkParam);
+            } catch (\Exception $e) {
+                $startOfWeek = new \DateTimeImmutable('monday this week');
+            }
+        } else {
+            $startOfWeek = new \DateTimeImmutable('monday this week');
+        }
+
+        if ($startOfWeek->format('N') !== '1') {
+            $startOfWeek = $startOfWeek->modify('monday this week');
+        }
+
+        $endOfWeek = $startOfWeek->modify('+6 days');
+
+
+
+
+        $creditsByDate = $transactionRepo->findCreditsByDate($startOfWeek, $endOfWeek);
+
+        $labels = [];
+        $data = [];
+        $cursor = $startOfWeek;
+        for ($i = 0; $i < 7; $i++) {
+            $jourKey = $cursor->format('Y-m-d');
+            $labels[] = $jourKey;
+            $data[] = $creditsByDate[$jourKey] ?? 0;
+            $cursor = $cursor->modify('+1 day');
+        }
+
+        $preWeek = $startOfWeek->modify('-7days')->format('Y-m-d');
+        $nextWeek = $startOfWeek->modify('+7days')->format('Y-m-d');
+
+
+        return $this->render('admin/dashboard-credit.html.twig', [
+            'labels' => $labels,
+            'data' => $data,
+            'preWeek' => $preWeek,
+            'nextWeek' => $nextWeek,
+            'startWeek' => $startOfWeek->format('Y-m-d'),
+        ]);
+    }
 }
