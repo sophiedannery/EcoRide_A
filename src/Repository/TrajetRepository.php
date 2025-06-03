@@ -236,7 +236,7 @@ class TrajetRepository extends ServiceEntityRepository
 
 
 
-    public function findCountByDate(): array
+    public function findCountByDate(\DateTimeInterface $startDate, \DateTimeInterface $endDate): array
     {
 
         $conn = $this->getEntityManager()->getConnection();
@@ -247,11 +247,16 @@ class TrajetRepository extends ServiceEntityRepository
             COUNT(*) AS total
         FROM trajet t
         WHERE t.statut = 'confirmé'
+            AND DATE(t.date_depart) BETWEEN ? AND ?
         GROUP BY DATE (t.date_depart)
-        ORDER BY DATE (t.date_depart) ASC                        
+        ORDER BY DATE (t.date_depart) ASC
         SQL;
 
-        $rows = $conn->executeQuery($sql)->fetchAllAssociative();
+        $rows = $conn->executeQuery($sql, [
+            $startDate->format('Y-m-d'),
+            $endDate->format('Y-m-d'),
+        ])->fetchAllAssociative();
+
         $result = [];
         foreach ($rows as $row) {
             $result[$row['jour']] = (int) $row['total'];

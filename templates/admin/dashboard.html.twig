@@ -4,10 +4,16 @@
 {% endblock %}
 
 {% block body %}
-	<h1>Nombre de covoiturage par jour</h1>
+	<h1>Trajets du
+		{{ labels[0]|date('d/m/Y') }}
+		au
+		{{ labels[6]|date('d/m/Y') }}</h1>
+
+
+	<a href="{{ path('app_admin_dashboard', { week_start: preWeek}) }}" class="btn btn_outline-secondary">Semaine précédente</a>
+	<a href="{{ path('app_admin_dashboard', { week_start: nextWeek}) }}" class="btn btn-outline-secondary">Semaine suivante</a>
 
 	<canvas id="trajetsChart" width="800" height="400"></canvas>
-
 
 	<a href="{{ path('app_admin')}}">retour</a>
 
@@ -18,8 +24,17 @@
 	{{ parent() }}
 	<script>
 
-		const labels = {{ labels|json_encode|raw }};
-const dataValues = {{ data|json_encode|raw }};
+		const labelsRaw = {{ labels|json_encode|raw }};
+const dataValuesRaw = {{ data|json_encode|raw }};
+
+const labels = labelsRaw.map(dateStr => {
+const d = new Date(dateStr);
+const dd = String(d.getDate()).padStart(2, '0');
+const mm = String(d.getMonth() + 1).padStart(2, '0');
+return dd + '/' + mm;
+});
+
+const dataValues = dataValuesRaw;
 
 const ctx = document.getElementById('trajetsChart').getContext('2d');
 
@@ -42,7 +57,7 @@ scales: {
 x: {
 title: {
 display: true,
-text: 'Date'
+text: 'Jour'
 }
 },
 y: {
