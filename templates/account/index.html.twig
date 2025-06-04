@@ -179,7 +179,6 @@
 	<th>Places</th>
 	<th>Statut</th>
 	<th>Passagers</th>
-	<th>Statut</th>
 	<th>Actions</th>
 </tr></thead><tbody>
 {% for t in driverTrips %}
@@ -191,7 +190,6 @@
 		<td>{{ t.prix }}
 			crédits</td>
 		<td>{{ t.places_restantes }}</td>
-		<td>{{ t.statut_trajet }}</td>
 		<td>
 			{% if t.passagers is empty %}
 				<em>Aucun passager</em>
@@ -205,27 +203,27 @@
 			{% set today = 'now'|date('Y-m-d') %}
 
 
-			{% if t.statut_reel == 'confirmé' and departDate == today %}
+			{% if t.statut_trajet == 'confirmé' and departDate == today %}
 				<form method='post' action="{{ path('app_trajet_demarrer', {'id': t.id_trajet}) }}" onsubmit="return confirm('Voulez-vous démarrer ce trajet ?')" ;>
 					<input type="hidden" name="_token" value="{{ csrf_token('trajet_demarrer' ~ t.id_trajet) }}">
 					<button class="btn btn-sm btn-primary">Démarrer</button>
 				</form>
-			{% elseif t.statut_reel == 'confirmé' and departDate != today %}
+			{% elseif t.statut_trajet == 'confirmé' and departDate != today %}
 				<button class="btn btn-sm btn-primary" disabled>Démarrer</button>
 			{% endif %}
 
-			{% if t.statut_reel == 'en_cours' %}
+			{% if t.statut_trajet == 'en_cours' %}
 				<form method='post' action="{{ path('app_trajet_arriver', {'id': t.id_trajet}) }}" onsubmit="return confirm('Êtes-vous arrivé à destination ?')" ;>
 					<input type="hidden" name="_token" value="{{ csrf_token('trajet_arriver' ~ t.id_trajet) }}">
 					<button class="btn btn-sm btn-success">Arrivée à destination</button>
 				</form>
 			{% endif %}
 
-			{% if t.statut_reel == 'terminé' %}
+			{% if t.statut_trajet == 'terminé' %}
 				<button class="btn btn-sm btn-success" disabled>En attente de validation</button>
 			{% endif %}
 
-			{% if t.statut_reel == 'validé' %}
+			{% if t.statut_trajet == 'validé' %}
 				<button class="btn btn-sm btn-success" disabled>Trajet terminé</button>
 			{% endif %}
 		</td>
