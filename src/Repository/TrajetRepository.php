@@ -29,8 +29,9 @@ class TrajetRepository extends ServiceEntityRepository
             DATE_FORMAT(t.date_depart, '%Y-%m-%d %H:%i') AS date_depart, 
             DATE_FORMAT(t.date_arrivee, '%Y-%m-%d %H:%i') AS date_arrivee, 
             t.prix,
-            t.places_restantes, 
+            t.places_restantes,
             u.pseudo AS chauffeur,
+            u.photo_filename AS chauffeur_filename,
             COALESCE(ar.avg_rating, 0) AS avg_rating,
             v.energie AS energie
         FROM trajet AS t
@@ -106,6 +107,7 @@ class TrajetRepository extends ServiceEntityRepository
                 t.places_restantes, 
                 u.id AS chauffeur_id,
                 u.pseudo AS chauffeur,
+                u.photo_filename AS chauffeur_filename,
                 v.marque AS vehicule_marque,
                 v.modele AS vehicule_modele,
                 v.energie AS vehicule_energie
@@ -221,8 +223,7 @@ class TrajetRepository extends ServiceEntityRepository
             DATE_FORMAT(t.date_depart, '%Y-%m-%d %H:%i') AS date_depart,
             DATE_FORMAT(t.date_arrivee, '%Y-%m-%d %H:%i') AS date_arrivee,
             t.prix, 
-            t.places_restantes,
-            t.statut AS statut_reel,
+            t.places_restantes, 
             IF(t.date_depart > NOW(), 'A venir', 'Passé') AS statut_trajet
         FROM trajet as t 
         WHERE t.chauffeur_id = ?

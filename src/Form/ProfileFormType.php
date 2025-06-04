@@ -21,6 +21,7 @@ class ProfileFormType extends AbstractType
                 'constraints' => [
                     new File([
                         'maxSize' => '2M',
+                        'maxSizeMessage' => 'Fichier trop volumineux : la taille maximale autorisée est de 2 Mo.',
                         'mimeTypes' => [
                             'image/jpeg',
                             'image/png',
