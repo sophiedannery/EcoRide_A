@@ -161,7 +161,11 @@
     background-position: center;
     background-size: cover;
   }
-  
+
+  /* main section {
+    display: none;
+  }
+   */
   
   
   /* .derniers_trajets{
