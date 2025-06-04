@@ -34,6 +34,17 @@
 </p>
 
 
+{% if app.user.photoFilename %}
+	<div>
+		<img src="{{ asset('uploads/photos/' ~ app.user.photoFilename) }}" alt="Photo de profil de {{ app.user.pseudo }}" style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%;"></div>
+	<a href="{{ path ('app_account_edit') }}" class="btn btn-outline-primary">Modifier ma photo</a>
+
+{% else %}
+	<p>Aucune photo de profil enregistrée.</p>
+	<a href="{{ path ('app_account_edit') }}" class="btn btn-outline-primary">Ajouter une photo</a>
+{% endif %}
+
+
 <br>
 <br>
 <br>

@@ -8,6 +8,8 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -47,6 +49,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
     private \DateTime $date_creation;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $photoFilename = null;
+
+    #[Assert\File(
+        maxSize: '2M',
+        mimeTypes: ['image/jpeg', 'image/png', 'image/webp'],
+        mimeTypesMessage: 'Veuillez télécharger une image JPEG, PNG ou WebP (max 2 Mo).'
+    )]
+    private ?UploadedFile $photoFile = null;
 
     /**
      * @var Collection<int, Vehicule>
@@ -90,6 +102,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: Preference::class, inversedBy: 'user')]
     #[ORM\JoinTable(name: 'preference_user')]
     private Collection $preferences;
+
+
 
     public function __construct()
     {
@@ -224,6 +238,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+
+
+
+    public function getPhotoFilename(): ?string
+    {
+        return $this->photoFilename;
+    }
+
+    public function setPhotoFilename(?string $photoFilename): self
+    {
+        $this->photoFilename = $photoFilename;
+        return $this;
+    }
+
+
+    public function getPhotoFile(): ?UploadedFile
+    {
+        return $this->photoFile;
+    }
+
+    public function setPhotoFile(?UploadedFile $photoFile): self
+    {
+        $this->photoFile = $photoFile;
+        return $this;
+    }
+
+
+
 
     /**
      * @return Collection<int, Vehicule>

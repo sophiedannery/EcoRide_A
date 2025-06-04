@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Preference;
+use App\Form\ProfileFormType;
 use App\Form\UserPreferenceType;
 use App\Form\UserStatutType;
 use App\Repository\PreferenceRepository;
@@ -10,10 +11,12 @@ use App\Repository\ReservationRepository;
 use App\Repository\TrajetRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 final class AccountController extends AbstractController
 {
@@ -114,6 +117,81 @@ final class AccountController extends AbstractController
 
         return $this->render('account/preferences.html.twig', [
             'form' => $form->createView(),
+        ]);
+    }
+
+
+
+
+
+    #[Route('/account/edit', name: 'app_account_edit')]
+    #[IsGranted('ROLE_USER')]
+    public function edit(Request $request, EntityManagerInterface $em, SluggerInterface $slugger): Response
+    {
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        $form = $this->createForm(ProfileFormType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var \Symfony\Component\HttpFoundation\File\UploadedFile $photoFile */
+            $photoFile = $form->get('photoFile')->getData();
+
+            if ($photoFile) {
+                $originalFilename = pathinfo($photoFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename . '-' . uniqid() . '.' . $photoFile->guessExtension();
+
+                try {
+                    $photoFile->move(
+                        $this->getParameter('user_photos_directory'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    $this->addFlash('error', 'Une erreur est survenue lors de l\'enregistrement de la photo.');
+                    return $this->redirectToRoute('app_account_edit');
+                }
+
+                $oldFilename = $user->getPhotoFilename();
+                if ($oldFilename) {
+                    $oldFilepath = $this->getParameter('user_photos_directory') . '/' . $oldFilename;
+                    if (file_exists($oldFilepath)) {
+                        @unlink($oldFilepath);
+                    }
+                }
+                $user->setPhotoFilename($newFilename);
+            }
+
+            $em->flush();
+
+            $this->addFlash('success', 'Votre photo de profil a bien été mise à jour.');
+            return $this->redirectToRoute('app_account');
+        }
+
+
+        return $this->render('account/edit.html.twig', [
+            'profileForm' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/account/show', name: 'app_account_show')]
+    #[IsGranted('ROLE_USER')]
+    public function show(): Response
+    {
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        return $this->render('account/show.html.twig', [
+            'user' => $user,
         ]);
     }
 }
