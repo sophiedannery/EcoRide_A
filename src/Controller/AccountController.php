@@ -48,7 +48,6 @@ final class AccountController extends AbstractController
             return $this->redirectToRoute('app_account');
         }
 
-
         $vehicules = $user->getVehicules();
         $history = $reservation_repository->findHistoryByUser($user->getId());
         $driverTrips = $trajet_repository->findTripsByDriver($user->getId());
@@ -58,7 +57,6 @@ final class AccountController extends AbstractController
             $passagers = $reservation_repository->findPassengerPseudoByTrajet($tripId);
             $trip['passagers'] = $passagers;
         }
-
 
         return $this->render('account/index.html.twig', [
             'statutForm' => $statutForm,
@@ -97,10 +95,7 @@ final class AccountController extends AbstractController
             return $this->redirectToRoute('app_account');
         }
 
-
         $vehicules = $user->getVehicules();
-
-
 
         return $this->render('account/statut.html.twig', [
             'statutForm' => $statutForm,
@@ -126,7 +121,6 @@ final class AccountController extends AbstractController
             $passagers = $reservation_repository->findPassengerPseudoByTrajet($tripId);
             $trip['passagers'] = $passagers;
         }
-
 
         return $this->render('account/reservations.html.twig', [
             'history' => $history,
@@ -156,6 +150,7 @@ final class AccountController extends AbstractController
         }
 
 
+
         return $this->render('account/trajets.html.twig', [
             'history' => $history,
             'driverTrips' => $driverTrips,
@@ -180,7 +175,6 @@ final class AccountController extends AbstractController
             $passagers = $reservation_repository->findPassengerPseudoByTrajet($tripId);
             $trip['passagers'] = $passagers;
         }
-
 
         return $this->render('account/vehicules.html.twig', [
             'history' => $history,
@@ -240,9 +234,6 @@ final class AccountController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
-
-
-
 
 
     #[Route('/account/edit', name: 'app_account_edit')]

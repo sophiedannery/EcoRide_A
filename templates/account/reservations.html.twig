@@ -60,7 +60,7 @@
 								<td>{{ r.reservation_statut }}</td>
 								<td>{{ r.credits_utilises }}</td>
 								<td>
-									{% if r.reservation_statut == 'confirmée' %}
+									{% if r.reservation_statut == 'confirmée' and r.statut_trajet != 'en_cours' and r.statut_trajet != 'terminé' %}
 										<form method='post' action="{{ path('app_reservation_annuler', {'id': r.reservation_id}) }}" onsubmit="return confirm('Voulez-vous vraiment annuler cette réservation ?')">
 											<input type="hidden" name="_token" value="{{ csrf_token('cancel_reservation' ~ r.reservation_id) }}">
 											<button class="btn btn-sm btn-danger">Annuler</button>
@@ -70,8 +70,12 @@
 									{% if r.reservation_statut == 'confirmée' and r.statut_trajet == 'terminé' %}
 										<form method='post' action="{{ path('app_reservation_valider', {'id': r.reservation_id}) }}" onsubmit="return confirm('Tout s\'est bien passé ? Validez pour payer le chauffeur.')">
 											<input type="hidden" name="_token" value="{{ csrf_token('reservation_valider' ~ r.reservation_id) }}">
-											<button class="btn btn-sm btn-success">Valider</button>
+											<button class="btn btn-sm btn-success">Valider le trajet</button>
 										</form>
+									{% endif %}
+
+									{% if r.statut_trajet == 'validé' %}
+										<button class="btn btn-sm btn-success disabled">Trajet terminé</button>
 									{% endif %}
 								</td>
 							</tr>

@@ -41,7 +41,7 @@
 							<th>Date départ</th>
 							<th>Prix</th>
 							<th>Places</th>
-							{# <th>Statut</th> #}
+							<th>Statut</th>
 							<th>Passagers</th>
 							<th>Actions</th>
 						</tr>
@@ -57,17 +57,8 @@
 									crédits</td>
 								<td>{{ t.places_restantes }}</td>
 								<td>
-									{% if t.passagers is empty %}
-										<em>Aucun passager</em>
-									{% else %}
-										{{ t.passagers|join(', ')}}
-									{% endif %}
-								</td>
-								<td>
-
 									{% set departDate = t.date_depart[:10] %}
 									{% set today = 'now'|date('Y-m-d') %}
-
 
 									{% if t.statut_trajet == 'confirmé' and departDate == today %}
 										<form method='post' action="{{ path('app_trajet_demarrer', {'id': t.id_trajet}) }}" onsubmit="return confirm('Voulez-vous démarrer ce trajet ?')" ;>
@@ -92,19 +83,25 @@
 									{% if t.statut_trajet == 'validé' %}
 										<button class="btn btn-sm btn-success" disabled>Trajet terminé</button>
 									{% endif %}
-
-									{% if t.statut_trajet is not same as('annulé')%}
+								</td>
+								<td>
+									{% if t.passagers is empty %}
+										<em>Aucun passager</em>
+									{% else %}
+										{{ t.passagers|join(', ')}}
+									{% endif %}
+								</td>
+								<td>
+									{% if t.statut_trajet != ('annulé') and t.statut_trajet != ('en_cours') and t.statut_trajet != ('validé')%}
 										<form method='post' action="{{ path('app_trajet_annuler', {'id': t.id_trajet}) }}" onsubmit="return confirm('Annuler définitivement ce trajet et rembourser tous les passagers ?')" ;>
 											<input type="hidden" name="_token" value="{{ csrf_token('cancel_trajet' ~ t.id_trajet) }}">
 											<button class="btn btn-sm btn-danger">Annuler le trajet</button>
 										</form>
+									{% else %}
+										<button class="btn btn-sm btn-danger disabled">Annuler le trajet</button>
 									{% endif %}
-
-
 								</td>
 							</tr>
-
-
 						</tbody>
 					{% endfor %}
 				</table>

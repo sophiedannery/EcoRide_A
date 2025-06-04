@@ -47,6 +47,7 @@
 			<p class="card-text">
 				Modifier votre statut :
 
+				{{ form_start(statutForm) }}
 				<div class="mb-4">
 					{% for child in statutForm.statut %}
 						<div class="form-check mb-2">
@@ -67,6 +68,9 @@
 						</div>
 					{% endfor %}
 				</div>
+				<button type="submit" class="btn btn-primary">Modifier mon statut</button>
+
+				{{ form_end(statutForm) }}
 			</p>
 
 
