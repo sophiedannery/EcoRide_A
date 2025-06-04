@@ -21,7 +21,8 @@ class UserStatutType extends AbstractType
                 ],
                 'expanded' => true,
                 'multiple' => false,
-                'label' => 'Je suis :',
+                'label' => '',
+
             ]);
     }
 

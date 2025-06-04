@@ -69,6 +69,127 @@ final class AccountController extends AbstractController
     }
 
 
+    #[Route('/account/statut', name: 'app_account_statut')]
+    #[IsGranted('ROLE_USER')]
+    public function statut(Request $request, EntityManagerInterface $em, ReservationRepository $reservation_repository, TrajetRepository $trajet_repository): Response
+    {
+
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
+        $statutForm = $this->createForm(UserStatutType::class, $user);
+        $statutForm->handleRequest($request);
+
+        if ($statutForm->isSubmitted() && $statutForm->isValid()) {
+            $em->flush();
+
+            if (in_array($user->getStatut(), ['chauffeur', 'passager_chauffeur'], true)) {
+                $needsVehicule = $user->getVehicules()->isEmpty();
+                $needsPreferences = $user->getPreferences()->isEmpty();
+                if ($needsVehicule || $needsPreferences) {
+                    $this->addFlash('warning', 'En tant que chauffeur, vous devez ajouter une voiture'
+                        . ($needsVehicule && $needsPreferences ? ' et des préférences.' : ($needsVehicule ? ' puis ajouter une voiture.' : ' puis définir vos préférences.')));
+                    return $this->redirectToRoute($needsVehicule ? 'app_account_vehicule_new' : 'app_account_preferences');
+                }
+            }
+
+            $this->addFlash('success', 'Statut mis à jour');
+            return $this->redirectToRoute('app_account');
+        }
+
+
+        $vehicules = $user->getVehicules();
+
+
+
+        return $this->render('account/statut.html.twig', [
+            'statutForm' => $statutForm,
+            'vehicules' => $vehicules,
+        ]);
+    }
+
+
+    #[Route('/account/reservations', name: 'app_account_reservations')]
+    #[IsGranted('ROLE_USER')]
+    public function reservations(Request $request, EntityManagerInterface $em, ReservationRepository $reservation_repository, TrajetRepository $trajet_repository): Response
+    {
+
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
+        $vehicules = $user->getVehicules();
+        $history = $reservation_repository->findHistoryByUser($user->getId());
+        $driverTrips = $trajet_repository->findTripsByDriver($user->getId());
+
+        foreach ($driverTrips as &$trip) {
+            $tripId = $trip['id_trajet'];
+            $passagers = $reservation_repository->findPassengerPseudoByTrajet($tripId);
+            $trip['passagers'] = $passagers;
+        }
+
+
+        return $this->render('account/reservations.html.twig', [
+            'history' => $history,
+            'driverTrips' => $driverTrips,
+            'vehicules' => $vehicules,
+        ]);
+    }
+
+
+
+    #[Route('/account/trajets', name: 'app_account_trajets')]
+    #[IsGranted('ROLE_USER')]
+    public function trajets(Request $request, EntityManagerInterface $em, ReservationRepository $reservation_repository, TrajetRepository $trajet_repository): Response
+    {
+
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
+        $vehicules = $user->getVehicules();
+        $history = $reservation_repository->findHistoryByUser($user->getId());
+        $driverTrips = $trajet_repository->findTripsByDriver($user->getId());
+
+        foreach ($driverTrips as &$trip) {
+            $tripId = $trip['id_trajet'];
+            $passagers = $reservation_repository->findPassengerPseudoByTrajet($tripId);
+            $trip['passagers'] = $passagers;
+        }
+
+
+        return $this->render('account/trajets.html.twig', [
+            'history' => $history,
+            'driverTrips' => $driverTrips,
+            'vehicules' => $vehicules,
+        ]);
+    }
+
+    #[Route('/account/vehicules', name: 'app_account_vehicules')]
+    #[IsGranted('ROLE_USER')]
+    public function vehicules(Request $request, EntityManagerInterface $em, ReservationRepository $reservation_repository, TrajetRepository $trajet_repository): Response
+    {
+
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
+        $vehicules = $user->getVehicules();
+        $history = $reservation_repository->findHistoryByUser($user->getId());
+        $driverTrips = $trajet_repository->findTripsByDriver($user->getId());
+
+        foreach ($driverTrips as &$trip) {
+            $tripId = $trip['id_trajet'];
+            $passagers = $reservation_repository->findPassengerPseudoByTrajet($tripId);
+            $trip['passagers'] = $passagers;
+        }
+
+
+        return $this->render('account/vehicules.html.twig', [
+            'history' => $history,
+            'driverTrips' => $driverTrips,
+            'vehicules' => $vehicules,
+        ]);
+    }
+
+
     #[Route('/account/preferences', name: 'app_account_preferences', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_USER')]
     public function preferences(Request $request, EntityManagerInterface $em, PreferenceRepository $prefRepo): Response
@@ -112,7 +233,7 @@ final class AccountController extends AbstractController
 
             $em->flush();
             $this->addFlash('success', 'Préférences enregistrées.');
-            return $this->redirectToRoute('app_account');
+            return $this->redirectToRoute('app_account_preferences');
         }
 
         return $this->render('account/preferences.html.twig', [

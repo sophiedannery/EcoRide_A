@@ -1,0 +1,71 @@
+{# templates/account/trajet_new.html.twig #}
+{% extends 'base.html.twig' %}
+{% block title %}Mestrajets
+{% endblock %}
+
+{% block body %}
+
+
+	<div class="card text-center">
+		<div class="card-header">
+			<ul class="nav nav-tabs card-header-tabs">
+				<li class="nav-item">
+					<a class="nav-link" aria-current="true" href="{{ path ('app_account') }}">Mon profil</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="{{ path ('app_account_reservations') }}">Mes réservations</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="{{ path ('app_account_trajets') }}">Mes trajets</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link active" aria-current="true" href="#">Mes véhicules</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="{{ path ('app_account_statut') }}">Mon statut</a>
+				</li>
+			</ul>
+		</div>
+		<div class="card-body">
+			<h2>Mes véhicules</h2>
+
+			{% if vehicules is empty %}
+				<p>Vous n'avez pas encore de véhicule enregistré.</p>
+			{% else %}
+
+				<table class="table">
+					<thead>
+						<tr>
+							<th>Plaque</th>
+							<th>1ère immat.</th>
+							<th>Marque</th>
+							<th>Modèle</th>
+							<th>Couleur</th>
+							<th>Places</th>
+							<th>Energie</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for v in vehicules %}
+							<tr>
+								<td>{{ v.immatriculation }}</td>
+								<td>{{ v.datePremiereImmatriculation|date('d/m/Y') }}</td>
+								<td>{{ v.marque }}</td>
+								<td>{{ v.modele }}</td>
+								<td>{{ v.couleur }}</td>
+								<td>{{ v.placesDisponibles }}</td>
+								<td>{{ v.energie }}</td>
+
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			{% endif %}
+
+
+			<a href="{{ path('app_account_vehicule_new')}}" class="btn btn-primary mb-3">Ajouter une voiture</a>
+		</div>
+	</div>
+
+
+{% endblock %}

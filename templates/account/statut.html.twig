@@ -10,13 +10,13 @@
 		<div class="card-header">
 			<ul class="nav nav-tabs card-header-tabs">
 				<li class="nav-item">
-					<a class="nav-link active" aria-current="true" href="#">Mon profil</a>
+					<a class="nav-link" href="{{ path ('app_account') }}">Mon profil</a>
 				</li>
 				<li class="nav-item">
 					<a class="nav-link" href="{{ path ('app_account_reservations') }}">Mes réservations</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="{{ path ('app_account_trajets') }}">Mes trajets</a>
+					<a class="nav-link" href="#">Mes trajets</a>
 				</li>
 				<li class="nav-item">
 					<a class="nav-link" href="{{ path ('app_account_vehicules') }}">Mes véhicules</a>
@@ -25,21 +25,12 @@
 					<a class="nav-link" href="{{ path ('app_account_preferences') }}">Mes préférences</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="{{ path ('app_account_statut') }}">Mon statut</a>
+					<a class="nav-link active" aria-current="true" href="{{ path ('app_account_statut') }}">Mon statut</a>
 				</li>
 			</ul>
 		</div>
 		<div class="card-body">
-
-			<h5 class="card-title">Bonjour,
-				{{app.user.pseudo}}
-				!</h5>
-
-			<p class="card-text">
-
-				<hr>
-
-				<strong>Staut :</strong>
+			<h5 class="card-title">
 				{% if app.user.statut == 'passager_chauffeur' %}
 					<i class="fa-solid fa-suitcase"></i>
 					Passager et
@@ -52,26 +43,32 @@
 					<i class="fa-solid fa-car-side"></i>
 					Chauffeur
 				{% endif %}
+			</h5>
+			<p class="card-text">
+				Modifier votre statut :
 
-				<hr>
-
-
-				<i class="fa-solid fa-coins"></i>
-				<strong>Crédits :</strong>
-				Vous avez actuellement
-				<strong>{{ app.user.credits }}</strong>
-				crédits.
-
-				<hr>
-
-				{% if app.user.photoFilename %}
-					<div>
-						<img src="{{ asset('uploads/photos/' ~ app.user.photoFilename) }}" alt="Photo de profil de {{ app.user.pseudo }}" style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%;"></div>
-					<a href="{{ path ('app_account_edit') }}" class="btn btn-outline-primary">Modifier ma photo</a>
-				{% else %}
-					<p>Aucune photo de profil enregistrée.</p>
-					<a href="{{ path ('app_account_edit') }}" class="btn btn-outline-primary">Ajouter une photo</a>
-				{% endif %}
+				<div class="mb-4">
+					{% for child in statutForm.statut %}
+						<div class="form-check mb-2">
+							{{ form_widget(child, { attr: { class: 'form-check-input' } }) }}
+							<label
+								class="form-check-label" for="{{ child.vars.id }}">
+								{# Affichez l'icône selon la valeur #}
+								{% if child.vars.value == 'passager' %}
+									<i class="fa-solid fa-suitcase"></i>
+								{% elseif child.vars.value == 'chauffeur' %}
+									<i class="fa-solid fa-car-side"></i>
+								{% elseif child.vars.value == 'passager_chauffeur' %}
+									<i class="fa-solid fa-suitcase"></i>
+									<i class="fa-solid fa-car-side"></i>
+								{% endif %}
+								{{ child.vars.label|capitalize }}
+							</label>
+						</div>
+					{% endfor %}
+				</div>
 			</p>
+
+
 		</div>
 	{% endblock %}

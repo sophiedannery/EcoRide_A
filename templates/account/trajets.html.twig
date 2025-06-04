@@ -1,0 +1,119 @@
+{# templates/account/trajet_new.html.twig #}
+{% extends 'base.html.twig' %}
+{% block title %}Mestrajets
+{% endblock %}
+
+{% block body %}
+
+
+	<div class="card text-center">
+		<div class="card-header">
+			<ul class="nav nav-tabs card-header-tabs">
+				<li class="nav-item">
+					<a class="nav-link" aria-current="true" href="{{ path ('app_account') }}">Mon profil</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="{{ path ('app_account_reservations') }}">Mes réservations</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link active" aria-current="true" href="#">Mes trajets</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="{{ path ('app_account_vehicules') }}">Mes véhicules</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="{{ path ('app_account_preferences') }}">Mes préférences</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="{{ path ('app_account_statut') }}">Mon statut</a>
+				</li>
+			</ul>
+		</div>
+		<div class="card-body">
+			<h2>Mes trajets en tant que chauffeur</h2>
+			{% if driverTrips is empty %}
+				<p>Vous n'avez créé aucun trajet pour le moment.</p>
+			{% else %}
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>Départ → Arrivée</th>
+							<th>Date départ</th>
+							<th>Prix</th>
+							<th>Places</th>
+							{# <th>Statut</th> #}
+							<th>Passagers</th>
+							<th>Actions</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for t in driverTrips %}
+							<tr>
+								<td>{{ t.adresse_depart }}
+									→
+									{{ t.adresse_arrivee }}</td>
+								<td>{{ t.date_depart }}</td>
+								<td>{{ t.prix }}
+									crédits</td>
+								<td>{{ t.places_restantes }}</td>
+								<td>
+									{% if t.passagers is empty %}
+										<em>Aucun passager</em>
+									{% else %}
+										{{ t.passagers|join(', ')}}
+									{% endif %}
+								</td>
+								<td>
+
+									{% set departDate = t.date_depart[:10] %}
+									{% set today = 'now'|date('Y-m-d') %}
+
+
+									{% if t.statut_trajet == 'confirmé' and departDate == today %}
+										<form method='post' action="{{ path('app_trajet_demarrer', {'id': t.id_trajet}) }}" onsubmit="return confirm('Voulez-vous démarrer ce trajet ?')" ;>
+											<input type="hidden" name="_token" value="{{ csrf_token('trajet_demarrer' ~ t.id_trajet) }}">
+											<button class="btn btn-sm btn-primary">Démarrer</button>
+										</form>
+									{% elseif t.statut_trajet == 'confirmé' and departDate != today %}
+										<button class="btn btn-sm btn-primary" disabled>Démarrer</button>
+									{% endif %}
+
+									{% if t.statut_trajet == 'en_cours' %}
+										<form method='post' action="{{ path('app_trajet_arriver', {'id': t.id_trajet}) }}" onsubmit="return confirm('Êtes-vous arrivé à destination ?')" ;>
+											<input type="hidden" name="_token" value="{{ csrf_token('trajet_arriver' ~ t.id_trajet) }}">
+											<button class="btn btn-sm btn-success">Arrivée à destination</button>
+										</form>
+									{% endif %}
+
+									{% if t.statut_trajet == 'terminé' %}
+										<button class="btn btn-sm btn-success" disabled>En attente de validation</button>
+									{% endif %}
+
+									{% if t.statut_trajet == 'validé' %}
+										<button class="btn btn-sm btn-success" disabled>Trajet terminé</button>
+									{% endif %}
+
+									{% if t.statut_trajet is not same as('annulé')%}
+										<form method='post' action="{{ path('app_trajet_annuler', {'id': t.id_trajet}) }}" onsubmit="return confirm('Annuler définitivement ce trajet et rembourser tous les passagers ?')" ;>
+											<input type="hidden" name="_token" value="{{ csrf_token('cancel_trajet' ~ t.id_trajet) }}">
+											<button class="btn btn-sm btn-danger">Annuler le trajet</button>
+										</form>
+									{% endif %}
+
+
+								</td>
+							</tr>
+
+
+						</tbody>
+					{% endfor %}
+				</table>
+			{% endif %}
+
+
+			<a href="{{ path('account_trajet_new')}}" class="btn btn-success mb-4">Ajouter trajet</a>
+		</div>
+	</div>
+
+
+{% endblock %}
