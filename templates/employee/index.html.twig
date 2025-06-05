@@ -6,4 +6,7 @@
 {% block body %}
 	<h1>Bienvenue,
 		{{ app.user.pseudo }}</h1>
+
+
+	<a href="{{ path('app_employee_signalement')}}">Trajets signalés</a>
 {% endblock %}

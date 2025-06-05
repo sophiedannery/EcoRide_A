@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\ReservationRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -15,6 +16,21 @@ final class EmployeeController extends AbstractController
     {
         return $this->render('employee/index.html.twig', [
             'controller_name' => 'EmployeeController',
+        ]);
+    }
+
+
+    #[Route('/employee/signalement', name: 'app_employee_signalement')]
+    #[IsGranted('ROLE_EMPLOYEE')]
+    public function listeSignalements(ReservationRepository $reservationRepo): Response
+    {
+
+        $signalements = $reservationRepo->findSignaledReservations();
+
+
+
+        return $this->render('employee/signalement.html.twig', [
+            'signalements' => $signalements,
         ]);
     }
 }

@@ -65,6 +65,39 @@ SQL;
     }
 
 
+    public function findSignaledReservations(): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+
+        $sql = <<<'SQL'
+SELECT 
+        r.id as reservation_id,
+        r.commentaire_probleme AS commentaire_probleme,
+        t.id AS trajet_id,
+        t.adresse_depart AS adresse_depart,
+        t.adresse_arrivee AS adresse_arrivee,
+        t.date_depart AS date_depart,
+        t.date_arrivee AS date_arrivee,
+        p.pseudo AS passager_pseudo,
+        p.email AS passager_email,
+        c.pseudo AS chauffeur_pseudo,
+        c.email AS chauffeur_email,
+        r.date_confirmation AS date_confirmation
+    FROM reservation r
+        JOIN trajet t ON r.trajet_id = t.id 
+        JOIN `user` p ON r.passager_id = p.id
+        JOIN `user` c ON t.chauffeur_id = c.id 
+    WHERE r.statut = 'signalé'
+    ORDER BY t.date_depart DESC
+SQL;
+
+        $rows = $conn->executeQuery($sql)->fetchAllAssociative();
+
+        return $rows;
+    }
+
+
 
 
     //    /**
