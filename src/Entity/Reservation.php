@@ -32,6 +32,9 @@ class Reservation
     #[ORM\Column]
     private ?int $credits_utilises = null;
 
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $commentaireProbleme = null;
+
     /**
      * @var Collection<int, Avis>
      */
@@ -107,6 +110,21 @@ class Reservation
 
         return $this;
     }
+
+
+    public function getCommentaireProbleme(): ?string
+    {
+        return $this->commentaireProbleme;
+    }
+
+    public function setCommentaireProbleme(?string $txt): self
+    {
+        $this->commentaireProbleme = $txt;
+        return $this;
+    }
+
+
+
 
     /**
      * @return Collection<int, Avis>

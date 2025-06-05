@@ -70,15 +70,22 @@
 										</form>
 									{% endif %}
 
+
 									{% if r.reservation_statut == 'confirmée' and r.statut_trajet == 'terminé' %}
-										<form method='post' action="{{ path('app_reservation_valider', {'id': r.reservation_id}) }}" onsubmit="return confirm('Tout s\'est bien passé ? Validez pour payer le chauffeur.')">
-											<input type="hidden" name="_token" value="{{ csrf_token('reservation_valider' ~ r.reservation_id) }}">
-											<button class="btn btn-sm btn-success">Valider le trajet</button>
-										</form>
+
+										<a href="{{ path('app_reservation_resume', {'id': r.reservation_id}) }}" class="btn btn-sm btn-success">Valider le trajet</a>
+										{# <form method='post' action="{{ path('app_reservation_valider', {'id': r.reservation_id}) }}" onsubmit="return confirm('Tout s\'est bien passé ? Validez pour payer le chauffeur.')">
+																																																				<input type="hidden" name="_token" value="{{ csrf_token('reservation_valider' ~ r.reservation_id) }}">
+																																																													<button class="btn btn-sm btn-success">Valider le trajet</button>
+																																																																																																														</form> #}
 									{% endif %}
 
 									{% if r.statut_trajet == 'validé' %}
 										<button class="btn btn-sm btn-success disabled">Trajet terminé</button>
+									{% endif %}
+
+									{% if r.reservation_statut == 'signalé' %}
+										<button class="btn btn-sm btn-warning disabled">Trajet signalé</button>
 									{% endif %}
 								</td>
 							</tr>

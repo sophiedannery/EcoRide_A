@@ -95,7 +95,7 @@
 									{% endif %}
 								</td>
 								<td>
-									{% if t.statut_trajet != ('annulé') and t.statut_trajet != ('en_cours') and t.statut_trajet != ('validé')%}
+									{% if t.statut_trajet != ('annulé') and t.statut_trajet != ('en_cours') and t.statut_trajet != ('validé') and t.statut_trajet != ('terminé')%}
 										<form method='post' action="{{ path('app_trajet_annuler', {'id': t.id_trajet}) }}" onsubmit="return confirm('Annuler définitivement ce trajet et rembourser tous les passagers ?')" ;>
 											<input type="hidden" name="_token" value="{{ csrf_token('cancel_trajet' ~ t.id_trajet) }}">
 											<button class="btn btn-sm btn-danger">Annuler le trajet</button>

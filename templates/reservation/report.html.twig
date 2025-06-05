@@ -1,0 +1,41 @@
+{# templates/reservation/report.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Signaler un problème
+{% endblock %}
+
+{% block body %}
+	<div class="card mx-auto" style="max-width: 600px; margin-top: 2rem;">
+		<div class="card-header text-center">
+			<h5>Signaler un problème</h5>
+		</div>
+		<div class="card-body">
+			<p>
+				<strong>Trajet :</strong><br>
+				{{ adresseDepart }}
+				→
+				{{ adresseArrivee }}<br>
+				<strong>Date :</strong>
+				{{ dateDepart|date('d/m/Y H:i') }}<br>
+				<strong>Chauffeur :</strong>
+				{{ chauffeur.getPseudo() }}
+			</p>
+
+			<hr>
+
+			<form method="post" action="{{ path('app_reservation_signal', {'id': reservation.getId()}) }}">
+				<input type="hidden" name="_token" value="{{ csrf_token('reservation_signal' ~ reservation.getId()) }}">
+
+				<div class="mb-3">
+					<label for="commentaire" class="form-label">Décrivez votre problème</label>
+					<textarea class="form-control" id="commentaire" name="commentaire" rows="4" placeholder="Détaillez ici ce qui s'est mal passé..." required></textarea>
+				</div>
+
+				<div class="d-flex justify-content-between">
+					<a href="{{ path('app_account') }}" class="btn btn-secondary">Annuler</a>
+					<button type="submit" class="btn btn-danger">Envoyer le signalement</button>
+				</div>
+			</form>
+		</div>
+	</div>
+{% endblock %}

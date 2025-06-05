@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Résumé du trajet
+{% endblock %}
+
+{% block body %}
+	<div class="card mx-auto" style="max-width: 600px; margin-top: 2rem;">
+		<div class="card-header text-center">
+			<h5>Résumé du trajet</h5>
+		</div>
+		<div class="card-body">
+			<p>
+				<strong>De :</strong>
+				{{ adresseDepart }}<br>
+				<strong>À :</strong>
+				{{ adresseArrivee }}<br>
+				<strong>Date :</strong>
+				{{ dateDepart|date('d/m/Y H:i') }}<br>
+				<strong>Chauffeur :</strong>
+				{{ chauffeur.getPseudo() }}<br>
+				<strong>Prix payé :</strong>
+				{{ prix }}
+				crédits
+			</p>
+
+			<hr>
+
+			<p>Le trajet s'est-il bien passé ?</p>
+
+			<div class="d-flex justify-content-between">
+				<form method="post" action="{{ path('app_reservation_finalize', {'id': reservation.getId()}) }}">
+					<input type="hidden" name="_token" value="{{ csrf_token('reservation_finalize' ~ reservation.getId()) }}">
+					<button type="submit" class="btn btn-success">
+						Oui, tout s'est bien passé
+					</button>
+				</form>
+
+				<a href="{{ path('app_reservation_report', {'id': reservation.getId()}) }}" class="btn btn-danger">
+					Signaler un problème
+				</a>
+			</div>
+		</div>
+	</div>
+{% endblock %}
