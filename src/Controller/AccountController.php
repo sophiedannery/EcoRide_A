@@ -6,6 +6,7 @@ use App\Entity\Preference;
 use App\Form\ProfileFormType;
 use App\Form\UserPreferenceType;
 use App\Form\UserStatutType;
+use App\Repository\AvisRepository;
 use App\Repository\PreferenceRepository;
 use App\Repository\ReservationRepository;
 use App\Repository\TrajetRepository;
@@ -167,19 +168,25 @@ final class AccountController extends AbstractController
         $user = $this->getUser();
 
         $vehicules = $user->getVehicules();
-        $history = $reservation_repository->findHistoryByUser($user->getId());
-        $driverTrips = $trajet_repository->findTripsByDriver($user->getId());
-
-        foreach ($driverTrips as &$trip) {
-            $tripId = $trip['id_trajet'];
-            $passagers = $reservation_repository->findPassengerPseudoByTrajet($tripId);
-            $trip['passagers'] = $passagers;
-        }
 
         return $this->render('account/vehicules.html.twig', [
-            'history' => $history,
-            'driverTrips' => $driverTrips,
             'vehicules' => $vehicules,
+        ]);
+    }
+
+
+    #[Route('/account/avis', name: 'app_account_avis')]
+    #[IsGranted('ROLE_USER')]
+    public function mesAvis(AvisRepository $avisRepo): Response
+    {
+
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
+        $avisRecus = $avisRepo->findAvisByChauffeur($user->getId());
+
+        return $this->render('account/avis.html.twig', [
+            'avisRecus' => $avisRecus,
         ]);
     }
 

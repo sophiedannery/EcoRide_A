@@ -27,6 +27,9 @@
 				<li class="nav-item">
 					<a class="nav-link" href="{{ path ('app_account_statut') }}">Mon statut</a>
 				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="{{ path ('app_account_avis') }}">Mes avis</a>
+				</li>
 			</ul>
 		</div>
 		<div class="card-body">
@@ -39,7 +42,7 @@
 
 				<hr>
 
-				<strong>Staut :</strong>
+
 				{% if app.user.statut == 'passager_chauffeur' %}
 					<i class="fa-solid fa-suitcase"></i>
 					Passager et
@@ -57,8 +60,6 @@
 
 
 				<i class="fa-solid fa-coins"></i>
-				<strong>Crédits :</strong>
-				Vous avez actuellement
 				<strong>{{ app.user.credits }}</strong>
 				crédits.
 
