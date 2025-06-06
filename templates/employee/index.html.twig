@@ -7,6 +7,11 @@
 	<h1>Bienvenue,
 		{{ app.user.pseudo }}</h1>
 
+	<hr>
 
 	<a href="{{ path('app_employee_signalement')}}">Trajets signalés</a>
+	<hr>
+	<a href="{{ path('app_employee_pending_avis')}}">Modérer les avis</a>
+	<hr>
+
 {% endblock %}

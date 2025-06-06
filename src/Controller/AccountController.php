@@ -107,7 +107,7 @@ final class AccountController extends AbstractController
 
     #[Route('/account/reservations', name: 'app_account_reservations')]
     #[IsGranted('ROLE_USER')]
-    public function reservations(Request $request, EntityManagerInterface $em, ReservationRepository $reservation_repository, TrajetRepository $trajet_repository): Response
+    public function reservations(Request $request, EntityManagerInterface $em, ReservationRepository $reservation_repository, TrajetRepository $trajet_repository, AvisRepository $avisRepo): Response
     {
 
         /** @var \App\Entity\User $user */
@@ -116,6 +116,14 @@ final class AccountController extends AbstractController
         $vehicules = $user->getVehicules();
         $history = $reservation_repository->findHistoryByUser($user->getId());
         $driverTrips = $trajet_repository->findTripsByDriver($user->getId());
+
+        foreach ($history as &$r) {
+            $existing = $avisRepo->findOneBy([
+                'reservation' => $r['reservation_id']
+            ]);
+            $r['avis'] = ($existing !== null);
+        }
+
 
         foreach ($driverTrips as &$trip) {
             $tripId = $trip['id_trajet'];

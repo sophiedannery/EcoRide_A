@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Avis;
 use App\Entity\Transaction;
 use App\Entity\User;
+use App\Repository\AvisRepository;
 use App\Repository\ReservationRepository;
 use App\Repository\TrajetRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -110,5 +112,65 @@ final class EmployeeController extends AbstractController
 
         $this->addFlash('success', 'La réservation a été clôturée et le trajet validé avec succès.');
         return $this->redirectToRoute('app_employee_signalement');
+    }
+
+
+
+
+
+
+
+
+
+
+    #[Route('/employee/avis/pending', name: 'app_employee_pending_avis')]
+    #[IsGranted('ROLE_EMPLOYEE')]
+    public function listePendingAvis(AvisRepository $avisRepo): Response
+    {
+        $pendingAvis = $avisRepo->findPendingAvis();
+
+        return $this->render('employee/avis/pending.html.twig', [
+            'pendingAvis' => $pendingAvis,
+        ]);
+    }
+
+    #[Route('/employee/avis/{id}/moderate', name: 'app_employee_moderate_avis', methods: ['POST'])]
+    #[IsGranted('ROLE_EMPLOYEE')]
+    public function moderateAvis(
+        int $id,
+        Request $request,
+        EntityManagerInterface $em
+    ): Response {
+
+        $action = $request->request->get('action');
+        $submittedToken = $request->request->get('_token');
+
+        if (!$this->isCsrfTokenValid('moderate_avis' . $id, $submittedToken)) {
+            $this->addFlash('error', 'Token CSRF invalide.');
+            return $this->redirectToRoute('app_employee_pending_avis');
+        }
+
+        /** @var Avis|null $avis */
+        $avis = $em->getRepository(Avis::class)->find($id);
+        if (!$avis) {
+            $this->addFlash('error', 'Avis introuvable.');
+            return $this->redirectToRoute('app_employee_pending_avis');
+        }
+
+        if ($action === 'validate') {
+            $avis->setStatutValidation('validé');
+            $this->addFlash('success', 'Avis validé.');
+        } elseif ($action === 'reject') {
+            $avis->setStatutValidation('refusé');
+            $this->addFlash('warning', 'Avis refusé.');
+        } else {
+            $this->addFlash('error', 'Action non reconnue.');
+            return $this->redirectToRoute('app_employee_pending_avis');
+        }
+
+        $em->persist($avis);
+        $em->flush();
+
+        return $this->redirectToRoute('app_employee_pending_avis');
     }
 }

@@ -1,0 +1,41 @@
+{# templates/avis/new.html.twig #}
+{% extends 'base.html.twig' %}
+{% block title %}Laisser un avis
+{% endblock %}
+{% block body %}
+	<h2>Laisser un avis pour le trajet avec
+		{{ chauffeurPseudo }}</h2>
+
+	<div class="card">
+		<div class="card-body">
+			<p>
+				<strong>Réservation n°
+					{{ reservation.id }}</strong>
+			</p>
+			<p>
+				Trajet :
+				{{ reservation.trajet.adresseDepart }}
+				→
+				{{ reservation.trajet.adresseArrivee }}<br>
+				Date départ :
+				{{ reservation.trajet.dateDepart|date('d/m/Y H:i') }}
+			</p>
+
+			{{ form_start(avisForm) }}
+			<div class="mb-3">
+				{{ form_label(avisForm.note) }}
+				{{ form_widget(avisForm.note, {'attr': {'class': 'form-control', 'min':1, 'max':5}}) }}
+				{{ form_errors(avisForm.note) }}
+			</div>
+			<div class="mb-3">
+				{{ form_label(avisForm.commentaire) }}
+				{{ form_widget(avisForm.commentaire, {'attr': {'class': 'form-control'}}) }}
+				{{ form_errors(avisForm.commentaire) }}
+			</div>
+			<button type="submit" class="btn btn-primary">Envoyer mon avis</button>
+			{{ form_end(avisForm) }}
+
+			<a href="{{ path('app_account_reservations') }}" class="btn btn-link mt-3">Retour à mes réservations</a>
+		</div>
+	</div>
+{% endblock %}

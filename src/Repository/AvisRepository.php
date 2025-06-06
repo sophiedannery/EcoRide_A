@@ -42,6 +42,39 @@ class AvisRepository extends ServiceEntityRepository
         return $conn->executeQuery($sql, [$driverId])->fetchAllAssociative();
     }
 
+
+    public function findPendingAvis(): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = <<<SQL
+        SELECT 
+            a.id AS avis_id,
+            a.note AS note,
+            a.commentaire AS commentaire,
+            DATE_FORMAT(a.date_creation, '%Y-%m-%d %H:%i') AS date_creation,
+            r.id AS reservation_id,
+            p.pseudo AS passager_pseudo,
+            c.pseudo AS chauffeur_pseudo,
+            t.id AS trajet_id,
+            t.adresse_depart AS adresse_depart,
+            t.adresse_arrivee AS adresse_arrivee,
+            DATE_FORMAT(t.date_depart, '%Y-%m-%d %H:%i') AS date_depart
+        FROM avis a
+        JOIN reservation r ON a.reservation_id = r.id
+        JOIN trajet t ON r.trajet_id = t.id
+        JOIN `user` p ON r.passager_id = p.id
+        JOIN `user` c ON t.chauffeur_id = c.id
+        WHERE a.statut_validation = 'en_attente'
+        ORDER BY a.date_creation DESC
+        SQL;
+
+        return $conn->executeQuery($sql)->fetchAllAssociative();
+    }
+
+
+
+
     //    /**
     //     * @return Avis[] Returns an array of Avis objects
     //     */

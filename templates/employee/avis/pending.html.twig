@@ -1,0 +1,67 @@
+{# templates/employee/pending_avis.html.twig #}
+{% extends 'base.html.twig' %}
+{% block title %}Avis en attente de validation
+{% endblock %}
+{% block body %}
+	<div class="container py-4">
+		<h2>Avis en attente</h2>
+
+		{% if pendingAvis is empty %}
+			<div class="alert alert-info">
+				Il n’y a aucun avis en attente de validation pour le moment.
+			</div>
+		{% else %}
+			<table class="table table-bordered table-striped">
+				<thead class="table-dark">
+					<tr>
+						<th>#Avis</th>
+						<th>Passager</th>
+						<th>Chauffeur</th>
+						<th>Trajet</th>
+						<th>Date trajet</th>
+						<th>Note</th>
+						<th>Commentaire</th>
+						<th>Date de création</th>
+						<th>Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for a in pendingAvis %}
+						<tr>
+							<td>{{ a.avis_id }}</td>
+							<td>{{ a.passager_pseudo }}</td>
+							<td>{{ a.chauffeur_pseudo }}</td>
+							<td>
+								{{ a.adresse_depart }}
+								→
+								{{ a.adresse_arrivee }}
+								<br>
+								Réservation n°
+								{{ a.reservation_id }}
+							</td>
+							<td>{{ a.date_depart|date('d/m/Y H:i') }}</td>
+							<td>{{ a.note }}</td>
+							<td>{{ a.commentaire }}</td>
+							<td>{{ a.date_creation|date('d/m/Y H:i') }}</td>
+							<td>
+								{# Formulaire POST “Valider” #}
+								<form method="post" style="display:inline" action="{{ path('app_employee_moderate_avis', {'id': a.avis_id}) }}" onsubmit="return confirm('Valider cet avis ?');">
+									<input type="hidden" name="_token" value="{{ csrf_token('moderate_avis' ~ a.avis_id) }}">
+									<input type="hidden" name="action" value="validate">
+									<button type="submit" class="btn btn-sm btn-success">Valider</button>
+								</form>
+
+								{# Formulaire POST “Refuser” #}
+								<form method="post" style="display:inline" action="{{ path('app_employee_moderate_avis', {'id': a.avis_id}) }}" onsubmit="return confirm('Refuser cet avis ?');">
+									<input type="hidden" name="_token" value="{{ csrf_token('moderate_avis' ~ a.avis_id) }}">
+									<input type="hidden" name="action" value="reject">
+									<button type="submit" class="btn btn-sm btn-danger">Refuser</button>
+								</form>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		{% endif %}
+	</div>
+{% endblock %}
