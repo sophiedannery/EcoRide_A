@@ -227,8 +227,8 @@ class TrajetRepository extends ServiceEntityRepository
             t.statut AS statut_trajet
         FROM trajet as t 
         WHERE t.chauffeur_id = ?
-        AND t.statut <> 'annulé'
-        AND t.date_depart > NOW()
+        -- AND t.statut <> 'annulé'
+        -- AND t.date_depart >= NOW()
         ORDER BY t.date_depart ASC
         SQL;
 

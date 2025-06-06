@@ -22,6 +22,7 @@
 					<th>Date Arrivée</th>
 					<th>Date Réservation</th>
 					<th>Commentaire Problème</th>
+					<th>Actions</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -41,6 +42,14 @@
 						<td>{{ s.date_arrivee ? s.date_arrivee|date('d/m/Y H:i') : '—' }}</td>
 						<td>{{ s.date_confirmation ? s.date_confirmation|date('d/m/Y H:i') : '—' }}</td>
 						<td>{{ s.commentaire_probleme }}</td>
+						<td>
+							<form method="post" action="{{ path('app_employee_cloturer_reservation', { 'id': s.reservation_id }) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir clôturer cette réservation et valider le trajet ?');" style="display:inline">
+								<input type="hidden" name="_token" value="{{ csrf_token('cloturer_reservation' ~ s.reservation_id) }}">
+								<button type="submit" class="btn btn-sm btn-primary">
+									Clôturer
+								</button>
+							</form>
+						</td>
 					</tr>
 				{% endfor %}
 			</tbody>
