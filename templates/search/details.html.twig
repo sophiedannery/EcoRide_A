@@ -82,7 +82,7 @@
 							Aucun avis pour ce chauffeur
 						{% else %}
 							{% for a in reviews %}
-								{{a.passager}}
+								{{a.pseudo_passager}}
 								: le
 								{{ a.date_creation|date('d/m/Y H:i')}}. Note :
 								{{a.note}}/5

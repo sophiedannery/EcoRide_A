@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\AvisRepository;
 use App\Repository\TrajetRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -55,7 +56,7 @@ final class SearchController extends AbstractController
     }
 
     #[Route('/trajet/{id}', name: 'app_trajet_detail', requirements: ['id' => '\d+'])]
-    public function detail(int $id, TrajetRepository $repo): Response
+    public function detail(int $id, TrajetRepository $repo, AvisRepository $avisRepo): Response
     {
 
         $trip = $repo->findTripById($id);
@@ -63,9 +64,13 @@ final class SearchController extends AbstractController
             throw $this->createNotFoundException("Trajet #$id introuvable");
         }
 
-        $reviews = $repo->getTripReviews($id);
+        // $reviews = $repo->getTripReviews($id);
+        $chauffeurId = $trip['chauffeur_id'];
+        $reviews = $avisRepo->findAvisByChauffeur($chauffeurId);
         $preferences = $repo->getDriverPreferences($trip['chauffeur_id']);
         $avgRating = $repo->getDriverAverageRating($trip['chauffeur_id']);
+
+        dump($reviews);
 
         return $this->render('search/details.html.twig', [
             'trip' => $trip,

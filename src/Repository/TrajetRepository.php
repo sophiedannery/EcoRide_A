@@ -140,7 +140,7 @@ class TrajetRepository extends ServiceEntityRepository
         JOIN `user` p 
             ON r.passager_id = p.id
         WHERE r.trajet_id = ?
-            AND a.statut_validation = 'valide'
+            -- AND a.statut_validation = 'validé'
         ORDER BY a.date_creation DESC
         SQL;
 
@@ -227,7 +227,7 @@ class TrajetRepository extends ServiceEntityRepository
             t.statut AS statut_trajet
         FROM trajet as t 
         WHERE t.chauffeur_id = ?
-        -- AND t.statut <> 'annulé'
+        AND t.statut <> 'annulé'
         -- AND t.date_depart >= NOW()
         ORDER BY t.date_depart ASC
         SQL;
