@@ -34,10 +34,16 @@ SELECT r.id AS reservation_id,
             DATE_FORMAT(t.date_arrivee, '%Y-%m-%d %H:%i') AS date_arrivee,
             t.prix,
             t.statut AS statut_trajet,
-            u.pseudo AS chauffeur_pseudo
+            u.pseudo AS chauffeur_pseudo,
+            u.photo_filename AS chauffeur_photo,
+            v.marque AS vehicule_marque,
+            v.modele AS vehicule_modele,
+            v.couleur AS vehicule_couleur,
+            v.energie AS vehicule_energie
 FROM reservation as r 
 JOIN trajet AS t ON r.trajet_id = t.id 
 JOIN `user` AS u ON t.chauffeur_id = u.id 
+LEFT JOIN vehicule AS v ON t.vehicule_id = v.id
 WHERE r.passager_id = ?
 ORDER BY r.date_confirmation DESC
 SQL;
