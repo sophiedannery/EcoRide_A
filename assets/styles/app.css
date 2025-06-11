@@ -192,6 +192,12 @@
     height: 100%;
     z-index: 0;
   }
+
+  .bg-cover {
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+  }
   
   /* .derniers_trajets{
     background-color: #10303e;
