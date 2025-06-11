@@ -1,42 +1,32 @@
 {# templates/account/trajet_new.html.twig #}
 {% extends 'base.html.twig' %}
-{% block title %}Mes trajets
+{% block title %}Historique des trajets
 {% endblock %}
 
 {% block body %}
 
 	{% set now = "now"|date("U") %}
-	{% set upcomingCount = 0 %}
 
-	{% for t in driverTrips %}
-		{% set departTs = t.date_depart|date("U") %}
-		{% if departTs >= now %}
-			{% set upcomingCount = upcomingCount + 1 %}
-		{% endif %}
-	{% endfor %}
 
 	<section class="py-5">
 		<div class="container">
 			<div class="d-flex justify-content-between align-items-end mb-5">
-				<h1 class="hero-heading mb-0">Vos trajets à venir</h1>
-				<a class="btn btn-link text-muted" href="{{ path('app_account_trajets_old')}}">Historique</a>
+				<h1 class="hero-heading mb-0">Historique</h1>
+				<a class="btn btn-link text-muted" href="{{ path('app_account_trajets')}}">Trajets à venir</a>
 			</div>
 			{% if driverTrips is empty %}
-				<p>Vos trajets apparaitront ici</p>
+				<p>Historique de vos trajets</p>
 			{% else %}
 				<div class="d-flex justify-content-between align-items-center flex-column flex-lg-row mb-5">
 					<div class="me-3">
-						<p class="mb-3 mb-lg-0">Vous avez
-							<strong>{{ upcomingCount}}
-								trajet{{ upcomingCount > 1 ? 's'}}</strong>
-							de prévus</p>
+						<p class="mb-3 mb-lg-0">Vos trajets passés</p>
 					</div>
 				</div>
 				<div class="list-group shadow-mb-5">
 
 					{% for t in driverTrips %}
 						{% set departTs = (t.date_depart|date("U")) %}
-						{% if departTs >= now %}
+						{% if departTs < now %}
 							<a class="list-group-item list-group-item-action p-4" href="#">
 								<div class="row">
 									<div class="col-lg-4 align-self-center mb-4 mb-lg-0">
@@ -142,9 +132,7 @@
 				</div>
 				<nav aria-label="Page trajets"></nav>
 			{% endif %}
-			<div class="text-center my-5">
-				<a href="{{ path('account_trajet_new')}}" class="btn btn-success mb-4">Ajouter un trajet</a>
-			</div>
+
 		</div>
 	</section>
 

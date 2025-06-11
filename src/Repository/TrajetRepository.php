@@ -224,11 +224,15 @@ class TrajetRepository extends ServiceEntityRepository
             DATE_FORMAT(t.date_arrivee, '%Y-%m-%d %H:%i') AS date_arrivee,
             t.prix, 
             t.places_restantes,
-            t.statut AS statut_trajet
+            t.statut AS statut_trajet,
+            v.modele AS vehicule_modele,
+            v.marque AS vehicule_marque,
+            v.energie AS vehicule_energie
         FROM trajet as t 
+        LEFT JOIN vehicule AS v 
+            ON t.vehicule_id = v.id
         WHERE t.chauffeur_id = ?
         AND t.statut <> 'annulé'
-        -- AND t.date_depart >= NOW()
         ORDER BY t.date_depart ASC
         SQL;
 

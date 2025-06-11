@@ -167,6 +167,34 @@ final class AccountController extends AbstractController
         ]);
     }
 
+
+    #[Route('/account/trajets_old', name: 'app_account_trajets_old')]
+    #[IsGranted('ROLE_USER')]
+    public function trajetsOld(Request $request, EntityManagerInterface $em, ReservationRepository $reservation_repository, TrajetRepository $trajet_repository): Response
+    {
+
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
+        $vehicules = $user->getVehicules();
+        $history = $reservation_repository->findHistoryByUser($user->getId());
+        $driverTrips = $trajet_repository->findTripsByDriver($user->getId());
+
+        foreach ($driverTrips as &$trip) {
+            $tripId = $trip['id_trajet'];
+            $passagers = $reservation_repository->findPassengerPseudoByTrajet($tripId);
+            $trip['passagers'] = $passagers;
+        }
+
+
+
+        return $this->render('account/trajets_old.html.twig', [
+            'history' => $history,
+            'driverTrips' => $driverTrips,
+            'vehicules' => $vehicules,
+        ]);
+    }
+
     #[Route('/account/vehicules', name: 'app_account_vehicules')]
     #[IsGranted('ROLE_USER')]
     public function vehicules(Request $request, EntityManagerInterface $em, ReservationRepository $reservation_repository, TrajetRepository $trajet_repository): Response
