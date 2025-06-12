@@ -218,6 +218,18 @@
     height: 7rem;
     line-height: 7rem;
   }
+
+  .date-tile {
+    display: flex;
+    width: 5.5rem;
+    height: 5.5rem;
+    text-align: center;
+    color: #fff;
+    border-radius: 0.4rem;
+    background: #00714B;
+    align-items: center;
+    justify-content: center;
+  }
   
   /* .derniers_trajets{
     background-color: #10303e;

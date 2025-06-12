@@ -6,8 +6,12 @@
 {% block body %}
 
 	<section class="py-5">
+
 		<div class="container">
+
 			<div class="row">
+
+				<h1 class="hero-heading mb-5">Détails du trajet</h1>
 
 				<div class="col-lg-3 me-lg-auto">
 					<div class="card boarder-0 shadow mb-6 mb-lg-0">
@@ -74,10 +78,23 @@
 							{% endif %}
 						</div>
 					</div>
+
+					<div class="mt-4 text-center">
+						<form method="post" action="{{ path('app_trajet_participer', {id: trip.id_trajet} ) }}" onsubmit="return confirm('Confirmez-vous votre participation ? Coût : {{ trip.prix}} crédits');">
+							<input type="hidden" name="_token" value="{{ csrf_token('participate' ~ trip.id_trajet) }}">
+
+							{% set notEnoughCredits = app.user.credits is not null and app.user.credits < trip.prix %}
+
+							<button class="btn btn-success" {% if notEnoughCredits %} disabled title="Crédits insuffisants" {% endif %}>Participer à ce trajet</button>
+							{% if notEnoughCredits %}
+								<p>Crédits insuffisants</p>
+							{% endif %}
+						</form>
+					</div>
 				</div>
 
 				<div class="col-lg-9 ps-lg-5">
-					<h1 class="hero-heading mb-0">Détails du trajet</h1>
+
 
 					<div class="text-block">
 						<p>
@@ -85,70 +102,101 @@
 								<span class="badge badge-rounded bg-success p-2 mt-2 text-white">VOYAGE ECOLOGIQUE</span>
 							{% endif %}
 						</p>
-					</p>
-					<p class="text-muted">Blablabla</p>
-				</div>
 
-				<div class="text-block">
-					<hr>
-					<p class="subtitle">{{ trip.date_depart|date('d/m/Y H:i') }}</p>
-					<h1 class="hero-heading mb-3">{{trip.adresse_depart}}
-						-
-						{{trip.adresse_arrivee}}</h1>
-				</div>
+					</div>
 
+					<div
+						class="text-block">
 
-				<div class="text-block">
-					<hr>
-					<p class="subtitle">{{ trip.date_depart|date('d/m/Y H:i') }}</p>
-					<p class="subtitle">{{ trip.date_arrivee|date('d/m/Y H:i') }}</p>
+						{# <p class="subtitle">blabla</p> #}
+						<h1 class="hero-heading mb-3">
+							<i class="fa-solid fa-location-dot"></i>
+							{{trip.adresse_depart}}
+							<i class="fa-solid fa-arrow-right-long"></i>
+							{{trip.adresse_arrivee}}</h1>
 
-				</div>
-
-				<div class="text-block">
-					<hr>
-					<i class="bi bi-coin"></i>
-					{{ trip.prix }}
-					crédits
-					<br>
-					<i class="bi bi-people-fill"></i>
-					{{ trip.places_restantes }}
-					place{{ trip.places_restantes > 1 ? 's' }}
-					restante{{ trip.places_restantes > 1 ? 's' }}
-
-				</div>
-
-
-				<div class="text-block">
-					<hr>
-					<br>
-					Marque :
-					{{trip.vehicule_marque}}
-					<br>
-					Modèle :
-					{{trip.vehicule_modele}}
-					<br>
-					Energie :
-					{{ trip.vehicule_energie}}
-
-
-				</div>
-
-				<form method="post" action="{{ path('app_trajet_participer', {id: trip.id_trajet} ) }}" onsubmit="return confirm('Confirmez-vous votre participation ? Coût : {{ trip.prix}} crédits');">
-					<input type="hidden" name="_token" value="{{ csrf_token('participate' ~ trip.id_trajet) }}">
-
-					{% set notEnoughCredits = app.user.credits is not null and app.user.credits < trip.prix %}
-
-					<button class="btn btn-success" {% if notEnoughCredits %} disabled title="Crédits insuffisants" {% endif %}>Participer à ce trajet</button>
-					{% if notEnoughCredits %}
-						<p>Crédits insuffisants
-						{% endif %}
-					</form>
+						<hr>
+					</div>
 
 
 					<div class="text-block">
+						<h6 class="mb-4">Horaires</h6>
+						<div class="row mb-3">
+							<div class="col-md-6 d-flex align-items-center mb-3 mb-md-0">
+								<p class="text-sm mb-0 me-3">Départ</p>
+								<div class="date-tile ">
+									<div class="text-uppercase">
+										<span class="text-sm">{{ trip.date_depart|date('d/m/Y') }}</span>
+										<br>
+										<strong class="text-lg">{{ trip.date_depart|date('H:i') }}</strong>
+									</div>
+								</div>
+
+							</div>
+							<div class="col-md-6 d-flex align-items-center">
+								<p class="text-sm mb-0 me-3">Arrivée</p>
+								<div class="date-tile ">
+									<div class="text-uppercase">
+										<span class="text-sm">{{ trip.date_arrivee|date('d/m/Y') }}</span>
+										<br>
+										<strong class="text-lg">{{ trip.date_arrivee|date('H:i') }}</strong>
+									</div>
+								</div>
+
+							</div>
+						</div>
 						<hr>
-						<h5 class="mb-4">Les avis de
+					</div>
+
+					<div class="text-block">
+						<div class="row">
+							<div class="col-sm">
+								<h6>Tarif</h6>
+								<p class="text-muted">
+									<i class="bi bi-coin"></i>
+									{{ trip.prix }}
+									crédits</p>
+							</div>
+							<div class="col-sm">
+								<h6>Places restantes</h6>
+								<p class="text-muted">
+									<i class="bi bi-people-fill"></i>
+									{{ trip.places_restantes }}
+									place{{ trip.places_restantes > 1 ? 's' }}
+									restante{{ trip.places_restantes > 1 ? 's' }}</p>
+							</div>
+						</div>
+						<hr>
+					</div>
+
+					<div class="text-block">
+						<div class="row">
+							<div class="col-sm">
+								<h6>Le véhicule</h6>
+								<p class="text-muted">
+									<i class="fa-solid fa-car-side"></i>
+									{{trip.vehicule_marque}}
+									{{trip.vehicule_modele}}
+								</p>
+							</div>
+							<div class="col-sm">
+								<h6>Energie</h6>
+								<p class="text-muted">
+									{% if trip.vehicule_energie == 'electrique' %}
+										<i class="fa-solid fa-bolt-lightning"></i>
+									{% else %}
+										<i class="fa-solid fa-gas-pump"></i>
+									{% endif %}
+									{{ trip.vehicule_energie}}</p>
+							</div>
+						</div>
+						<hr>
+					</div>
+
+
+					<div class="text-block mt-5">
+
+						<h5 class="mb-4 ">Les avis de
 							{{ trip.chauffeur }}</h5>
 						{% if reviews is empty %}
 							<p class="subtitle text-sm">Aucun avis pour ce chauffeur</p>
@@ -188,16 +236,13 @@
 
 
 					</div>
+
 				</div>
-
+				<div class="text-center">
+					<a class="btn btn-secondary btn-lg px-4 me-md-2" href="/">Retour à l'accueil</a>
+				</div>
 			</div>
-			<div class="text-center">
-				<a class="btn btn-secondary btn-lg px-4 me-md-2" href="/">Retour à l'accueil</a>
-			</div>
-
 		</div>
+	</div>
 
-	</section>
-
-
-</div>{% endblock %}
+</section>{% endblock %}
