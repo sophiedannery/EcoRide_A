@@ -37,7 +37,7 @@
 					{% for t in driverTrips %}
 						{% set departTs = (t.date_depart|date("U")) %}
 						{% if departTs >= now %}
-							<a class="list-group-item list-group-item-action p-4" href="#">
+							<div class="list-group-item list-group-item-action p-4">
 								<div class="row">
 									<div class="col-lg-4 align-self-center mb-4 mb-lg-0">
 										<div class="d-flex align-items-center mb-3">
@@ -136,7 +136,7 @@
 
 									</div>
 								</div>
-							</a>
+							</div>
 						{% endif %}
 					{% endfor %}
 				</div>

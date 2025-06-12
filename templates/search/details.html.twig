@@ -5,104 +5,204 @@
 
 {% block body %}
 
-	<h2>
-		Détails du trajet
-		{{ trip.chauffeur }}</h2>
+	<section class="py-5">
+		<div class="container">
+			<div class="row">
 
-	<div class="card text-center">
+				<div class="col-lg-3 me-lg-auto">
+					<div class="card boarder-0 shadow mb-6 mb-lg-0">
+						<div class="card-header bg-gray-100 py-4 border-0 text-center">
+							<a class="d-inline-block" href:"#">
+								{% if trip.chauffeur_filename %}
+									<div>
+										<img src="{{ asset('uploads/photos/' ~ trip.chauffeur_filename) }}" alt="Photo de profil de  {{ trip.chauffeur }}" style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%;"></div>
+								{% else %}
+									<div>
+										<img src="{{ asset('assets/images/avatar-default.png') }}" alt="Pas de photo de profil" style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%;"></div>
+								{% endif %}
+							</a>
+							<h5>{{ trip.chauffeur }}</h5>
+							<p class="text-muted text-sm mb-0"></p>
 
-
-		<div class="card-body">
-
-			<h5 class="card-title">
-				<i class="bi bi-geo-fill text-success"></i>
-				{{trip.adresse_depart}}
-				<i class="bi bi-arrow-right mx-1"></i>
-				<i class="bi bi-geo-alt-fill text-danger"></i>
-				{{trip.adresse_arrivee}}</h5>
-
-			<h6 class="card-subtitle mb-2 text-body-secondary">
-				<i class="bi bi-calendar3"></i>
-				<p>Départ
-					{{ trip.date_depart|date('d/m/Y H:i') }}</p>
-				<p>Arrivée
-					{{ trip.date_arrivee|date('d/m/Y H:i') }}</p>
-			</h6>
+						</div>
+						<div class="card-body p-4">
 
 
-			<p class="card-text mb-2">
-				<i class="bi bi-coin"></i>
-				{{ trip.prix }}
-				crédits
-				<br>
-				<i class="bi bi-people-fill"></i>
-				{{ trip.places_restantes }}
-				place{{ trip.places_restantes > 1 ? 's' }}
-				restante{{ trip.places_restantes > 1 ? 's' }}
-
-				{% if trip.vehicule_energie == 'electrique' %}
-					<span class="badge bg-success fs-6">
-						<i class="bi bi-tree"></i>
-						Voyage écologique
-					</span>
-				{% endif %}
-			</p>
-
-			<div>
-				<diV>
-					<h6 class="cart-title">
-						A propos du chauffeur
-					</h6>
-
-					<p class="card-text mb-2">
-						Pseudo :
-						{{ trip.chauffeur }}
-						<br>
-
-						{% if trip.chauffeur_filename %}
-							<div class="text-center mb-3">
-								<img src="{{ asset('uploads/photos/' ~ trip.chauffeur_filename) }}" alt="Photo de {{ trip.chauffeur }}" class="rounded-circle" style="width: 80px; height: 80px; object-fit: cover;">
+							<div class="d-flex align-items-center mb-3">
+								<div>
+									{% if avgRating is not null %}
+										<div
+											class="mb-0">
+											{# Affiche jusqu'à 5 étoiles pleines, demi- ou vides #}
+											{% for i in 1..5 %}
+												{% if i <= avgRating|round(0, 'floor') %}
+													<i class="fa-solid fa-star text-warning"></i>
+												{% elseif i - avgRating <= 0.5 %}
+													<i class="fa-solid fa-star-half-stroke text-warning"></i>
+												{% else %}
+													<i class="fa-regular fa-star text-warning"></i>
+												{% endif %}
+											{% endfor %}
+										</div>
+									{% else %}
+										<p class="text-muted mb-0">Pas encore de note</p>
+									{% endif %}
+								</div>
 							</div>
-						{% else %}
-							<div class="text-center mb-3">
-								<img src="{{ asset('assets/images/avatar-default.png') }}" alt="Pas de photo" class="rounded-circle" style="width: 80px; height: 80px; object-fit: cover; opacity: 0.5;">
-							</div>
-						{% endif %}
 
-						{% if avgRating is not null %}
-							Note moyenne :
-							{{ avgRating|round(1, 'floor' )}}/5
-						{% else %}
-							<p>Pas encore de note pour ce chauffeur</p>
-						{% endif %}
-						<br>
+							{% if reviewCount > 0 %}
+								<div class="d-flex align-items-center mb-3">
+									<div class="icon-rounded icon-rounded-sm bg-primary-light flex-shrink-0 me-2">
+										<i class="fa-solid fa-comment"></i>
+									</div>
+									<div>
+										<p class="mb-0">
+											{{ reviewCount }}
+											avis
+										</p>
+									</div>
+								</div>
+							{% endif %}
 
-						Avis :
+
+							<div class="d-flex align-items-center mb-3"></div>
+							<hr>
+							<h6>Préférences</h6>
+
+							{% if preferences is empty %}
+								Aucune préférence
+							{% else %}
+								<ul class="card-text text-muted">
+									{% for libelle in preferences %}
+										<li>{{ libelle }}</li>
+									{% endfor %}
+								</ul>
+							{% endif %}
+
+
+						</div>
+					</div>
+				</div>
+
+				<div class="col-lg-9 ps-lg-5">
+					<h1 class="hero-heading mb-0">Détails du trajet</h1>
+					<div class="text-block">
+						<p>
+							<span class="badge badge-rounded bg-primary p-2 mt-2 text-white">Trajet posté le</span>
+						</p>
+						<p class="text-muted">Blablabla</p>
+					</div>
+					<div class="text-block">
+						<hr>
+						<h4 class="mb-5">
+							<i class="bi bi-geo-fill text-success"></i>
+							{{trip.adresse_depart}}
+							<i class="bi bi-arrow-right mx-1"></i>
+							<i class="bi bi-geo-alt-fill text-danger"></i>
+							{{trip.adresse_arrivee}}</h4>
+					</div>
+					<div class="text-block">
+						<hr>
+
+						<h5 class="mb-4">Les avis de
+							{{ trip.chauffeur }}</h5>
+
+
 						{% if reviews is empty %}
-							Aucun avis pour ce chauffeur
+							<p class="subtitle text-sm">Aucun avis pour ce chauffeur</p>
 						{% else %}
 							{% for a in reviews %}
-								{{a.pseudo_passager}}
-								: le
-								{{ a.date_creation|date('d/m/Y H:i')}}. Note :
-								{{a.note}}/5
 
-								{% if a.commentaire %}
-									{{a.commentaire}}
-								{% endif %}
+
+								<div class="d-flex d-block d-sm-flex review mb-3 mt-1">
+
+									<div class="text-md-center flex-shrink-0 me-4 me-xl-5">
+										{% if a.photo_passager %}
+											<img class="d-block avatar avatar-xl p-2 mb-2" src="{{ asset('uploads/photos/' ~ a.photo_passager) }}" alt="Photo de {{ a.pseudo_passager}}">
+										{% else %}
+											<img class="d-block avatar avatar-xl p-2 mb-2" src="{{ asset('assets/images/avatar-default.png') }}" alt="Pas de photo">
+										{% endif %}
+
+										<span class="text-uppercase text-muted text-sm">{{ a.date_creation|date('d/m/Y')}}</span>
+									</div>
+									<div>
+										<h6 class="mt-2 mb-1">{{a.pseudo_passager}}</h6>
+										<div class="mb-2">
+											{% for i in 1..5 %}
+												{% if i <= a.note|round(0, 'floor') %}
+													<i class="fa-solid fa-star text-warning" aria-hidden="true"></i>
+												{% elseif i - a.note <= 0.5 %}
+													<i class="fa-solid fa-star-half-stroke text-warning" aria-hidden="true"></i>
+												{% else %}
+													<i class="fa-regular fa-star text-warning" aria-hidden="true"></i>
+												{% endif %}
+											{% endfor %}
+										</div>
+										{% if a.commentaire %}
+											<p class="text-muted text-sm">{{a.commentaire}}</p>
+										{% endif %}
+
+									</div>
+
+								</div>
+								<hr>
+
 							{% endfor %}
 						{% endif %}
-						<br>
 
-						Préférences :
-						{% if preferences is empty %}
-							Aucune préférence renseignée par le chauffeur.
-						{% else %}
-							{% for libelle in preferences %}
-								{{ libelle }}
-							{% endfor %}
-						{% endif %}
-					</p>
+
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</section>
+
+
+	<h2>
+
+
+		<div class="card text-center">
+
+
+			<div class="card-body">
+
+				<h5 class="card-title">
+					<i class="bi bi-geo-fill text-success"></i>
+					{{trip.adresse_depart}}
+					<i class="bi bi-arrow-right mx-1"></i>
+					<i class="bi bi-geo-alt-fill text-danger"></i>
+					{{trip.adresse_arrivee}}</h5>
+
+				<h6 class="card-subtitle mb-2 text-body-secondary">
+					<i class="bi bi-calendar3"></i>
+					<p>Départ
+						{{ trip.date_depart|date('d/m/Y H:i') }}</p>
+					<p>Arrivée
+						{{ trip.date_arrivee|date('d/m/Y H:i') }}</p>
+				</h6>
+
+
+				<p class="card-text mb-2">
+					<i class="bi bi-coin"></i>
+					{{ trip.prix }}
+					crédits
+					<br>
+					<i class="bi bi-people-fill"></i>
+					{{ trip.places_restantes }}
+					place{{ trip.places_restantes > 1 ? 's' }}
+					restante{{ trip.places_restantes > 1 ? 's' }}
+
+					{% if trip.vehicule_energie == 'electrique' %}
+						<span class="badge bg-success fs-6">
+							<i class="bi bi-tree"></i>
+							Voyage écologique
+						</span>
+					{% endif %}
+				</p>
+
+				<div>
+					<diV></p>
 				</div>
 
 

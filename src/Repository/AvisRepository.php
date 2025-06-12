@@ -29,7 +29,8 @@ class AvisRepository extends ServiceEntityRepository
             DATE_FORMAT(a.date_creation, '%Y-%m-%d %H:%i') AS date_creation,
             a.statut_validation AS statut_validation,
             u.id AS id_passager,
-            u.pseudo as pseudo_passager
+            u.pseudo as pseudo_passager,
+            u.photo_filename AS photo_passager
         FROM avis AS a
         INNER JOIN reservation AS r ON a.reservation_id= r.id
         INNER JOIN trajet AS t ON r.trajet_id= t.id
