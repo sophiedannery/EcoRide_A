@@ -23,11 +23,8 @@
 							</a>
 							<h5>{{ trip.chauffeur }}</h5>
 							<p class="text-muted text-sm mb-0"></p>
-
 						</div>
 						<div class="card-body p-4">
-
-
 							<div class="d-flex align-items-center mb-3">
 								<div>
 									{% if avgRating is not null %}
@@ -63,12 +60,9 @@
 									</div>
 								</div>
 							{% endif %}
-
-
 							<div class="d-flex align-items-center mb-3"></div>
 							<hr>
 							<h6>Préférences</h6>
-
 							{% if preferences is empty %}
 								Aucune préférence
 							{% else %}
@@ -78,51 +72,95 @@
 									{% endfor %}
 								</ul>
 							{% endif %}
-
-
 						</div>
 					</div>
 				</div>
 
 				<div class="col-lg-9 ps-lg-5">
 					<h1 class="hero-heading mb-0">Détails du trajet</h1>
+
 					<div class="text-block">
 						<p>
-							<span class="badge badge-rounded bg-primary p-2 mt-2 text-white">Trajet posté le</span>
+							{% if trip.vehicule_energie == 'electrique' %}
+								<span class="badge badge-rounded bg-success p-2 mt-2 text-white">VOYAGE ECOLOGIQUE</span>
+							{% endif %}
 						</p>
-						<p class="text-muted">Blablabla</p>
-					</div>
-					<div class="text-block">
-						<hr>
-						<h4 class="mb-5">
-							<i class="bi bi-geo-fill text-success"></i>
-							{{trip.adresse_depart}}
-							<i class="bi bi-arrow-right mx-1"></i>
-							<i class="bi bi-geo-alt-fill text-danger"></i>
-							{{trip.adresse_arrivee}}</h4>
-					</div>
-					<div class="text-block">
-						<hr>
+					</p>
+					<p class="text-muted">Blablabla</p>
+				</div>
 
+				<div class="text-block">
+					<hr>
+					<p class="subtitle">{{ trip.date_depart|date('d/m/Y H:i') }}</p>
+					<h1 class="hero-heading mb-3">{{trip.adresse_depart}}
+						-
+						{{trip.adresse_arrivee}}</h1>
+				</div>
+
+
+				<div class="text-block">
+					<hr>
+					<p class="subtitle">{{ trip.date_depart|date('d/m/Y H:i') }}</p>
+					<p class="subtitle">{{ trip.date_arrivee|date('d/m/Y H:i') }}</p>
+
+				</div>
+
+				<div class="text-block">
+					<hr>
+					<i class="bi bi-coin"></i>
+					{{ trip.prix }}
+					crédits
+					<br>
+					<i class="bi bi-people-fill"></i>
+					{{ trip.places_restantes }}
+					place{{ trip.places_restantes > 1 ? 's' }}
+					restante{{ trip.places_restantes > 1 ? 's' }}
+
+				</div>
+
+
+				<div class="text-block">
+					<hr>
+					<br>
+					Marque :
+					{{trip.vehicule_marque}}
+					<br>
+					Modèle :
+					{{trip.vehicule_modele}}
+					<br>
+					Energie :
+					{{ trip.vehicule_energie}}
+
+
+				</div>
+
+				<form method="post" action="{{ path('app_trajet_participer', {id: trip.id_trajet} ) }}" onsubmit="return confirm('Confirmez-vous votre participation ? Coût : {{ trip.prix}} crédits');">
+					<input type="hidden" name="_token" value="{{ csrf_token('participate' ~ trip.id_trajet) }}">
+
+					{% set notEnoughCredits = app.user.credits is not null and app.user.credits < trip.prix %}
+
+					<button class="btn btn-success" {% if notEnoughCredits %} disabled title="Crédits insuffisants" {% endif %}>Participer à ce trajet</button>
+					{% if notEnoughCredits %}
+						<p>Crédits insuffisants
+						{% endif %}
+					</form>
+
+
+					<div class="text-block">
+						<hr>
 						<h5 class="mb-4">Les avis de
 							{{ trip.chauffeur }}</h5>
-
-
 						{% if reviews is empty %}
 							<p class="subtitle text-sm">Aucun avis pour ce chauffeur</p>
 						{% else %}
 							{% for a in reviews %}
-
-
 								<div class="d-flex d-block d-sm-flex review mb-3 mt-1">
-
 									<div class="text-md-center flex-shrink-0 me-4 me-xl-5">
 										{% if a.photo_passager %}
 											<img class="d-block avatar avatar-xl p-2 mb-2" src="{{ asset('uploads/photos/' ~ a.photo_passager) }}" alt="Photo de {{ a.pseudo_passager}}">
 										{% else %}
 											<img class="d-block avatar avatar-xl p-2 mb-2" src="{{ asset('assets/images/avatar-default.png') }}" alt="Pas de photo">
 										{% endif %}
-
 										<span class="text-uppercase text-muted text-sm">{{ a.date_creation|date('d/m/Y')}}</span>
 									</div>
 									<div>
@@ -141,9 +179,7 @@
 										{% if a.commentaire %}
 											<p class="text-muted text-sm">{{a.commentaire}}</p>
 										{% endif %}
-
 									</div>
-
 								</div>
 								<hr>
 
@@ -155,95 +191,13 @@
 				</div>
 
 			</div>
+			<div class="text-center">
+				<a class="btn btn-secondary btn-lg px-4 me-md-2" href="/">Retour à l'accueil</a>
+			</div>
+
 		</div>
+
 	</section>
 
 
-	<h2>
-
-
-		<div class="card text-center">
-
-
-			<div class="card-body">
-
-				<h5 class="card-title">
-					<i class="bi bi-geo-fill text-success"></i>
-					{{trip.adresse_depart}}
-					<i class="bi bi-arrow-right mx-1"></i>
-					<i class="bi bi-geo-alt-fill text-danger"></i>
-					{{trip.adresse_arrivee}}</h5>
-
-				<h6 class="card-subtitle mb-2 text-body-secondary">
-					<i class="bi bi-calendar3"></i>
-					<p>Départ
-						{{ trip.date_depart|date('d/m/Y H:i') }}</p>
-					<p>Arrivée
-						{{ trip.date_arrivee|date('d/m/Y H:i') }}</p>
-				</h6>
-
-
-				<p class="card-text mb-2">
-					<i class="bi bi-coin"></i>
-					{{ trip.prix }}
-					crédits
-					<br>
-					<i class="bi bi-people-fill"></i>
-					{{ trip.places_restantes }}
-					place{{ trip.places_restantes > 1 ? 's' }}
-					restante{{ trip.places_restantes > 1 ? 's' }}
-
-					{% if trip.vehicule_energie == 'electrique' %}
-						<span class="badge bg-success fs-6">
-							<i class="bi bi-tree"></i>
-							Voyage écologique
-						</span>
-					{% endif %}
-				</p>
-
-				<div>
-					<diV></p>
-				</div>
-
-
-				<diV>
-					<h6 class="cart-title">
-						A propos du véhicule
-					</h6>
-					<p class="card-text mb-2">
-						<br>
-						Marque :
-						{{trip.vehicule_marque}}
-						<br>
-						Modèle :
-						{{trip.vehicule_modele}}
-						<br>
-						Energie :
-						{{ trip.vehicule_energie}}
-					</p>
-				</div>
-
-			</div>
-
-
-			<form method="post" action="{{ path('app_trajet_participer', {id: trip.id_trajet} ) }}" onsubmit="return confirm('Confirmez-vous votre participation ? Coût : {{ trip.prix}} crédits');">
-				<input type="hidden" name="_token" value="{{ csrf_token('participate' ~ trip.id_trajet) }}">
-
-				{% set notEnoughCredits = app.user.credits is not null and app.user.credits < trip.prix %}
-
-				<button class="btn btn-success" {% if notEnoughCredits %} disabled title="Crédits insuffisants" {% endif %}>Participer à ce trajet</button>
-				{% if notEnoughCredits %}
-					<p>Crédits insuffisants
-					{% endif %}
-				</form>
-
-
-				<div class="card-footer text-body-secondary">
-					Trajet posté le</div>
-
-			</div>
-
-			<div class="text-center m-5">
-				<a class="btn btn-secondary btn-lg px-4 me-md-2" href="/">Retour à l'accueil</a>
-			</div>
-		{% endblock %}
+</div>{% endblock %}
