@@ -230,6 +230,23 @@
     align-items: center;
     justify-content: center;
   }
+
+.dark-overlay {
+  position: relative;
+}
+  .card-img-overlay-bottom {
+    position: absolute;
+    right: 1.2rem;
+    bottom: 1.2rem;
+    left: 1.2rem;
+  }
+
+  .card-img-overlay-top {
+    position: absolute;
+    top: 1.2rem;
+    right: 1.2rem;
+    left: 1.2rem;
+  }
   
   /* .derniers_trajets{
     background-color: #10303e;

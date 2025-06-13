@@ -5,148 +5,206 @@
 
 {% block body %}
 
-	<form method="GET" action="{{ path('app_search') }}" class=" p-4 p-md-4 border rounded-3 bg-body-tertiary">
-		<div class="form-floating mb-3 ">
-			<input name="depart" type="text" class="form-control" required id="depart" value="{{ app.request.query.get('depart') }}">
-			<label id="depart">Départ</label>
-		</div>
-		<div class="form-floating mb-3">
-			<input name="arrivee" type="text" class="form-control" required id="arrivee" value="{{ app.request.query.get('arrivee') }}">
-			<label id="arrivee">Arrivée</label>
-		</div>
-		<div class="form-floating mb-3">
-			<input name="date" type="date" class="form-control" required id="date" value="{{ app.request.query.get('date') }}">
-			<label id="date">Date</label>
-		</div>
+	<section>
+		<div class="container py-5 px-lg-5">
 
-		<button class="w-100 btn btn-lg btn-primary" type="submit">
-			<i class="bi bi-search"></i>
-			Rechercher</button>
-		<hr class="my-4">
-
-		<div class="row gx-3 gy-2 align-items-end">
-			<div class="col-auto">
-				<div class="form-check">
-					<input class="form-check-input" type="checkbox" name="eco" id="eco" value="1" {{ app.request.query.get('eco') ? 'checked' : '' }}>
-					<label class="form-check-label" for="eco">Voyage écologique</label>
+			<div class="row border-bottom mb-4">
+				<div class="col-12">
+					<h1 class="display-4 fw-bold text-serif mb-4">Résultats de votre recherche</h1>
 				</div>
 			</div>
-			<div class="col-auto">
-				<label for="maxPrice" class="form-label">Prix</label>
-				<input type="number" class="form-control" name="maxPrice" min="0" step="1" value="{{app.request.query.get('maxPrice') }}">
-			</div>
-			<div class="col-auto">
-				<label for="maxDurationTime" class="form-label">Durée max</label>
-				<input type="time" class="form-control" name="maxDurationTime" id="maxDurationTime" step="60" value="{{app.request.query.get('maxDurationTime') }}">
-			</div>
-			<div class="col-auto">
-				<label for="minRating" class="form-label">Note minimal</label>
-				<input type="number" class="form-control" name="minRating" id="minRating" min="0" max="5" step="0.5" value="{{app.request.query.get('minRating') }}">
-			</div>
-			<div class="col-auto">
-				<button type="submit" class="btn btn-outline-primary">Filtrer les résultats</button>
-			</div>
-		</div>
-	</form>
 
+			<div class="row">
 
-	{% if trajets is empty %}
-		<div class="text-center m-5">
-			<h2>Aucun trajet trouvé</h2>
-
-			{% if nextDate is not null %}
-				<p>Le prochain trajet disponible est prévu le
-					{{ nextDate|date('d/m/Y H:i')}}</p>
-				<a href="{{ path('app_search', {depart: app.request.query.get('depart'), arrivee: app.request.query.get('arrivee'), date: nextDate|date('Y-m-d') }) }}" class="btn btn-outline-primary">Rechercher pour cette date</a>
-
-			{% endif %}
-
-
-		</div>
-
-	{% else %}
-
-		<div classe="row row-cols-1 row-cols-md-2 g-4">
-			{% for t in trajets %}
-				<div class="col m-5">
-					<div class="card h-100 shadow-sm">
-						<div class="card-body">
-							<h5 class="card-title">
-								<i class="bi bi-geo-fill text-success"></i>
-								{{t.adresse_depart}}
-								<i class="bi bi-arrow-right mx-1"></i>
-								<i class="bi bi-geo-alt-fill text-danger"></i>
-								{{t.adresse_arrivee}}
-							</h5>
-							<p class="card-text mb-2">
-								<i class="bi bi-calendar3"></i>
-								Départ :
-								{{ t.date_depart|date('d/m/Y H:i') }}
-							</p>
-							<p class="card-text mb-2">
-								<i class="bi bi-calendar3"></i>
-								Arrivée :
-								{{ t.date_arrivee|date('d/m/Y H:i') }}
-							</p>
-							<div class="d-flex justify-content-between align-items-center">
-								<span class="badge bg-success fs-5">
-									<i class="bi bi-coin"></i>
-									{{ t.prix }}
-									crédits
-								</span>
-								<span>
-									<i class="bi bi-people-fill"></i>
-									{{ t.places_restantes }}
-									place{{ t.places_restantes > 1 ? 's' }}
-								</span>
-
-								<span>
-									<i class="bi bi-person-circle"></i>
-									{{ t.chauffeur }}
-
-									{% if t.chauffeur_filename %}
-										<div class="text-center mb-3">
-											<img src="{{ asset('uploads/photos/' ~ t.chauffeur_filename) }}" alt="Photo de {{ t.chauffeur }}" class="rounded-circle" style="width: 80px; height: 80px; object-fit: cover;">
-										</div>
-									{% else %}
-										<div class="text-center mb-3">
-											<img src="{{ asset('assets/images/avatar-default.png') }}" alt="Pas de photo" class="rounded-circle" style="width: 80px; height: 80px; object-fit: cover; opacity: 0.5;">
-										</div>
-									{% endif %}
-
-								</span>
-								{% if t.avg_rating > 0 %}
-									<span>
-										Note :
-										{{ t.avg_rating|round(1)}}/5
-									</span>
-								{% else %}
-									Pas encore de note pour ce chauffeur.
-								{% endif %}
-
-
-								{% if t.energie == 'electrique' %}
-									<span class="badge bg-success fs-6">
-										<i class="bi bi-tree"></i>
-										Voyage écologique
-									</span>
-								{% endif %}
-
-							</div>
-							<div class="card-footer bg-transparent border-top-0 text-center">
-								<a href="{{path('app_trajet_detail', {id: t.id_trajet} ) }}" class="btn btn-outline-primary btn-sm">
-									Voir le trajet
-								</a>
+				<div class="col-lg-3 pt-3">
+					<form method="GET" action="{{ path('app_search') }}" class="pe-xl-3">
+						<div class="mb-4">
+							<label id="depart" class="form-label">Départ</label>
+							<input name="depart" type="text" class="form-control pe-4" required id="depart" value="{{ app.request.query.get('depart') }}">
+						</div>
+						<div class="mb-4">
+							<label id="arrivee" class="form-label">Arrivée</label>
+							<input name="arrivee" type="text" class="form-control pe-4" required id="arrivee" value="{{ app.request.query.get('arrivee') }}">
+						</div>
+						<div class="mb-4">
+							<label id="date" class="form-label">Date</label>
+							<input name="date" type="date" class="form-control pe-4" required id="date" value="{{ app.request.query.get('date') }}">
+						</div>
+						<div class="mb-4">
+							<button class="w-100 btn btn-lg btn-primary" type="submit">
+								<i class="bi bi-search text-white"></i>
+								Rechercher</button>
+						</div>
+						<div class="mb-4">
+							<div class="form-check">
+								<input class="form-check-input" type="checkbox" name="eco" id="eco" value="1" {{ app.request.query.get('eco') ? 'checked' : '' }}>
+								<label class="form-check-label" for="eco">Voyage écologique</label>
 							</div>
 						</div>
-					</div>
+						<div class="mb-4">
+							<label for="maxPrice" class="form-label">Prix</label>
+							<input type="number" class="form-control" name="maxPrice" min="0" step="1" value="{{app.request.query.get('maxPrice') }}">
+						</div>
+						<div class="mb-4">
+							<label for="maxDurationTime" class="form-label">Durée max</label>
+							<input type="time" class="form-control" name="maxDurationTime" id="maxDurationTime" step="60" value="{{app.request.query.get('maxDurationTime') }}">
+						</div>
+						<div class="mb-4">
+							<label for="minRating" class="form-label">Note minimal</label>
+							<input type="number" class="form-control" name="minRating" id="minRating" min="0" max="5" step="0.5" value="{{app.request.query.get('minRating') }}">
+						</div>
+						<div class="mb-4">
+							<button type="submit" class="w-100 btn btn-lg btn-outline-primary">Filtrer les résultats</button>
+						</div>
+					</form>
 				</div>
-			{% endfor %}
+
+				<div class="col-lg-9">
+
+
+					{% if trajets is empty %}
+						<div class="text-center m-5">
+							<h2>Aucun trajet trouvé</h2>
+
+							{% if nextDate is not null %}
+								<p>Le prochain trajet disponible est prévu le
+									{{ nextDate|date('d/m/Y H:i')}}</p>
+								<a href="{{ path('app_search', {depart: app.request.query.get('depart'), arrivee: app.request.query.get('arrivee'), date: nextDate|date('Y-m-d') }) }}" class="btn btn-outline-primary">Rechercher pour cette date</a>
+
+							{% endif %}
+
+
+						</div>
+
+					{% else %}
+
+						{% set resultCount = trajets|length %}
+
+						<div class="d-flex justify-content-between align-items-center flex-column flex-md-row mb-4">
+							<div class="me-3">
+								<p class="mb-3 mb-md-0">
+									<strong>{{ resultCount }}</strong>
+									résultat{{ resultCount > 1 ? 's' : '' }}</p>
+							</div>
+							<div></div>
+						</div>
+						<div class="row">
+							{% for t in trajets %}
+
+								<div class="col-sm-6 col-xl-4 mb-5 hover-animate">
+
+									<div class="card h-100 border-0 shadow">
+										<div class="card-body">
+											{% if t.energie == 'electrique' %}
+												<div class="text-center mt-2 mb-5">
+													<span class="badge bg-success fs-6">
+														<i class="fa-solid fa-leaf"></i>
+														Voyage écologique
+													</span>
+												</div>
+											{% endif %}
+											<div class="row align-items-center justify-content-center mt-3">
+												<div class="col-4">
+													{% if t.chauffeur_filename %}
+														<div class="text-center mb-3">
+															<img src="{{ asset('uploads/photos/' ~ t.chauffeur_filename) }}" alt="Photo de {{ t.chauffeur }}" class="rounded-circle" style="width: 80px; height: 80px; object-fit: cover;">
+														</div>
+													{% else %}
+														<div class="text-center mb-3">
+															<img src="{{ asset('assets/images/avatar-default.png') }}" alt="Pas de photo" class="rounded-circle" style="width: 80px; height: 80px; object-fit: cover; opacity: 0.5;">
+														</div>
+													{% endif %}
+												</div>
+												<div class="col-8">
+													<h5 class="card-title">{{ t.chauffeur }}</h5>
+													<h6 class="card-subtitle mb-2 text-body-secondary">
+														{% if t.avg_rating > 0 %}
+															<div class="mb-2">
+																{% for i in 1..5 %}
+																	{% if i <= t.avg_rating|round(0, 'floor') %}
+																		<i class="fa-solid fa-star text-warning"></i>
+																	{% elseif i - t.avg_rating <= 0.5 %}
+																		<i class="fa-solid fa-star-half-stroke text-warning"></i>
+																	{% else %}
+																		<i class="fa-regular fa-star text-warning"></i>
+																	{% endif %}
+																{% endfor %}
+
+															</div>
+														{% else %}
+															<p class="text-muted">Pas encore de note.</p>
+														{% endif %}
+													</h6>
+												</div>
+											</div>
+
+											<p class="card-subtitle my-4 text-body-secondary text-center">
+												<i class="bi bi-geo-fill text-success"></i>
+												{{t.adresse_depart}}
+												<i class="bi bi-arrow-right mx-1"></i>
+												<i class="bi bi-geo-alt-fill text-danger"></i>
+												{{t.adresse_arrivee}}</p>
+											<p class="card-text">
+												<strong>Départ :</strong>
+												{{ t.date_depart|date('d/m/Y') }}
+												à
+												{{ t.date_depart|date('H:i') }}</p>
+											<p class="card-text">
+												<strong>Arrivée :</strong>
+												{{ t.date_arrivee|date('d/m/Y') }}
+												à
+												{{ t.date_arrivee|date('H:i') }}</p>
+											<p class="card-text">
+												<strong>Prix :</strong>
+												{{ t.prix}}
+												crédits
+											</p>
+											<p class="card-text">
+												<strong>Place{{ t.places_restantes > 1 ? 's' : '' }}
+													:</strong>
+												{{ t.places_restantes}}
+											</p>
+
+										</div>
+										<div class="card-footer bg-transparent border-top-0 text-center mb-3">
+											<a href="{{path('app_trajet_detail', {id: t.id_trajet} ) }}" class="btn btn-outline-primary btn-sm">
+												Voir le trajet
+											</a>
+										</div>
+									</div>
+
+								</div>
+							{% endfor %}
+
+						</div>
+					</div>
+
+					{# <div aria-label="Page navigation">
+																																														<ul class="pagination pagination-template d-flex justify-content-center">
+																																															<li class="page-item">
+																																																<a class="page-link" href"#">
+																																																	<i class="fa fa-angle-left"></i>
+																																																</a>
+																																															</li>
+																																															<li class="page-item active">
+																																																<a class="page-link" href"#">1</a>
+																																															</li>
+																																															<li class="page-item">
+																																																<a class="page-link" href"#">2</a>
+																																															</li>
+																																															<li class="page-item">
+																																																<a class="page-link" href"#">
+																																																	<i class="fa fa-angle-right"></i>
+																																																</a>
+																																															</li>
+																																														</div>
+																																													</div> #}
+				{% endif %}
+			</div>
+		</section>
+
+
+		<div class="text-center m-5">
+			<a class="btn btn-primary btn-lg px-4 me-md-2" href="/">Retour à l'accueil</a>
 		</div>
-	{% endif %}
-
-	<div class="text-center m-5">
-		<a class="btn btn-primary btn-lg px-4 me-md-2" href="/">Retour à l'accueil</a>
-	</div>
-
-{% endblock %}
+	{% endblock %}
