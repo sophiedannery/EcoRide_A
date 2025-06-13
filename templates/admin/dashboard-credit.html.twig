@@ -4,20 +4,39 @@
 {% endblock %}
 
 {% block body %}
-	<h1>Crédits par jour, du
-		{{ labels[0]|date('d/m/Y') }}
-		au
-		{{ labels[6]|date('d/m/Y') }}</h1>
 
-	<p>Si le graphique ne s'affiche pas, actualisez-la page.</p>
+	<section class="py-5">
+		<div class="container">
+			<div class="card shadow mb-4">
+				<div class="card-header bg-white border-0 text-center py-3">
+					<h2>Crédits gagnés par jour</h2>
+					<h3 class="h5 mb-0">
+						Semaine du
+						{{ labels[0]|date('d/m/Y') }}
+						au
+						{{ labels[6]|date('d/m/Y') }}
+					</h3>
+				</div>
+				<div class="card-body">
+					<div class="d-flex justify-content-center gap-2 mb-4">
+						<a href="{{ path('app_admin_dashboard_credit', { week_start: preWeek }) }}" class="btn btn-outline-secondary" data-turbo="false">
+							← Semaine précédente
+						</a>
+						<a href="{{ path('app_admin_dashboard_credit', { week_start: nextWeek }) }}" class="btn btn-outline-secondary" data-turbo="false">
+							Semaine suivante →
+						</a>
+					</div>
+					<div class="position-relative" style="padding-top: 40%; /* ratio 16:9 */">
+						<canvas id="creditsChart" class="position-absolute top-0 start-0 w-100 h-100"></canvas>
+					</div>
+				</div>
+			</div>
 
-
-	<a href="{{ path('app_admin_dashboard_credit', { week_start: preWeek}) }}" class="btn btn_outline-secondary" data-turbo="false">Semaine précédente</a>
-	<a href="{{ path('app_admin_dashboard_credit', { week_start: nextWeek}) }}" class="btn btn-outline-secondary" data-turbo="false">Semaine suivante</a>
-
-	<canvas id="creditsChart" width="800" height="400"></canvas>
-
-	<a href="{{ path('app_admin')}}">retour</a>
+			<div class="text-center m-5">
+				<a class="btn btn-outline-primary btn-lg px-4 me-md-2" href="{{ path('app_admin')}}">Retour</a>
+			</div>
+		</div>
+	</section>
 
 
 	{% block javascripts %}

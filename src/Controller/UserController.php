@@ -26,14 +26,44 @@ final class UserController extends AbstractController
         ]);
     }
 
+
+
+    #[Route('/admin/employee_edit', name: 'app_employee_edit', methods: ['GET'])]
+    public function employeeEdit(UserRepository $userRepository): Response
+    {
+        $employees = $userRepository->findByRole('ROLE_EMPLOYEE');
+
+        return $this->render('admin/employee_edit.html.twig', [
+            'users' => $employees,
+        ]);
+    }
+
+
+    #[Route('/admin/user_edit', name: 'app_user_admin_delete', methods: ['GET'])]
+    public function userEdit(UserRepository $userRepository): Response
+    {
+        $users = $userRepository->findByRole('ROLE_USER');
+
+        return $this->render('admin/user_admin_edit.html.twig', [
+            'users' => $users,
+        ]);
+    }
+
+
+
     #[Route('/new', name: 'app_user_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
     {
         $user = new User();
         $form = $this->createForm(UserForm::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $plainPassword = $form->get('password')->getData();
+
+            $hashed = $passwordHasher->hashPassword($user, $plainPassword);
+            $user->setPassword($hashed);
 
 
 
@@ -43,7 +73,7 @@ final class UserController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_employee_edit', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('user/new.html.twig', [
@@ -51,6 +81,9 @@ final class UserController extends AbstractController
             'form' => $form,
         ]);
     }
+
+
+
 
     #[Route('/{id}', name: 'app_user_show', methods: ['GET'])]
     public function show(User $user): Response
@@ -86,6 +119,6 @@ final class UserController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_admin', [], Response::HTTP_SEE_OTHER);
     }
 }

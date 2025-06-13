@@ -1,11 +1,56 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New User{% endblock %}
+{% block title %}Compte employée
+{% endblock %}
 
 {% block body %}
-    <h1>Create new User</h1>
+	<section class="py-5">
+		<div class="container">
+			<div class="row justify-content-center">
+				<div class="col-12 col-md-8 col-lg-6">
+					<div class="card shadow">
+						<div class="card-header bg-white border-0 text-center py-3">
+							<h2 class="h5 mb-0">Créer un nouveau compte employée</h2>
+						</div>
+						<div class="card-body">
 
-    {{ include('user/_form.html.twig') }}
 
-    <a href="{{ path('app_user_index') }}">back to list</a>
+							{{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+							{{ form_errors(form) }}
+
+							<div class="mb-3">
+								{{ form_label(form.email, 'Email', {'label_attr': {'class': 'form-label'}}) }}
+								{{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
+								{{ form_errors(form.email) }}
+							</div>
+
+							<div class="mb-3">
+								{{ form_label(form.pseudo, 'Pseudo', {'label_attr': {'class': 'form-label'}}) }}
+								{{ form_widget(form.pseudo, {'attr': {'class': 'form-control'}}) }}
+								{{ form_errors(form.pseudo) }}
+							</div>
+
+							<div class="mb-3">
+								{{ form_label(form.password, 'Mot de passe', {'label_attr': {'class': 'form-label'}}) }}
+								{{ form_widget(form.password, {'attr': {'class': 'form-control'}}) }}
+								{{ form_errors(form.password) }}
+							</div>
+
+
+							<div class="card-footer bg-white border-0 text-center py-3">
+								<button type="submit" class="btn btn-primary">
+									{{ button_label|default('Créer') }}
+								</button>
+								<a href="{{ path('app_user_index') }}" class="btn btn-outline-secondary">
+									Retour
+								</a>
+							</div>
+							{{ form_end(form) }}
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
 {% endblock %}

@@ -4,12 +4,166 @@
 {% endblock %}
 
 {% block body %}
-	<h1>Bienvenue, Admin</h1>
 
-	<a href="{{ path('app_user_index')}}">Gérer les user</a><br>
-	<a href="{{ path('app_admin_dashboard')}}">Covoiturage par jour</a><br>
-	<a href="{{ path('app_admin_dashboard_credit')}}">Crédits par jour</a>
+	<section class="py-5">
+		<div class="container">
+			<h1 class="hero-heading mb-0">Bonjour
+				{{app.user.pseudo}}</h1>
+			<p class="text-muted mt-3 mb-5">Tableau de bord</p>
 
-	<h2>{{totalCommission}}
-		crédits gagnés à ce jour.</h2>
-{% endblock %}
+			<div class="row mb-5">
+
+
+				<div class="col-12 col-sm-4 mb-4">
+					<div class="card h-100 border-0 shadow hover-animate">
+						<div class="card-body">
+							<div class="icon-rounded bg-secondary-light mb-3">
+								<i class="fa-solid fa-user-tie"></i>
+							</div>
+							<h5 class="card-title mb-3">
+								<a class="text-decoration-none text-dark stretched-link" href="{{ path('app_employee_edit')}}">{{ nbeEmployees }}
+									employée{{ nbeEmployees > 1 ? 's' : '' }}</a>
+							</h5>
+							<p class="text-muted card-text text-sm">Gérer les comptes employées</p>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-12 col-sm-4 mb-4">
+					<div class="card h-100 border-0 shadow hover-animate">
+						<div class="card-body">
+							<div class="icon-rounded bg-secondary-light mb-3">
+								<i class="fa-solid fa-user-xmark"></i>
+							</div>
+							<h5 class="card-title mb-3">
+								<a class="text-decoration-none text-dark stretched-link" href="{{ path('app_user_admin_delete')}}">{{ nbeUtilisateur }}
+									utilisateur{{ nbeUtilisateur > 1 ? 's' : '' }}</a>
+							</h5>
+							<p class="text-muted card-text text-sm">Suspendre un compte utilisateur</p>
+						</div>
+					</div>
+				</div>
+
+
+				<div class="col-12 col-sm-4 mb-4">
+					<div class="card h-100 border-0 shadow hover-animate">
+						<div class="card-body">
+							<div class="icon-rounded bg-secondary-light mb-3">
+								<i class="fa-solid fa-coins"></i>
+							</div>
+							<h5 class="card-title mb-3">
+								<a class="text-decoration-none text-dark stretched-link" href="{{ path('app_admin_dashboard_credit')}}">{{totalCommission}}
+									crédits gagnés à ce jour</a>
+							</h5>
+							<p class="text-muted card-text text-sm">Voir les statistiques →</p>
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+
+			<div class="card shadow mb-4">
+				<div class="card-header bg-white border-0 text-center py-3">
+					<h2>Nombre de trajets par jour</h2>
+					<h3 class="h5 mb-0">
+						Semaine du
+						{{ labels[0]|date('d/m/Y') }}
+						au
+						{{ labels[6]|date('d/m/Y') }}
+					</h3>
+				</div>
+				<div class="card-body">
+					<div class="d-flex justify-content-center gap-2 mb-4">
+						<a href="{{ path('app_admin', { week_start: preWeek }) }}" class="btn btn-outline-secondary" data-turbo="false">
+							← Semaine précédente
+						</a>
+						<a href="{{ path('app_admin', { week_start: nextWeek }) }}" class="btn btn-outline-secondary" data-turbo="false">
+							Semaine suivante →
+						</a>
+					</div>
+					<div class="position-relative" style="padding-top: 40%; /* ratio 16:9 */">
+						<canvas id="trajetsChart" class="position-absolute top-0 start-0 w-100 h-100"></canvas>
+					</div>
+				</div>
+			</div>
+
+
+		</div>
+
+	</div>
+</section>
+
+{% block javascripts %}
+	{{ parent() }}
+
+
+	<script>
+
+		if (typeof window.trajetsChartInstance === 'undefined') {
+window.trajetsChartInstance = null;
+}
+
+function initTrajetsChart() {
+if (window.trajetsChartInstance) {
+window.trajetsChartInstance.destroy();
+}
+
+const labelsRaw = {{ labels|json_encode|raw }};
+const dataValuesRaw = {{ data|json_encode|raw }};
+
+const labels = labelsRaw.map(dateStr => {
+const d = new Date(dateStr);
+const dd = String(d.getDate()).padStart(2, '0');
+const mm = String(d.getMonth() + 1).padStart(2, '0');
+return dd + '/' + mm;
+});
+
+const dataValues = dataValuesRaw;
+
+const ctx = document.getElementById('trajetsChart').getContext('2d');
+
+window.trajetsChartInstance = new Chart(ctx, {
+type: 'bar',
+data: {
+labels: labels,
+datasets: [
+{
+label: 'Nombre de covoiturages',
+data: dataValues,
+backgroundColor: 'rgba(75, 192, 192, 0.5)',
+borderColor: 'rgba(75, 192, 192, 1)',
+borderWidth: 1
+}
+]
+},
+options: {
+scales: {
+x: {
+title: {
+display: true,
+text: 'Jour'
+}
+},
+y: {
+beginAtZero: true,
+max: 10,
+ticks: {
+stepSize: 1
+},
+title: {
+display: true,
+text: 'Nombre de trajets'
+}
+}
+}
+}
+});
+
+}
+
+document.addEventListener('DOMContentLoaded', initTrajetsChart);
+	</script>
+
+
+{% endblock %}{% endblock %}
