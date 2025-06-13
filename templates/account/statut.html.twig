@@ -6,76 +6,72 @@
 {% block body %}
 
 
-	<div class="card text-center">
-		<div class="card-header">
-			<ul class="nav nav-tabs card-header-tabs">
-				<li class="nav-item">
-					<a class="nav-link" href="{{ path ('app_account') }}">Mon profil</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="{{ path ('app_account_reservations') }}">Mes réservations</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="#">Mes trajets</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="{{ path ('app_account_vehicules') }}">Mes véhicules</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="{{ path ('app_account_preferences') }}">Mes préférences</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link active" aria-current="true" href="{{ path ('app_account_statut') }}">Mon statut</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="{{ path ('app_account_avis') }}">Mes avis</a>
-				</li>
-			</ul>
-		</div>
-		<div class="card-body">
-			<h5 class="card-title">
-				{% if app.user.statut == 'passager_chauffeur' %}
-					<i class="fa-solid fa-suitcase"></i>
-					Passager et
-					<i class="fa-solid fa-car-side"></i>
-					Chauffeur
-				{% elseif  app.user.statut == 'passager' %}
-					<i class="fa-solid fa-suitcase"></i>
-					Passager
-				{% elseif  app.user.statut == 'chauffeur' %}
-					<i class="fa-solid fa-car-side"></i>
-					Chauffeur
-				{% endif %}
-			</h5>
-			<p class="card-text">
-				Modifier votre statut :
+	<section class="py-4">
 
-				{{ form_start(statutForm) }}
-				<div class="mb-4">
-					{% for child in statutForm.statut %}
-						<div class="form-check mb-2">
-							{{ form_widget(child, { attr: { class: 'form-check-input' } }) }}
-							<label
-								class="form-check-label" for="{{ child.vars.id }}">
-								{# Affichez l'icône selon la valeur #}
-								{% if child.vars.value == 'passager' %}
-									<i class="fa-solid fa-suitcase"></i>
-								{% elseif child.vars.value == 'chauffeur' %}
-									<i class="fa-solid fa-car-side"></i>
-								{% elseif child.vars.value == 'passager_chauffeur' %}
-									<i class="fa-solid fa-suitcase"></i>
-									<i class="fa-solid fa-car-side"></i>
-								{% endif %}
-								{{ child.vars.label|capitalize }}
-							</label>
+		<div class="container">
+
+			<div class="row justify-content-center">
+
+				<div class="col-md-8 col-lg-6">
+
+					<div class="card border-0 shadow my-5">
+
+						<div class="card-header bg-gray-100 py-4 border-0">
+							<div class="d-flex align-items-center justify-content-between">
+								<div>
+									<p class="subtitle text-sm text-muted">Votre statut</p>
+									<h4 class="mb-0">
+										{{ app.user.statut }}
+									</h4>
+								</div>
+								<div></div>
+							</div>
 						</div>
-					{% endfor %}
+
+						<div class="card-body px-4 py-3">
+
+							{{ form_start(statutForm) }}
+							<p>Modifier votre statut :</p>
+
+							<ul class="list-unstyled mb-4">
+
+								{% for choice in statutForm.statut %}
+									<li class="mb-2 d-flex align-items-center">{{ form_widget(choice, {
+                attr: {
+                  class: 'form-check-input me-2',
+                  id: choice.vars.id
+                }
+              }) }}
+										<label class="form-check-label text-sm" for="{{ choice.vars.id }}">
+											{{ choice.vars.label|capitalize }}
+										</label>
+									</li>
+
+								{% endfor %}
+
+
+							</ul>
+
+
+							<div class="d-grid text-center">
+								<button type="submit" class="btn btn-primary">
+									<i class="far fa-paper-plane me-2"></i>
+									Enregistrer
+								</button>
+							</div>
+
+							{{ form_end(statutForm) }}
+
+						</div>
+
+					</div>
 				</div>
-				<button type="submit" class="btn btn-primary">Modifier mon statut</button>
+			</div>
 
-				{{ form_end(statutForm) }}
-			</p>
-
+			<div class="text-center m-5">
+				<a class="btn btn-outline-primary btn-lg px-4 me-md-2" href="{{ path('app_account')}}">Retour</a>
+			</div>
 
 		</div>
-	{% endblock %}
+	</section>
+{% endblock %}
