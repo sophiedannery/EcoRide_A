@@ -1,27 +1,93 @@
 {# templates/account/trajet_new.html.twig #}
 {% extends 'base.html.twig' %}
-{% block title %}Créer un trajet
+{% block title %}Ajouter un trajet
 {% endblock %}
 
 {% block body %}
-	<div class="container py-5">
-		<h1>Nouvel itinéraire</h1>
 
-		{{ form_start(form) }}
-		{{ form_row(form.adresseDepart) }}
-		{{ form_row(form.adresseArrivee) }}
-		{{ form_row(form.dateDepart) }}
-		{{ form_row(form.dateArrivee) }}
-		{{ form_row(form.prix) }}
+	<section class="py-5">
+		<div class="container">
+			<p class="subtitle">Ajouter un trajet</p>
+			<h1 class="h2 mb-5">Les informations</h1>
 
-		{{ form_row(form.vehicule) }}
-		<p>
-			Pas encore de véhicule ?
-			<a href="{{ path('app_account_vehicule_new') }}">Ajoutez-en un ici</a>.
-		</p>
 
-		<button class="btn btn-primary">Enregistrer ce trajet</button>
-		<a href="{{ path('app_account') }}" class="btn btn-secondary">Annuler</a>
-		{{ form_end(form) }}
-	</div>
+			{{ form_start(form) }}
+			{{ form_errors(form) }}
+
+
+			<div class="row form-block">
+				<div class="col-lg-4">
+					<h4 class="">Le trajet</h4>
+					<p class="text-muted text-sm"></p>
+				</div>
+				<div class="col-lg-7 ms-auto">
+					<div class="mb-4">{{ form_label(form.adresseDepart, 'Adresse de départ', { label_attr: { class: 'form-label' } }) }}
+						{{ form_widget(form.adresseDepart, { attr: { class: 'form-control' } }) }}
+						{{ form_errors(form.adresseDepart) }}</div>
+					<div class="mb-4">{{ form_label(form.adresseArrivee, 'Adresse d’arrivée', { label_attr: { class: 'form-label' } }) }}
+						{{ form_widget(form.adresseArrivee, { attr: { class: 'form-control'} }) }}
+						{{ form_errors(form.adresseArrivee) }}</div>
+				</div>
+			</div>
+
+			<div class="row form-block">
+				<div class="col-lg-4">
+					<h4 class="">La date</h4>
+					<p class="text-muted text-sm"></p>
+				</div>
+				<div class="col-lg-7 ms-auto">
+					<div class="row">
+
+						<div class="col-md-6 mb-4">{{ form_label(form.dateDepart, 'Date & heure de départ', { label_attr: { class: 'form-label' } }) }}
+							{{ form_widget(form.dateDepart, { attr: { class: 'form-control' } }) }}
+							{{ form_errors(form.dateDepart) }}</div>
+
+						<div class="col-md-6 mb-4">{{ form_label(form.dateArrivee, 'Date & heure d’arrivée', { label_attr: { class: 'form-label' } }) }}
+							{{ form_widget(form.dateArrivee, { attr: { class: 'form-control' } }) }}
+							{{ form_errors(form.dateArrivee) }}</div>
+
+					</div>
+				</div>
+			</div>
+
+			<div class="row form-block">
+				<div class="col-lg-4">
+					<h4 class="">Le prix</h4>
+					<p class="text-muted text-sm">Une commission de 2 crédits est retenue par la plateforme pour chaque transaction.</p>
+				</div>
+				<div class="col-lg-7 ms-auto">
+					<div class="mb-4">{{ form_label(form.prix, 'Prix ', { label_attr: { class: 'form-label' } }) }}
+						{{ form_widget(form.prix, { attr: { class: 'form-control', type: 'number', min:2, step:1 } }) }}
+						{{ form_errors(form.prix) }}</div>
+				</div>
+			</div>
+
+			<div class="row form-block">
+				<div class="col-lg-4">
+					<h4 class="">Le véhicule</h4>
+					<p class="text-muted text-sm">Choisissez parmi vos véhicules enregistrés</p>
+				</div>
+				<div class="col-lg-7 ms-auto">
+					<div class="mb-4">{{ form_label(form.vehicule, 'Choisir un véhicule', { label_attr: { class: 'form-label' } }) }}
+						{{ form_widget(form.vehicule, { attr: { class: 'form-select' } }) }}
+						{{ form_errors(form.vehicule) }}
+						<small class="form-text text-muted">
+							Pas encore de véhicule ?
+							<a href="{{ path('app_account_vehicule_new') }}">Ajoutez-en un ici</a>.
+						</small>
+					</div>
+				</div>
+			</div>
+
+			<div class="row form-block">
+				<div class="d-flex gap-2 justify-content-center mt-5">
+					<button type="submit" class="btn btn-primary">Enregistrer ce trajet</button>
+					<a href="{{ path('app_account') }}" class="btn btn-secondary">Annuler</a>
+				</div>
+			</div>
+
+
+			{{ form_end(form) }}
+		</div>
+	</section>
 {% endblock %}

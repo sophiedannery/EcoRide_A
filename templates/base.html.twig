@@ -32,10 +32,12 @@
 		{% include "partials/header.html.twig" %}
 
 		{% for label, messages in app.flashes %}
-			<div class="alert alert-{{ label }}">
-				{% for msg in messages %}
-					{{ msg }}
-				{% endfor %}
+			<div class="container mt-5 mb-3">
+				<div class="alert alert-{{ label }}">
+					{% for msg in messages %}
+						{{ msg }}
+					{% endfor %}
+				</div>
 			</div>
 		{% endfor %}
 

@@ -8,6 +8,7 @@ use App\Repository\VehiculeRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -37,9 +38,12 @@ class TrajetType extends AbstractType
                 'widget' => 'single_text',
                 'label' => 'Date et heure d\'arrivée',
             ])
-            ->add('prix', MoneyType::class, [
-                'label'       => 'Prix (crédits)',
-                'divisor'     => 1,
+            ->add('prix', IntegerType::class, [
+                'label'       => 'Prix ',
+                'attr'        => [
+                    'min'  => 2,
+                    'step' => 1,
+                ],
                 'constraints' => [
                     new GreaterThan([
                         'value'   => 2,
