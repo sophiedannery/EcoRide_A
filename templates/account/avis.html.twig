@@ -4,79 +4,53 @@
 {% endblock %}
 
 {% block body %}
+	<section class="py-5">
+		<div class="container">
+			<h1 class="hero-heading mb-5">Vos avis</h1>
 
-
-	<div class="card text-center">
-		<div class="card-header">
-			<ul class="nav nav-tabs card-header-tabs">
-				<li class="nav-item">
-					<a class="nav-link" href="{{ path ('app_account') }}">Mon profil</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="{{ path ('app_account_trajets') }}">Mes trajets</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="{{ path ('app_account_vehicules') }}">Mes véhicules</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="{{ path ('app_account_preferences') }}">Mes préférences</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="{{ path ('app_account_statut') }}">Mon statut</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link active" aria-current="true" href="{{ path ('app_account_avis') }}">Mes avis</a>
-				</li>
-			</ul>
-		</div>
-		<div class="card-body">
-
-			<h5 class="card-title">Mes avis</h5>
-
-			<p class="card-text">
-
+			<div>
 				{% if avisRecus is empty %}
-					Vos avis apparaitront ici.
+					<p>Vos avis apparaitront ici.</p>
 				{% else %}
-					<table class="table table-striped">
-						<thead>
-							<tr>
-
-								<th>Date</th>
-								<th>Passager</th>
-								<th>Note</th>
-								<th>Commentaire</th>
-
-							</tr>
-						</thead>
-
-						<tbody>
-							{% for avis in avisRecus %}
-
-								<tr>
-									<td>{{ avis.date_creation ? avis.date_creation|date('d/m/Y H:i') : '—' }}</td>
-									<td>{{ avis.pseudo_passager ?: '—' }}</td>
-									<td>
-										{% for i in 1..5 %}
-											{% if i <= avis.note %}
-												<i class="fa-solid fa-star" style="color: #FFD700;"></i>
-											{% else %}
-												<i class="fa-regular fa-star" style="color: #FFD700;"></i>
-											{% endif %}
-										{% endfor %}
-									</td>
-									<td>
-										{% if avis.commentaire %}
-											{{ avis.commentaire}}
+					{% for avis in avisRecus %}
+						<div class="d-flex d-block d-sm-flex review mb-3 mt-2">
+							<div class="text-md-center flex-shrink-0 me-4 me-xl-5">
+								{% if avis.photo_passager %}
+									<img class="d-block avatar avatar-xl p-2 mb-2" src="{{ asset('uploads/photos/' ~ avis.photo_passager) }}" alt="Photo de {{ avis.pseudo_passager}}">
+								{% else %}
+									<img class="d-block avatar avatar-xl p-2 mb-2" src="{{ asset('assets/images/avatar.png') }}" alt="Pas de photo">
+								{% endif %}
+								<span class="text-uppercase text-muted text-sm">{{ avis.date_creation|date('d/m/Y')}}</span>
+							</div>
+							<div>
+								<h6 class="mt-2 mb-1">{{avis.pseudo_passager}}</h6>
+								<div class="mb-2">
+									{% for i in 1..5 %}
+										{% if i <= avis.note|round(0, 'floor') %}
+											<i class="fa-solid fa-star text-warning" aria-hidden="true"></i>
+										{% elseif i - avis.note <= 0.5 %}
+											<i class="fa-solid fa-star-half-stroke text-warning" aria-hidden="true"></i>
 										{% else %}
-											-
+											<i class="fa-regular fa-star text-warning" aria-hidden="true"></i>
 										{% endif %}
-									</td>
-								</tr>
-							{% endfor %}
-						</tbody>
-					</table>
+									{% endfor %}
+								</div>
+								{% if avis.commentaire %}
+									<p class="text-muted text-sm">{{avis.commentaire}}</p>
+								{% endif %}
+							</div>
+						</div>
+						<hr>
+					{% endfor %}
 				{% endif %}
-			</p>
+
+			</div>
+
+			<div class="text-center m-5">
+				<a class="btn btn-outline-primary btn-lg px-4 me-md-2" href="{{ path('app_account')}}">Retour</a>
+			</div>
 		</div>
-	{% endblock %}
+	</section>
+
+
+{% endblock %}

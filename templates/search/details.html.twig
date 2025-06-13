@@ -145,7 +145,7 @@
 
 							</div>
 						</div>
-						<hr>
+						<br><br>
 					</div>
 
 					<div class="text-block">
@@ -166,7 +166,7 @@
 									restante{{ trip.places_restantes > 1 ? 's' }}</p>
 							</div>
 						</div>
-						<hr>
+						<br><br>
 					</div>
 
 					<div class="text-block">
@@ -207,7 +207,7 @@
 										{% if a.photo_passager %}
 											<img class="d-block avatar avatar-xl p-2 mb-2" src="{{ asset('uploads/photos/' ~ a.photo_passager) }}" alt="Photo de {{ a.pseudo_passager}}">
 										{% else %}
-											<img class="d-block avatar avatar-xl p-2 mb-2" src="{{ asset('assets/images/avatar-default.png') }}" alt="Pas de photo">
+											<img class="d-block avatar avatar-xl p-2 mb-2" src="{{ asset('assets/images/avatar.png') }}" alt="Pas de photo">
 										{% endif %}
 										<span class="text-uppercase text-muted text-sm">{{ a.date_creation|date('d/m/Y')}}</span>
 									</div>
