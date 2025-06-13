@@ -8,48 +8,51 @@
 
 	<section class="py-5">
 		<div class="container">
-			<h1 class="hero-heading mb-0">Mon profil</h1>
-			<p class="trext-muted mb-5">Gérer vos informations personnelles ici.</p>
+			<h1 class="hero-heading mb-2">Mon profil</h1>
+			<p class="trext-muted mb-5">Consultez vos informations personnelles ici.</p>
 			<div class="row">
 				<div class="col-lg-7 mb-5 mb-lg-0">
 
 					<div class="text-block">
-						<h5>Mes infos</h5>
+						<h5 class="mb-4">Mes infos</h5>
 						<p class="text-sm text-muted">
 							<i class="fa fa-id-card fa-fw me-2"></i>
 							<strong>Pseudo :</strong>
-							{{app.user.pseudo}}<br>
+							{{app.user.pseudo}}</p>
+						<p class="text-sm text-muted">
 							<i class="fa fa-envelope-open fa-fw me-2"></i>
 							<strong>E-mail :</strong>
-							{{app.user.email}}<br>
+							{{app.user.email}}</p>
+						<p class="text-sm text-muted">
 							<i class="fa-solid fa-tag fa-fw me-2"></i>
 							<strong>Statut :</strong>
-							{{app.user.statut}}<br>
+							{{app.user.statut}}</p>
+						<p class="text-sm text-muted">
 							<i class="fa-solid fa-coins fa-fw me-2"></i>
 							<strong>Crédits :</strong>
 							{{app.user.credits}}
-							<br>
-
 						</p>
+
+
 					</div>
 
 
+				</div>
+				<div class="col-md-8 col-lg-4 ms-lg-auto">
+
 					<div class="text-block">
-						<h5>Ma photo</h5>
-						<p class="text-sm text-muted">
-							Modifier ma photo de profil
-							{% if app.user.photoFilename %}
-								<div>
-									<img src="{{ asset('uploads/photos/' ~ app.user.photoFilename) }}" alt="Photo de profil de {{ app.user.pseudo }}" style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%;"></div>
-								{# <a href="{{ path ('app_account_edit') }}" class="btn btn-outline-primary">Modifier ma photo</a> #}
-							{% else %}
-								<p>Aucune photo de profil enregistrée.</p>
 
-							{% endif %}
+						<h5 class="mb-3">Ma photo</h5>
 
+						{% if app.user.photoFilename %}
+							<div>
+								<img src="{{ asset('uploads/photos/' ~ app.user.photoFilename) }}" alt="Photo de profil de {{ app.user.pseudo }}" style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%;"></div>
+							{# <a href="{{ path ('app_account_edit') }}" class="btn btn-outline-primary">Modifier ma photo</a> #}
+							<p class="text-sm text-muted mt-3">
+
+								Modifier ma photo :</p>
 
 							{{ form_errors(profileForm) }}
-
 							{{ form_start(profileForm, {
       action: path('app_account_edit'),
       method: 'POST',
@@ -58,15 +61,45 @@
 							{{ form_row(profileForm.photoFile) }}
 							{{ form_errors(profileForm.photoFile) }}
 
-							<button class="btn btn-primary" type="submit">Enregistrer</button>
-							<a href="{{ path('app_account') }}" class="btn btn-secondary">Annuler</a>
+							<div class="justify-content-between mt-4">
+								<button class="btn btn-primary me-4" type="submit">Enregistrer</button>
+								<a href="{{ path('app_account') }}" class="btn btn-secondary">Annuler</a>
+							</div>
 							{{ form_end(profileForm) }}
-						</p>
-					</div>
 
+						{% else %}
+
+							<p class="text-sm text-muted mt-3">
+
+								Ajouter une photo :</p>
+
+							{{ form_errors(profileForm) }}
+							{{ form_start(profileForm, {
+      action: path('app_account_edit'),
+      method: 'POST',
+      attr: { enctype: 'multipart/form-data' }
+  }) }}
+							{{ form_row(profileForm.photoFile) }}
+							{{ form_errors(profileForm.photoFile) }}
+
+							<div class="justify-content-between mt-4">
+								<button class="btn btn-primary me-4" type="submit">Enregistrer</button>
+								<a href="{{ path('app_account') }}" class="btn btn-secondary">Annuler</a>
+							</div>
+							{{ form_end(profileForm) }}
+
+
+						{% endif %}
+
+
+					</div>
 				</div>
-				<div class="col-md-8 col-lg-4 ms-lg-auto"></div>
 			</div>
+
+			<div class="text-center m-5">
+				<a class="btn btn-outline-primary btn-lg px-4 me-md-2" href="{{ path('app_account')}}">Retour</a>
+			</div>
+
 		</div>
 	</section>
 

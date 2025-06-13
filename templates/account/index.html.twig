@@ -7,271 +7,112 @@
 
 	{% set isPassengerOnly = app.user.statut == 'passager' %}
 
+
 	<section class="py-5">
 		<div class="container">
+			<h1 class="hero-heading mb-0">Bonjour
+				{{app.user.pseudo}}</h1>
+			<p class="text-muted mt-3 mb-5">Gérer votre profil ici.</p>
 			<div class="row">
-				<div class="col-lg-3 me-lg-auto">
-					<div class="card boarder-0 shadow mb-6 mb-lg-0">
-						<div class="card-header bg-gray-100 py-4 border-0 text-center">
-							<a class="d-inline-block" href:"#">
-								{% if app.user.photoFilename %}
-									<div>
-										<img src="{{ asset('uploads/photos/' ~ app.user.photoFilename) }}" alt="Photo de profil de {{ app.user.pseudo }}" style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%;"></div>
-									{# <a href="{{ path ('app_account_edit') }}" class="btn btn-outline-primary">Modifier ma photo</a> #}
-								{% else %}
-									<p>Aucune photo de profil enregistrée.</p>
-									<a href="{{ path ('app_account_edit') }}" class="btn btn-outline-primary">Ajouter une photo</a>
-								{% endif %}
-							</a>
-							<h5>{{app.user.pseudo}}</h5>
-							<p class="text-muted text-sm mb-0"></p>
 
-						</div>
-						<div class="card-body p-4">
-
-							<div class="d-flex align-items-center mb-3">
-								<div class="icon-rounded icon-rounded-sm bg-primary-light flex-shrink-0 me-2">
-									<i class="fa-solid fa-coins"></i>
-								</div>
-								<div>
-									<p class="mb-0">
-										<strong>{{ app.user.credits }}</strong>
-										crédits</p>
-								</div>
+				<div class="col-6 col-md-4 mb-4">
+					<div class="card h-100 border-0 shadow hover-animate">
+						<div class="card-body">
+							<div class="icon-rounded bg-secondary-light mb-3">
+								<i class="fa-regular fa-address-card"></i>
 							</div>
-
-							{% if app.user.statut == 'passager_chauffeur' %}
-								<div class="d-flex align-items-center mb-3">
-									<div class="icon-rounded icon-rounded-sm bg-primary-light flex-shrink-0 me-2">
-										<i class="fa-solid fa-suitcase"></i>
-									</div>
-									<div>
-										<p class="mb-0">
-											Passager</p>
-									</div>
-								</div>
-								<div class="d-flex align-items-center mb-3">
-									<div class="icon-rounded icon-rounded-sm bg-primary-light flex-shrink-0 me-2">
-										<i class="fa-solid fa-car-side"></i>
-									</div>
-									<div>
-										<p class="mb-0">
-											Chauffeur</p>
-									</div>
-								</div>
-							{% elseif  app.user.statut == 'passager' %}
-								<div class="d-flex align-items-center mb-3">
-									<div class="icon-rounded icon-rounded-sm bg-primary-light flex-shrink-0 me-2">
-										<i class="fa-solid fa-suitcase"></i>
-									</div>
-									<div>
-										<p class="mb-0">
-											Passager</p>
-									</div>
-								</div>
-							{% elseif  app.user.statut == 'chauffeur' %}
-								<div class="d-flex align-items-center mb-3">
-									<div class="icon-rounded icon-rounded-sm bg-primary-light flex-shrink-0 me-2">
-										<i class="fa-solid fa-car-side"></i>
-									</div>
-									<div>
-										<p class="mb-0">
-											Chauffeur</p>
-									</div>
-								</div>
-							{% endif %}
-
-							<div class="d-flex align-items-center mb-3"></div>
-							<hr>
-							<h6>blabla</h6>
-							<ul class="card-text text-muted">
-								<li>a</li>
-								<li>f</li>
-								<li>e</li>
-							</ul>
-
+							<h5 class="card-title mb-3">
+								<a class="text-decoration-none text-dark stretched-link" href="{{ path ('app_account_edit') }}">Mes infos</a>
+							</h5>
+							<p class="text-muted card-text text-sm">Modifier vos informations personnelles</p>
 						</div>
 					</div>
 				</div>
 
-				<div class="col-lg-9 me-lg-auto">
-					<h1 class="hero-heading mb-0">Votre profil</h1>
-					<p class="text-muted mb-5">Modifier votre profil ici</p>
-
-					<div class="row">
-
-						<div class="col-6 col-md-4 mb-4">
-							<div class="card h-100 border-0 shadow hover-animate">
-								<div class="card-body">
-									<div class="icon-rounded bg-secondary-light mb-3">
-										<i class="fa-regular fa-address-card"></i>
-									</div>
-									<h5 class="card-title mb-3">
-										<a class="text-decoration-none text-dark stretched-link" href="{{ path ('app_account_edit') }}">Mes infos</a>
-									</h5>
-									<p class="text-muted card-text text-sm">Modifier vos informations personnelles</p>
-								</div>
+				<div class="col-6 col-md-4 mb-4">
+					<div class="card h-100 border-0 shadow hover-animate">
+						<div class="card-body">
+							<div class="icon-rounded bg-secondary-light mb-3">
+								<i class="fa-solid fa-suitcase"></i>
 							</div>
+							<h5 class="card-title mb-3">
+								<a class="text-decoration-none text-dark stretched-link" href="{{ path ('app_account_reservations') }}">Mes réservations</a>
+							</h5>
+							<p class="text-muted card-text text-sm">Visualiser vos réservations passées et à venir</p>
 						</div>
+					</div>
+				</div>
 
-						<div class="col-6 col-md-4 mb-4">
-							<div class="card h-100 border-0 shadow hover-animate">
-								<div class="card-body">
-									<div class="icon-rounded bg-secondary-light mb-3">
-										<i class="fa-solid fa-suitcase"></i>
-									</div>
-									<h5 class="card-title mb-3">
-										<a class="text-decoration-none text-dark stretched-link" href="{{ path ('app_account_reservations') }}">Mes réservations</a>
-									</h5>
-									<p class="text-muted card-text text-sm">Visualiser vos réservations passées et à venir</p>
-								</div>
+				<div class="col-6 col-md-4 mb-4">
+					<div class="card h-100 border-0 shadow hover-animate">
+						<div class="card-body">
+							<div class="icon-rounded bg-secondary-light mb-3">
+								<i class="fa-solid fa-tag"></i>
 							</div>
+							<h5 class="card-title mb-3">
+								<a class="text-decoration-none text-dark stretched-link" href="{{ path ('app_account_statut') }}">Mon statut</a>
+							</h5>
+							<p class="text-muted card-text text-sm">Modifier votre statut</p>
 						</div>
+					</div>
+				</div>
 
-
-						<div class="col-6 col-md-4 mb-4">
-							<div class="card h-100 border-0 shadow hover-animate">
-								<div class="card-body">
-									<div class="icon-rounded bg-secondary-light mb-3">
-										<i class="fa-solid fa-tag"></i>
-									</div>
-									<h5 class="card-title mb-3">
-										<a class="text-decoration-none text-dark stretched-link" href="{{ path ('app_account_statut') }}">Mon statut</a>
-									</h5>
-									<p class="text-muted card-text text-sm">Modifier votre statut</p>
-								</div>
+				<div class="col-6 col-md-4 mb-4">
+					<div class="card h-100 border-0 shadow hover-animate {{ isPassengerOnly ? 'opacity-50' }}">
+						<div class="card-body">
+							<div class="icon-rounded bg-secondary-light mb-3">
+								<i class="fa-solid fa-road"></i>
 							</div>
+							<h5 class="card-title mb-3">
+								{% if not isPassengerOnly %}
+									<a class="text-decoration-none text-dark stretched-link" href="{{ path ('app_account_trajets') }}">Mes trajets</a>
+								{% else %}
+									<a class="text-decoration-none text-dark stretched-link" href="#">Mes trajets</a>
+								{% endif %}
+							</h5>
+							<p class="text-muted card-text text-sm">Visualiser vos trajets passés et à venir</p>
 						</div>
+					</div>
+				</div>
 
-						<div class="col-6 col-md-4 mb-4">
-							<div class="card h-100 border-0 shadow hover-animate {{ isPassengerOnly ? 'opacity-50' }}">
-								<div class="card-body">
-									<div class="icon-rounded bg-secondary-light mb-3">
-										<i class="fa-solid fa-road"></i>
-									</div>
-									<h5 class="card-title mb-3">
-										{% if not isPassengerOnly %}
-											<a class="text-decoration-none text-dark stretched-link" href="{{ path ('app_account_trajets') }}">Mes trajets</a>
-										{% else %}
-											<a class="text-decoration-none text-dark stretched-link" href="#">Mes trajets</a>
-										{% endif %}
-									</h5>
-									<p class="text-muted card-text text-sm">Visualiser vos trajets passés et à venir</p>
-								</div>
+				<div class="col-6 col-md-4 mb-4">
+					<div class="card h-100 border-0 shadow hover-animate {{ isPassengerOnly ? 'opacity-50' }}">
+						<div class="card-body">
+							<div class="icon-rounded bg-secondary-light mb-3">
+								<i class="fa-solid fa-car-side"></i>
 							</div>
+							<h5 class="card-title mb-3">
+								{% if not isPassengerOnly %}
+									<a class="text-decoration-none text-dark stretched-link" href="{{ path ('app_account_vehicules') }}">Mes véhicules</a>
+								{% else %}
+									<a class="text-decoration-none text-dark stretched-link" href="#">Mes véhicules</a>
+								{% endif %}
+							</h5>
+							<p class="text-muted card-text text-sm">Modifier vos véhicules</p>
 						</div>
+					</div>
+				</div>
 
-						<div class="col-6 col-md-4 mb-4">
-							<div class="card h-100 border-0 shadow hover-animate {{ isPassengerOnly ? 'opacity-50' }}">
-								<div class="card-body">
-									<div class="icon-rounded bg-secondary-light mb-3">
-										<i class="fa-solid fa-car-side"></i>
-									</div>
-									<h5 class="card-title mb-3">
-										{% if not isPassengerOnly %}
-											<a class="text-decoration-none text-dark stretched-link" href="{{ path ('app_account_vehicules') }}">Mes véhicules</a>
-										{% else %}
-											<a class="text-decoration-none text-dark stretched-link" href="#">Mes véhicules</a>
-										{% endif %}
-									</h5>
-									<p class="text-muted card-text text-sm">Modifier vos véhicules</p>
-								</div>
+				<div class="col-6 col-md-4 mb-4">
+					<div class="card h-100 border-0 shadow hover-animate {{ isPassengerOnly ? 'opacity-50' }}">
+						<div class="card-body">
+							<div class="icon-rounded bg-secondary-light mb-3">
+								<i class="fa-solid fa-comments"></i>
 							</div>
+							<h5 class="card-title mb-3">
+								{% if not isPassengerOnly %}
+									<a class="text-decoration-none text-dark stretched-link" href="{{ path ('app_account_avis') }}">Mes avis</a>
+								{% else %}
+									<a class="text-decoration-none text-dark stretched-link" href="#">Mes véhicules</a>
+								{% endif %}
+							</h5>
+							<p class="text-muted card-text text-sm">Consulter les avis que vous avez reçu</p>
 						</div>
-
-						<div class="col-6 col-md-4 mb-4">
-							<div class="card h-100 border-0 shadow hover-animate {{ isPassengerOnly ? 'opacity-50' }}">
-								<div class="card-body">
-									<div class="icon-rounded bg-secondary-light mb-3">
-										<i class="fa-solid fa-comments"></i>
-									</div>
-									<h5 class="card-title mb-3">
-										{% if not isPassengerOnly %}
-											<a class="text-decoration-none text-dark stretched-link" href="{{ path ('app_account_avis') }}">Mes avis</a>
-										{% else %}
-											<a class="text-decoration-none text-dark stretched-link" href="#">Mes véhicules</a>
-										{% endif %}
-									</h5>
-									<p class="text-muted card-text text-sm">Consulter les avis que vous avez reçu</p>
-								</div>
-							</div>
-						</div>
-
 					</div>
 				</div>
 
 			</div>
+
 		</div>
 	</section>
-
-	{# 
-											<div class="card text-center">
-												<div class="card-header">
-													<ul class="nav nav-tabs card-header-tabs">
-														<li class="nav-item">
-															<a class="nav-link active" aria-current="true" href="#">Mon profil</a>
-														</li>
-														<li class="nav-item">
-															<a class="nav-link" href="{{ path ('app_account_reservations') }}">Mes réservations</a>
-														</li>
-														<li class="nav-item">
-															<a class="nav-link" href="{{ path ('app_account_trajets') }}">Mes trajets</a>
-														</li>
-														<li class="nav-item">
-															<a class="nav-link" href="{{ path ('app_account_vehicules') }}">Mes véhicules</a>
-														</li>
-														<li class="nav-item">
-															<a class="nav-link" href="{{ path ('app_account_preferences') }}">Mes préférences</a>
-														</li>
-														<li class="nav-item">
-															<a class="nav-link" href="{{ path ('app_account_statut') }}">Mon statut</a>
-														</li>
-														<li class="nav-item">
-															<a class="nav-link" href="{{ path ('app_account_avis') }}">Mes avis</a>
-														</li>
-													</ul>
-												</div>
-												<div class="card-body">
-										
-													<h5 class="card-title">Bonjour,
-														{{app.user.pseudo}}
-														!</h5>
-										
-													<p class="card-text">
-										
-														<hr>
-										
-										
-														{% if app.user.statut == 'passager_chauffeur' %}
-															<i class="fa-solid fa-suitcase"></i>
-															Passager et
-															<i class="fa-solid fa-car-side"></i>
-															Chauffeur
-														{% elseif  app.user.statut == 'passager' %}
-															<i class="fa-solid fa-suitcase"></i>
-															Passager
-														{% elseif  app.user.statut == 'chauffeur' %}
-															<i class="fa-solid fa-car-side"></i>
-															Chauffeur
-														{% endif %}
-										
-														<hr>
-										
-										
-														<i class="fa-solid fa-coins"></i>
-														<strong>{{ app.user.credits }}</strong>
-														crédits.
-										
-														<hr>
-										
-														{% if app.user.photoFilename %}
-															<div>
-																<img src="{{ asset('uploads/photos/' ~ app.user.photoFilename) }}" alt="Photo de profil de {{ app.user.pseudo }}" style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%;"></div>
-															<a href="{{ path ('app_account_edit') }}" class="btn btn-outline-primary">Modifier ma photo</a>
-														{% else %}
-															<p>Aucune photo de profil enregistrée.</p>
-															<a href="{{ path ('app_account_edit') }}" class="btn btn-outline-primary">Ajouter une photo</a>
-														{% endif %}
-													</p>
-												</div> #}
 {% endblock %}

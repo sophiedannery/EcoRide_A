@@ -99,6 +99,11 @@
   p{
     font-family: "Poppins", sans-serif;
   }
+
+
+  .text-content h1,   .text-content h2, .text-content h3, .text-content h4, .text-content h5, .text-content h6, .text-content p {
+    margin-bottom: 2rem;
+  }
   
   .card-img-top {
     width: 100%;
@@ -246,6 +251,13 @@
     top: 1.2rem;
     right: 1.2rem;
     left: 1.2rem;
+  }
+
+  .hero {
+    position: relative;
+    text-align: center;
+    background: #00714B;
+    box-shadow: 0 0.05rem 0.3rem rgba(0, 0, 0, 0.1);
   }
   
   /* .derniers_trajets{

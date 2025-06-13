@@ -18,6 +18,9 @@ class ProfileFormType extends AbstractType
                 'label' => 'Photo de profil (JPEG, PNG, WebP - max 2 Mo)',
                 'mapped' => false,
                 'required' => false,
+                'attr' => [
+                    'class' => 'form-control'
+                ],
                 'constraints' => [
                     new File([
                         'maxSize' => '2M',
