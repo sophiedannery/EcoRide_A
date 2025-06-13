@@ -4,57 +4,87 @@
 {% endblock %}
 
 {% block body %}
-	<h2>Trajets signalés</h2>
 
-	{% if signalements is empty %}
-		<div class="alert alert-info">Il n'y a aucun trajet signalé pour le moment.</div>
-	{% else %}
-		<table class="table table-bordered table-striped">
-			<thead class="table-dark">
-				<tr>
-					<th>#Réservation</th>
-					<th>Passager</th>
-					<th>Email Passager</th>
-					<th>Chauffeur</th>
-					<th>Email Chauffeur</th>
-					<th>Départ → Arrivée</th>
-					<th>Date Départ</th>
-					<th>Date Arrivée</th>
-					<th>Date Réservation</th>
-					<th>Commentaire Problème</th>
-					<th>Actions</th>
-				</tr>
-			</thead>
-			<tbody>
-				{% for s in signalements %}
-					<tr>
-						<td>{{ s.reservation_id }}</td>
-						<td>{{ s.passager_pseudo }}</td>
-						<td>{{ s.passager_email }}</td>
-						<td>{{ s.chauffeur_pseudo }}</td>
-						<td>{{ s.chauffeur_email }}</td>
-						<td>
-							{{ s.adresse_depart }}<br>
-							&darr;<br>
-							{{ s.adresse_arrivee }}
-						</td>
-						<td>{{ s.date_depart ? s.date_depart|date('d/m/Y H:i') : '—' }}</td>
-						<td>{{ s.date_arrivee ? s.date_arrivee|date('d/m/Y H:i') : '—' }}</td>
-						<td>{{ s.date_confirmation ? s.date_confirmation|date('d/m/Y H:i') : '—' }}</td>
-						<td>{{ s.commentaire_probleme }}</td>
-						<td>
-							<form method="post" action="{{ path('app_employee_cloturer_reservation', { 'id': s.reservation_id }) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir clôturer cette réservation et valider le trajet ?');" style="display:inline">
-								<input type="hidden" name="_token" value="{{ csrf_token('cloturer_reservation' ~ s.reservation_id) }}">
-								<button type="submit" class="btn btn-sm btn-primary">
-									Clôturer
-								</button>
-							</form>
-						</td>
-					</tr>
-				{% endfor %}
-			</tbody>
-		</table>
+	{% set count = signalements|length %}
 
 
-	{% endif %}
+	<section class="py-5">
+		<div class="container">
+			<h1 class="hero-heading mb-0">Signalements</h1>
+			{% if signalements is empty %}
+				<div class="mt-4">
+					<p>Aucun trajet signalé.</p>
+				</div>
+			{% else %}
+				<p class="mt-3">
+					<strong>{{count}}</strong>
+					avis en attente</p>
+
+				<div class="list-group shadow-mb5">
+					{% for s in signalements %}
+						<div class="list-group-item list-group-item-action p-4">
+							<div class="row">
+
+								<div class="col-9 col-lg-4 align-self-center mb-3 mb-lg-0">
+									<h2 class="h5 mb-1">Réservation n°
+										{{ s.reservation_id }}</h2>
+									<p class="text-sm text-muted">Passager :
+										{{ s.passager_pseudo }}
+										-
+										{{ s.passager_email }}</p>
+									<p class="text-sm text-muted">Chauffeur :
+										{{ s.passager_pseudo }}
+										-
+										{{ s.passager_email }}</p>
+									<h2 class="h5 mb-1">Le trajet
+									</h2>
+									<p class="text-sm text-muted">
+										{{ s.adresse_depart }}
+										→
+										{{ s.adresse_arrivee }}</p>
+									<p class="text-sm text-muted">
+										{{ s.date_depart ? s.date_depart|date('d/m/Y H:i') : '—' }}</p>
+									<p class="text-sm text-muted">
+										{{ s.date_arrivee ? s.date_arrivee|date('d/m/Y H:i') : '—' }}</p>
+									<p class="text-sm text-muted">
+										Confirmée le
+										{{ s.date_confirmation ? s.date_confirmation|date('d/m/Y H:i') : '—' }}</p>
+
+								</div>
+
+								<div class="col-10 ms-auto col-lg-7">
+									<div class="row">
+										<div class="col-md-8 py-3">
+											<p class="text-sm mb-0 text-muted">Pas de commentaire</p>
+										</div>
+										<div class="col-md-4 py-3">
+											<p class="text-sm mb-0">
+												<strong>Note</strong>
+											</p>
+											<p class="text-sm"></p>
+										</div>
+									</div>
+								</div>
+
+								<div class="text-center">
+									<form method="post" action="{{ path('app_employee_cloturer_reservation', { 'id': s.reservation_id }) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir clôturer cette réservation et valider le trajet ?');" style="display:inline">
+										<input type="hidden" name="_token" value="{{ csrf_token('cloturer_reservation' ~ s.reservation_id) }}">
+										<button type="submit" class="btn btn-sm btn-primary">
+											Clôturer
+										</button>
+									</form>
+								</div>
+
+							</div>
+						</div>
+					{% endfor %}
+				</div>
+			{% endif %}
+
+			<div class="text-center m-5">
+				<a class="btn btn-outline-primary btn-lg px-4 me-md-2" href="{{ path('app_employee')}}">Retour</a>
+			</div>
+		</div>
+	</section>
+
 {% endblock %}

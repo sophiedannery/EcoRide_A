@@ -4,14 +4,48 @@
 {% endblock %}
 
 {% block body %}
-	<h1>Bienvenue,
-		{{ app.user.pseudo }}</h1>
 
-	<hr>
 
-	<a href="{{ path('app_employee_signalement')}}">Trajets signalés</a>
-	<hr>
-	<a href="{{ path('app_employee_pending_avis')}}">Modérer les avis</a>
-	<hr>
+	<section class="py-5">
+		<div class="container">
+			<h1 class="hero-heading mb-0">Bonjour
+				{{app.user.pseudo}}</h1>
+			<p class="text-muted mt-3 mb-5">Gérer votre profil ici.</p>
+			<div class="row">
+
+				<div class="col-12 col-sm-6 mb-4">
+					<div class="card h-100 border-0 shadow hover-animate">
+						<div class="card-body">
+							<div class="icon-rounded bg-secondary-light mb-3">
+								<i class="fa-solid fa-bullhorn"></i>
+							</div>
+							<h5 class="card-title mb-3">
+								<a class="text-decoration-none text-dark stretched-link" href="{{ path('app_employee_signalement')}}">Les trajets</a>
+							</h5>
+							<p class="text-muted card-text text-sm">Géstion des trajets signalés</p>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-12 col-sm-6 mb-4">
+					<div class="card h-100 border-0 shadow hover-animate">
+						<div class="card-body">
+							<div class="icon-rounded bg-secondary-light mb-3">
+								<i class="fa-solid fa-comments"></i>
+							</div>
+							<h5 class="card-title mb-3">
+								<a class="text-decoration-none text-dark stretched-link" href="{{ path('app_employee_pending_avis')}}">Les avis</a>
+							</h5>
+							<p class="text-muted card-text text-sm">Modération des avis en attente</p>
+						</div>
+					</div>
+				</div>
+
+
+			</div>
+
+		</div>
+	</section>
+
 
 {% endblock %}

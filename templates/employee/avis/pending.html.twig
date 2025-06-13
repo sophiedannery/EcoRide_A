@@ -3,65 +3,100 @@
 {% block title %}Avis en attente de validation
 {% endblock %}
 {% block body %}
-	<div class="container py-4">
-		<h2>Avis en attente</h2>
 
-		{% if pendingAvis is empty %}
-			<div class="alert alert-info">
-				Il n’y a aucun avis en attente de validation pour le moment.
-			</div>
-		{% else %}
-			<table class="table table-bordered table-striped">
-				<thead class="table-dark">
-					<tr>
-						<th>#Avis</th>
-						<th>Passager</th>
-						<th>Chauffeur</th>
-						<th>Trajet</th>
-						<th>Date trajet</th>
-						<th>Note</th>
-						<th>Commentaire</th>
-						<th>Date de création</th>
-						<th>Actions</th>
-					</tr>
-				</thead>
-				<tbody>
+	{% set count = pendingAvis|length %}
+
+
+	<section class="py-5">
+		<div class="container">
+			<h1 class="hero-heading mb-0">Modération des avis</h1>
+			{% if pendingAvis is empty %}
+				<div class="mt-4
+										<p>Aucun avis en attente de validation.</p>
+									</div>
+								{% else %}
+									<p class=" mt-3">
+					<strong>{{count}}</strong>
+					avis en attente</p>
+
+				<div class="list-group shadow-mb5">
 					{% for a in pendingAvis %}
-						<tr>
-							<td>{{ a.avis_id }}</td>
-							<td>{{ a.passager_pseudo }}</td>
-							<td>{{ a.chauffeur_pseudo }}</td>
-							<td>
-								{{ a.adresse_depart }}
-								→
-								{{ a.adresse_arrivee }}
-								<br>
-								Réservation n°
-								{{ a.reservation_id }}
-							</td>
-							<td>{{ a.date_depart|date('d/m/Y H:i') }}</td>
-							<td>{{ a.note }}</td>
-							<td>{{ a.commentaire }}</td>
-							<td>{{ a.date_creation|date('d/m/Y H:i') }}</td>
-							<td>
-								{# Formulaire POST “Valider” #}
-								<form method="post" style="display:inline" action="{{ path('app_employee_moderate_avis', {'id': a.avis_id}) }}" onsubmit="return confirm('Valider cet avis ?');">
-									<input type="hidden" name="_token" value="{{ csrf_token('moderate_avis' ~ a.avis_id) }}">
-									<input type="hidden" name="action" value="validate">
-									<button type="submit" class="btn btn-sm btn-success">Valider</button>
-								</form>
+						<div class="list-group-item list-group-item-action p-4">
+							<div class="row">
 
-								{# Formulaire POST “Refuser” #}
-								<form method="post" style="display:inline" action="{{ path('app_employee_moderate_avis', {'id': a.avis_id}) }}" onsubmit="return confirm('Refuser cet avis ?');">
-									<input type="hidden" name="_token" value="{{ csrf_token('moderate_avis' ~ a.avis_id) }}">
-									<input type="hidden" name="action" value="reject">
-									<button type="submit" class="btn btn-sm btn-danger">Refuser</button>
-								</form>
-							</td>
-						</tr>
+								<div class="col-9 col-lg-4 align-self-center mb-3 mb-lg-0">
+									<h2 class="h5 mb-1">Avis n°
+										{{ a.avis_id }}</h2>
+									<p class="text-sm text-muted">Posté le
+										{{ a.date_creation|date('d/m/Y') }}
+										à
+										{{ a.date_creation|date('H:i') }}</p>
+									<h2 class="h5 mb-1">Le trajet
+									</h2>
+									<p class="text-sm text-muted">
+										{{ a.adresse_depart }}
+										→
+										{{ a.adresse_arrivee }}</p>
+									<p class="text-sm text-muted">
+										{{ a.date_depart|date('d/m/Y') }}
+										à
+										{{ a.date_depart|date('H:i') }}</p>
+									<p class="text-sm text-muted">
+										Réservation n°
+										{{ a.reservation_id }}</p>
+									<p class="text-sm text-muted">
+										Chauffeur :
+										{{ a.chauffeur_pseudo }}</p>
+									<p class="text-sm text-muted">
+										Passager :
+										{{ a.passager_pseudo }}</p>
+								</div>
+
+								<div class="col-10 ms-auto col-lg-7">
+									<div class="row">
+										<div class="col-md-8 py-3">
+											{% if a.commentaire %}
+												<p class="text-sm mb-0">
+													<strong>Commentaire</strong>
+												</p>
+												<p class="text-sm mb-0">{{ a.commentaire }}</p>
+											{% else %}
+												<p class="text-sm mb-0 text-muted">Pas de commentaire</p>
+											{% endif %}
+										</div>
+										<div class="col-md-4 py-3">
+											<p class="text-sm mb-0">
+												<strong>Note</strong>
+											</p>
+											<p class="text-sm">{{ a.note }}/5</p>
+										</div>
+									</div>
+								</div>
+
+								<div class="text-center">
+									<form method="post" style="display:inline" action="{{ path('app_employee_moderate_avis', {'id': a.avis_id}) }}" onsubmit="return confirm('Valider cet avis ?');">
+										<input type="hidden" name="_token" value="{{ csrf_token('moderate_avis' ~ a.avis_id) }}">
+										<input type="hidden" name="action" value="validate">
+										<button type="submit" class="btn btn-sm btn-success">Valider</button>
+									</form>
+
+									<form method="post" style="display:inline" action="{{ path('app_employee_moderate_avis', {'id': a.avis_id}) }}" onsubmit="return confirm('Refuser cet avis ?');">
+										<input type="hidden" name="_token" value="{{ csrf_token('moderate_avis' ~ a.avis_id) }}">
+										<input type="hidden" name="action" value="reject">
+										<button type="submit" class="btn btn-sm btn-danger">Refuser</button>
+									</form>
+								</div>
+
+							</div>
+						</div>
 					{% endfor %}
-				</tbody>
-			</table>
-		{% endif %}
-	</div>
+				</div>
+			{% endif %}
+
+			<div class="text-center m-5">
+				<a class="btn btn-outline-primary btn-lg px-4 me-md-2" href="{{ path('app_employee')}}">Retour</a>
+			</div>
+		</div>
+	</section>
+
 {% endblock %}
