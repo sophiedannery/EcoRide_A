@@ -17,7 +17,65 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class TrajetController extends AbstractController
 {
-    #[Route('/account/trajet/new', name: 'account_trajet_new')]
+
+    #[Route('/trajet/trajet_account', name: 'app_trajet_account')]
+    #[IsGranted('ROLE_USER')]
+    public function trajets(Request $request, EntityManagerInterface $em, ReservationRepository $reservation_repository, TrajetRepository $trajet_repository): Response
+    {
+
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
+        $vehicules = $user->getVehicules();
+        $history = $reservation_repository->findHistoryByUser($user->getId());
+        $driverTrips = $trajet_repository->findTripsByDriver($user->getId());
+
+        foreach ($driverTrips as &$trip) {
+            $tripId = $trip['id_trajet'];
+            $passagers = $reservation_repository->findPassengerPseudoByTrajet($tripId);
+            $trip['passagers'] = $passagers;
+        }
+
+
+
+        return $this->render('trajet/trajet_account.html.twig', [
+            'history' => $history,
+            'driverTrips' => $driverTrips,
+            'vehicules' => $vehicules,
+        ]);
+    }
+
+
+    #[Route('/trajet/trajet_historique', name: 'app_trajet_historique')]
+    #[IsGranted('ROLE_USER')]
+    public function trajetsOld(Request $request, EntityManagerInterface $em, ReservationRepository $reservation_repository, TrajetRepository $trajet_repository): Response
+    {
+
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
+        $vehicules = $user->getVehicules();
+        $history = $reservation_repository->findHistoryByUser($user->getId());
+        $driverTrips = $trajet_repository->findTripsByDriver($user->getId());
+
+        foreach ($driverTrips as &$trip) {
+            $tripId = $trip['id_trajet'];
+            $passagers = $reservation_repository->findPassengerPseudoByTrajet($tripId);
+            $trip['passagers'] = $passagers;
+        }
+
+
+
+        return $this->render('trajet/trajet_historique.html.twig', [
+            'history' => $history,
+            'driverTrips' => $driverTrips,
+            'vehicules' => $vehicules,
+        ]);
+    }
+
+
+
+    #[Route('/trajet/trajet_new', name: 'app_trajet_new')]
     public function new(Request $request, EntityManagerInterface $em, VehiculeRepository $vehiculeRepo): Response
     {
         /** @var \App\Entity\User $user */
@@ -59,7 +117,7 @@ final class TrajetController extends AbstractController
             return $this->redirectToRoute('app_account');
         }
 
-        return $this->render('account/trajet_new.html.twig', [
+        return $this->render('trajet/trajet_new.html.twig', [
             'form' => $form->createView(),
         ]);
     }

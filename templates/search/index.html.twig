@@ -1,20 +1,60 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello SearchController!{% endblock %}
+{% block title %}Covoiturages
+{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>C:/Users/Alley/Desktop/EcoRide_A/EcoRide_A/src/Controller/SearchController.php</code></li>
-        <li>Your template at <code>C:/Users/Alley/Desktop/EcoRide_A/EcoRide_A/templates/search/index.html.twig</code></li>
-    </ul>
-</div>
-{% endblock %}
+	<div class="container-fluid px-3">
+		<div class="row min-vh-100">
+
+			<div class="col-md-8 col-lg-6 col-xl-5 d-flex align-items-center">
+
+				<div class="w-100 py-5 px-md-5 px-xxl-6 position-relative">
+
+					<div class="mb-5">
+						<h1>Trouver un covoiturage !!</h1>
+					</div>
+
+					<form
+						method="GET" action="{{ path('app_search') }}">
+						{# Départ #}
+						<div class="form-floating mb-4">
+							<input name="depart" type="text" class="form-control" id="depart" placeholder="Départ" required value="{{ app.request.query.get('depart') }}">
+							<label for="depart" class="form-label">Départ</label>
+						</div>
+
+						{# Arrivée #}
+						<div class="form-floating mb-4">
+							<input name="arrivee" type="text" class="form-control" id="arrivee" placeholder="Arrivée" required value="{{ app.request.query.get('arrivee') }}">
+							<label for="arrivee" class="form-label">Arrivée</label>
+						</div>
+
+						{# Date #}
+						<div class="form-floating mb-4">
+							<input name="date" type="date" class="form-control" id="date" placeholder="Date" required value="{{ app.request.query.get('date') }}">
+							<label for="date" class="form-label">Date</label>
+						</div>
+
+						{# Bouton Rechercher #}
+						<div class="d-grid gap-2 mb-4">
+							<button class="btn btn-lg btn-primary" type="submit">
+								<i class="bi bi-search"></i>
+								Rechercher
+							</button>
+						</div>
+					</form>
+
+				</div>
+
+
+			</div>
+
+			<div class="col-md-4 col-lg-6 col-xl-7 d-none d-md-block">
+				<div class="bg-cover h-100 me-n3" style="background-image: url(/assets/images/image\ \(2\).jpg);"></div>
+			</div>
+		</div>
+
+
+	{% endblock %}

@@ -1,0 +1,48 @@
+{# templates/account/trajet_new.html.twig #}
+{% extends 'base.html.twig' %}
+{% block title %}Historique des trajets
+{% endblock %}
+
+{% block body %}
+
+	{% set now = "now"|date("U") %}
+
+
+	<section class="py-5">
+		<div class="container">
+
+			<div class="d-flex justify-content-between align-items-end mb-5">
+				<h1 class="hero-heading mb-0">Historique</h1>
+				<a class="btn btn-link text-muted" href="{{ path('app_trajet_account')}}">Trajets à venir</a>
+			</div>
+
+			{% if driverTrips is empty %}
+				<p>Historique de vos trajets</p>
+			{% else %}
+				<div class="d-flex justify-content-between align-items-center flex-column flex-lg-row mb-5">
+					<div class="me-3">
+						<p class="mb-3 mb-lg-0">Vos trajets passés</p>
+					</div>
+				</div>
+				<div class="list-group shadow-mb-5">
+
+					{% for t in driverTrips %}
+						{% set departTs = (t.date_depart|date("U")) %}
+						{% if departTs < now %}
+							{% include "partials/card_trajet_account_historique.html.twig" %}
+						{% endif %}
+					{% endfor %}
+				</div>
+				<nav aria-label="Page trajets"></nav>
+			{% endif %}
+
+
+			<div class="text-center m-5">
+				<a class="btn btn-outline-primary btn-lg px-4 me-md-2" href="{{ path('app_trajet_account')}}">Retour</a>
+			</div>
+
+		</div>
+	</section>
+
+
+{% endblock %}

@@ -1,0 +1,41 @@
+{# templates/account/trajet_new.html.twig #}
+{% extends 'base.html.twig' %}
+{% block title %}Historique de mes réservations
+{% endblock %}
+
+{% block body %}
+	{% set now = "now"|date("U") %}
+
+	<section class="py-5">
+		<div class="container">
+
+			<div class="d-flex justify-content-between align-items-end mb-5">
+				<h1 class="hero-heading mb-0">Historique</h1>
+				<a class="btn btn-link text-muted" href="{{ path('app_reservation_account')}}">Réservations à venir</a>
+			</div>
+
+			{% if history is empty %}
+				<p>Vos réservations passées apparaitront ici.</p>
+			{% else %}
+
+				<div class="d-flex justify-content-between align-items-center flex-column flex-lg-row mb-5">
+					<div class="me-3">
+						<p class="mb-3 mb-lg-0">Vos réservations passées
+						</p>
+					</div>
+				</div>
+				<div class="list-group shadow-mb-5">
+
+					{% for r in history %}
+						{% set departTs = (r.date_depart|date("U")) %}
+						{% if departTs < now %}
+							{% include "partials/card_reservation_historique.html.twig" %}
+						{% endif %}
+					{% endfor %}
+				{% endif %}
+				<div class="text-center m-5">
+					<a class="btn btn-outline-primary btn-lg px-4 me-md-2" href="{{ path('app_reservation_account')}}">Retour</a>
+				</div>
+			</div>
+		</section>
+	{% endblock %}

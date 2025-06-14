@@ -1,0 +1,87 @@
+<div class="col-sm-6 col-xl-4 mb-5 hover-animate">
+
+	<div class="card h-100 border-0 shadow">
+		<div class="card-body">
+			{% if t.energie == 'electrique' %}
+				<div class="text-center mt-2 mb-5">
+					<span class="badge bg-success fs-6">
+						<i class="fa-solid fa-leaf"></i>
+						Voyage écologique
+					</span>
+				</div>
+			{% endif %}
+
+			<div class="row align-items-center justify-content-center mt-3">
+
+				<div class="col-4 me-1">
+					{% if t.chauffeur_filename %}
+						<div class="text-center mb-3">
+							<img src="{{ asset('uploads/photos/' ~ t.chauffeur_filename) }}" alt="Photo de {{ t.chauffeur }}" class="rounded-circle" style="width: 80px; height: 80px; object-fit: cover;">
+						</div>
+					{% else %}
+						<div class="text-center mb-3">
+							<img src="{{ asset('assets/images/avatar-default.png') }}" alt="Pas de photo" class="rounded-circle" style="width: 80px; height: 80px; object-fit: cover; opacity: 0.5;">
+						</div>
+					{% endif %}
+				</div>
+
+				<div class="col-7 ms-auto">
+					<h5 class="card-title">{{ t.chauffeur }}</h5>
+					<h6 class="card-subtitle mb-2 text-body-secondary">
+						{% if t.avg_rating > 0 %}
+							<div class="mb-2">
+								{% for i in 1..5 %}
+									{% if i <= t.avg_rating|round(0, 'floor') %}
+										<i class="fa-solid fa-star text-warning"></i>
+									{% elseif i - t.avg_rating <= 0.5 %}
+										<i class="fa-solid fa-star-half-stroke text-warning"></i>
+									{% else %}
+										<i class="fa-regular fa-star text-warning"></i>
+									{% endif %}
+								{% endfor %}
+
+							</div>
+						{% else %}
+							<p class="text-muted">Pas encore de note.</p>
+						{% endif %}
+					</h6>
+				</div>
+
+			</div>
+
+			<p class="card-subtitle my-4 text-body-secondary text-center">
+				<i class="bi bi-geo-fill text-success"></i>
+				{{t.adresse_depart}}
+				<i class="bi bi-arrow-right mx-1"></i>
+				<i class="bi bi-geo-alt-fill text-danger"></i>
+				{{t.adresse_arrivee}}</p>
+			<p class="card-text">
+				<strong>Départ :</strong>
+				{{ t.date_depart|date('d/m/Y') }}
+				à
+				{{ t.date_depart|date('H:i') }}</p>
+			<p class="card-text">
+				<strong>Arrivée :</strong>
+				{{ t.date_arrivee|date('d/m/Y') }}
+				à
+				{{ t.date_arrivee|date('H:i') }}</p>
+			<p class="card-text">
+				<strong>Prix :</strong>
+				{{ t.prix}}
+				crédits
+			</p>
+			<p class="card-text">
+				<strong>Place{{ t.places_restantes > 1 ? 's' : '' }}
+					:</strong>
+				{{ t.places_restantes}}
+			</p>
+
+		</div>
+		<div class="card-footer bg-transparent border-top-0 text-center mb-3">
+			<a href="{{path('app_trajet_detail', {id: t.id_trajet} ) }}" class="btn btn-outline-primary btn-sm">
+				Voir le trajet
+			</a>
+		</div>
+	</div>
+
+</div>

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Reservation;
 use App\Entity\Transaction;
+use App\Repository\AvisRepository;
 use App\Repository\ReservationRepository;
 use App\Repository\TrajetRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -11,9 +12,81 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class ReservationController extends AbstractController
 {
+
+    #[Route('/reservation/reservation_account', name: 'app_reservation_account')]
+    #[IsGranted('ROLE_USER')]
+    public function reservations(Request $request, EntityManagerInterface $em, ReservationRepository $reservation_repository, TrajetRepository $trajet_repository, AvisRepository $avisRepo): Response
+    {
+
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
+        $vehicules = $user->getVehicules();
+        $history = $reservation_repository->findHistoryByUser($user->getId());
+        $driverTrips = $trajet_repository->findTripsByDriver($user->getId());
+
+        foreach ($history as &$r) {
+            $existing = $avisRepo->findOneBy([
+                'reservation' => $r['reservation_id']
+            ]);
+            $r['avis'] = ($existing !== null);
+        }
+
+
+        foreach ($driverTrips as &$trip) {
+            $tripId = $trip['id_trajet'];
+            $passagers = $reservation_repository->findPassengerPseudoByTrajet($tripId);
+            $trip['passagers'] = $passagers;
+        }
+
+        return $this->render('reservation/reservation_account.html.twig', [
+            'history' => $history,
+            'driverTrips' => $driverTrips,
+            'vehicules' => $vehicules,
+        ]);
+    }
+
+
+
+    #[Route('/reservation/reservation_historique', name: 'app_reservation_historique')]
+    #[IsGranted('ROLE_USER')]
+    public function reservationsOld(Request $request, EntityManagerInterface $em, ReservationRepository $reservation_repository, TrajetRepository $trajet_repository, AvisRepository $avisRepo): Response
+    {
+
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
+        $vehicules = $user->getVehicules();
+        $history = $reservation_repository->findHistoryByUser($user->getId());
+        $driverTrips = $trajet_repository->findTripsByDriver($user->getId());
+
+        foreach ($history as &$r) {
+            $existing = $avisRepo->findOneBy([
+                'reservation' => $r['reservation_id']
+            ]);
+            $r['avis'] = ($existing !== null);
+        }
+
+
+        foreach ($driverTrips as &$trip) {
+            $tripId = $trip['id_trajet'];
+            $passagers = $reservation_repository->findPassengerPseudoByTrajet($tripId);
+            $trip['passagers'] = $passagers;
+        }
+
+        return $this->render('reservation/reservation_historique.html.twig', [
+            'history' => $history,
+            'driverTrips' => $driverTrips,
+            'vehicules' => $vehicules,
+        ]);
+    }
+
+
+
     #[Route('/trajet/{id}/participer', name: 'app_trajet_participer', methods: ['POST'])]
     public function participer(int $id, Request $request, TrajetRepository $trajetRepo, EntityManagerInterface $em): Response
     {

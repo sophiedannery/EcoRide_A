@@ -5,20 +5,30 @@ namespace App\Controller;
 use App\Entity\Avis;
 use App\Form\AvisFormType;
 use App\Entity\Reservation;
+use App\Repository\AvisRepository;
 use App\Repository\ReservationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class AvisController extends AbstractController
 {
-    #[Route('/avis', name: 'app_avis')]
-    public function index(): Response
+
+    #[Route('/avis/avis_account', name: 'app_avis_account')]
+    #[IsGranted('ROLE_USER')]
+    public function mesAvis(AvisRepository $avisRepo): Response
     {
-        return $this->render('avis/index.html.twig', [
-            'controller_name' => 'AvisController',
+
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
+        $avisRecus = $avisRepo->findAvisByChauffeur($user->getId());
+
+        return $this->render('avis/avis_account.html.twig', [
+            'avisRecus' => $avisRecus,
         ]);
     }
 

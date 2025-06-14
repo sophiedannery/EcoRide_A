@@ -11,6 +11,14 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class SearchController extends AbstractController
 {
+
+    #[Route('/search/index', name: 'app_search_index')]
+    public function index(): Response
+    {
+        return $this->render('search/index.html.twig');
+    }
+
+
     #[Route('/search', name: 'app_search')]
     public function search(Request $request, TrajetRepository $trajet_repository): Response
     {
@@ -54,6 +62,8 @@ final class SearchController extends AbstractController
             'nextDate' => $nextDate,
         ]);
     }
+
+
 
     #[Route('/trajet/{id}', name: 'app_trajet_detail', requirements: ['id' => '\d+'])]
     public function detail(int $id, TrajetRepository $repo, AvisRepository $avisRepo): Response
