@@ -1,0 +1,95 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Contact
+{% endblock %}
+
+{% block body %}
+
+	<section class="hero py-5 py-lg-7 text-white dark-overlay">
+		<img class="bg-image" src="{{ asset('assets/images/image (4).jpg') }}">
+		<div class="container overlay-content">
+			<h1 class="hero-heading text-white">Nous contacter</h1>
+		</div>
+	</section>
+
+	<section class="py-5">
+		<div class="container">
+			<div class="row">
+
+				<div class="col-md-4 text-center text-md-start mb-4 mb-md-0">
+					<div class="icon-rounded mb-4">
+						<i class="fa-solid fa-house"></i>
+					</div>
+					<h3 class="h5">Adresse</h3>
+					<p class="text-muted">Contactez-nous pas courrier à l'adresse suivante :
+						<br><br>
+						<strong>
+							EcoRide<br>12 avenue du Grand Jardin
+							<br>
+							90 109 Paris
+							<br>
+							France</strong>
+					</p>
+				</div>
+
+				<div class="col-md-4 text-center text-md-start mb-4 mb-md-0">
+					<div class="icon-rounded mb-4">
+						<i class="fa-solid fa-phone"></i>
+					</div>
+					<h3 class="h5">Téléphone</h3>
+					<p class="text-muted">Notre équipe est joignable du lundi au vendredi de 9h à 18h
+						<br><br>
+						<strong>+33 4 95 45 43 45</strong>
+					</p>
+				</div>
+				<div class="col-md-4 text-center text-md-start mb-4 mb-md-0">
+					<div class="icon-rounded mb-4">
+						<i class="fa-solid fa-envelope"></i>
+					</div>
+					<h3 class="h5">E-mail</h3>
+					<p class="text-muted">Contactez notre support par e-mail à l'adresse suivante :
+						<br><br>
+						<strong>ecoride@contact.com</strong>
+					</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="py-6 bg-gray-100">
+		<div class="container">
+			<h2 class="h4 mb-5">Formulaire de contact</h2>
+			<div class="row">
+				<div class="col-md-8 mb-5 mb-md-0">
+					{{ form_start(contactForm) }}
+					{{ form_errors(contactForm) }}
+
+					<div class="mb-3">
+						{{ form_label(contactForm.name) }}
+						{{ form_widget(contactForm.name) }}
+						{{ form_errors(contactForm.name) }}
+					</div>
+					<div class="mb-3">
+						{{ form_label(contactForm.email) }}
+						{{ form_widget(contactForm.email) }}
+						{{ form_errors(contactForm.email) }}
+					</div>
+					<div class="mb-3">
+						{{ form_label(contactForm.subject) }}
+						{{ form_widget(contactForm.subject) }}
+						{{ form_errors(contactForm.subject) }}
+					</div>
+					<div class="mb-3">
+						{{ form_label(contactForm.message) }}
+						{{ form_widget(contactForm.message) }}
+						{{ form_errors(contactForm.message) }}
+					</div>
+
+					{{ form_widget(contactForm.send) }}
+					{{ form_end(contactForm) }}
+				</div>
+			</div>
+		</div>
+	</section>
+
+{% endblock %}
