@@ -9,9 +9,12 @@ use App\Repository\ReservationRepository;
 use App\Repository\TrajetRepository;
 use App\Repository\VehiculeRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -127,8 +130,14 @@ final class TrajetController extends AbstractController
 
 
     #[Route('/trajet/{id}/annuler', name: 'app_trajet_annuler')]
-    public function annulerTrajet(int $id, Request $request, EntityManagerInterface $em, TrajetRepository $trajetRepo, ReservationRepository $reservationRepo): Response
-    {
+    public function annulerTrajet(
+        int $id,
+        Request $request,
+        EntityManagerInterface $em,
+        TrajetRepository $trajetRepo,
+        ReservationRepository $reservationRepo,
+        MailerInterface $mailer
+    ): Response {
 
         if (!$this->isCsrfTokenValid('cancel_trajet' . $id, $request->request->get('_token'))) {
             $this->addFlash('error', 'Token invalide.');
@@ -156,6 +165,25 @@ final class TrajetController extends AbstractController
             $creditsUtilises = $reservation->getCreditsUtilises();
 
             $passager->setCredits($passager->getCredits() + $creditsUtilises);
+
+            $email = (new TemplatedEmail())
+                ->from('team.ecoride@gmail.com')
+                ->to($passager->getEmail())
+                ->subject('Trajet annulé')
+                ->htmlTemplate('emails/annulation-trajet.html.twig')
+                ->context([
+                    'pseudo' => $passager->getPseudo(),
+                    'adresse_depart' => $trajet->getAdresseDepart(),
+                    'adresse_arrivee' => $trajet->getAdresseArrivee(),
+                    'date_depart' => $trajet->getDateDepart()->format('d/m/Y H:i'),
+                    'credits' => $creditsUtilises,
+                ]);
+
+            try {
+                $mailer->send($email);
+            } catch (Exception $e) {
+                $this->addFlash('error', 'Erreur lors de l\'envoi du mail à ' . $passager->getEmail());
+            }
 
             $transaction = new Transaction();
             $transaction

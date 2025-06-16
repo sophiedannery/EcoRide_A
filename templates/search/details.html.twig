@@ -83,14 +83,20 @@
 						<form method="post" action="{{ path('app_trajet_participer', {id: trip.id_trajet} ) }}" onsubmit="return confirm('Confirmez-vous votre participation ? Coût : {{ trip.prix}} crédits');">
 							<input type="hidden" name="_token" value="{{ csrf_token('participate' ~ trip.id_trajet) }}">
 
-							{% set notEnoughCredits = app.user.credits is not null and app.user.credits < trip.prix %}
-
-							<button class="btn btn-success" {% if notEnoughCredits %} disabled title="Crédits insuffisants" {% endif %}>Participer à ce trajet</button>
-							{% if notEnoughCredits %}
-								<p>Crédits insuffisants</p>
+							{% if app.user %}
+								{% set notEnoughCredits = app.user.credits is not null and app.user.credits < trip.prix %}
+								<button class="btn btn-success" {% if notEnoughCredits %} disabled title="Crédits insuffisants" {% endif %}>
+									Participer à ce trajet
+								</button>
+								{% if notEnoughCredits %}
+									<p>Crédits insuffisants</p>
+								{% endif %}
+							{% else %}
+								<a href="{{ path('app_login') }}" class="btn btn-warning">Connectez-vous pour participer</a>
 							{% endif %}
 						</form>
 					</div>
+
 				</div>
 
 				<div class="col-lg-9 ps-lg-5">
