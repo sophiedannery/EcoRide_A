@@ -18,7 +18,8 @@
 			{% else %}
 				<p class="mt-3">
 					<strong>{{count}}</strong>
-					signalement en attente</p>
+					signalement{{ count > 1 ? 's' : '' }}
+					en attente</p>
 
 				<div class="list-group shadow-mb5">
 					{% for s in signalements %}
@@ -67,6 +68,14 @@
 								</div>
 
 								<div class="text-center">
+
+									<button type="submit" class="btn btn-sm btn-outline-primary">
+										<a href="#">Contacter le chauffeur</a>
+									</button>
+									<button type="submit" class="btn btn-sm btn-outline-primary">
+										<a href="#">Contacter le passager</a>
+									</button>
+
 									<form method="post" action="{{ path('app_employee_cloturer_reservation', { 'id': s.reservation_id }) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir clôturer cette réservation et valider le trajet ?');" style="display:inline">
 										<input type="hidden" name="_token" value="{{ csrf_token('cloturer_reservation' ~ s.reservation_id) }}">
 										<button type="submit" class="btn btn-sm btn-primary">
