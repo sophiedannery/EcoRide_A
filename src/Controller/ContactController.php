@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Form\ContactType;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,15 +23,16 @@ final class ContactController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
-            $email = (new MimeEmail())
+            $email = (new TemplatedEmail())
                 ->from($data['email'])
-                ->to('contact@ecoride.com')
-                ->subject('[Site] ' . $data['subjet'])
-                ->text(
-                    "Nom {$data['name']}\n" .
-                        "Email {$data['email']}\n\n" .
-                        $data['message']
-                );
+                ->to('team.ecoride@gmail.com')
+                ->subject('[EcoRide] Message : ' . $data['subject'])
+                ->htmlTemplate('emails/contact.html.twig')
+                ->context([
+                    'name' => $data['name'],
+                    'sender_email' => $data['email'],
+                    'message' => $data['message'],
+                ]);
 
             $mailer->send($email);
 
