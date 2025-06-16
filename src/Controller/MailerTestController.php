@@ -18,10 +18,10 @@ class MailerTestController extends AbstractController
     public function sendEmail(MailerInterface $mailer): Response
     {
         $email = (new Email())
-            ->from('test@example.com')
-            ->to('demo@fake.com')
-            ->subject('Test sécurisé')
-            ->html('<h1>Hello !</h1><p>Tout est propre ✨</p>');
+            ->from('team.ecoride@gmail.com')
+            ->to('dannery.sophie@gmail.com')
+            ->subject('Test Mail')
+            ->html('<h1>Hello World !</h1><p>Si tu vois ça, t\'es un génie ! ✨</p>');
 
         $mailer->send($email);
 
