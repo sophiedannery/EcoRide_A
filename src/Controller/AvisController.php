@@ -47,26 +47,26 @@ final class AvisController extends AbstractController
 
         if (!$reservation) {
             $this->addFlash('error', 'Réservation introuvable.');
-            return $this->redirectToRoute('app_account_reservations');
+            return $this->redirectToRoute('app_reservation_account');
         }
 
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
         if ($reservation->getPassager()->getId() !== $user->getId()) {
             $this->addFlash('error', 'Vous n\'êtes pas autorisé à laisser un avis pour cette réservation.');
-            return $this->redirectToRoute('app_account_reservations');
+            return $this->redirectToRoute('app_reservation_account');
         }
 
         $trajet = $reservation->getTrajet();
         if ($trajet->getStatut() !== 'validé') {
             $this->addFlash('warning', 'Vous ne pouvez laisser un avis que lorsqu’un trajet est validé.');
-            return $this->redirectToRoute('app_account_reservations');
+            return $this->redirectToRoute('app_reservation_account');
         }
 
         $existingAvis = $em->getRepository(Avis::class)->findOneBy(['reservation' => $reservation]);
         if ($existingAvis) {
             $this->addFlash('info', 'Vous avez déjà laissé un avis pour cette réservation.');
-            return $this->redirectToRoute('app_account_reservations');
+            return $this->redirectToRoute('app_reservation_account');
         }
 
         $avis = new Avis();
@@ -83,7 +83,7 @@ final class AvisController extends AbstractController
             $em->flush();
 
             $this->addFlash('success', 'Votre avis a bien été enregistré et est en attente de validation.');
-            return $this->redirectToRoute('app_account_reservations');
+            return $this->redirectToRoute('app_reservation_account');
         }
 
         return $this->render('avis/new.html.twig', [

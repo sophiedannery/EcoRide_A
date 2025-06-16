@@ -250,8 +250,14 @@ final class TrajetController extends AbstractController
 
     #[Route('/account/trajet/{id}/arriver', name: 'app_trajet_arriver', methods: ['POST'])]
     #[IsGranted('ROLE_USER')]
-    public function arriver(int $id, Request $request, EntityManagerInterface $em, TrajetRepository $trajetRepo, ReservationRepository $reservationRepo): Response
-    {
+    public function arriver(
+        int $id,
+        Request $request,
+        EntityManagerInterface $em,
+        TrajetRepository $trajetRepo,
+        ReservationRepository $reservationRepo,
+        MailerInterface $mailer,
+    ): Response {
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
 
@@ -276,7 +282,31 @@ final class TrajetController extends AbstractController
         $trajet->setStatut('terminé');
         $em->flush();
 
-        $this->addFlash('success', 'Trajet terminé. Les passagers peuvent maintenant valider.');
+        $reservations = $reservationRepo->findBy(['trajet' => $trajet]);
+
+        foreach ($reservations as $reservation) {
+            $passager = $reservation->getPassager();
+
+            $email = (new TemplatedEmail())
+                ->from('team.ecoride@gmail.com')
+                ->to($passager->getEmail())
+                ->subject('Merci de valider votre trajet')
+                ->htmlTemplate('emails/validation-trajet.html.twig')
+                ->context([
+                    'pseudo' => $passager->getPseudo(),
+                    'adresse_depart' => $trajet->getAdresseDepart(),
+                    'adresse_arrivee' => $trajet->getAdresseArrivee(),
+                    'date_depart' => $trajet->getDateDepart()->format('d/m/Y H:i'),
+                ]);
+
+            try {
+                $mailer->send($email);
+            } catch (Exception $e) {
+                $this->addFlash('error', 'Erreur lors de l\'envoi du mail à ' . $passager->getEmail());
+            }
+        }
+
+        $this->addFlash('success', 'Trajet terminé. Les passagers peuvent maintenant valider le trajet.');
 
         return $this->redirectToRoute('app_account');
     }

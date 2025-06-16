@@ -1,4 +1,35 @@
-<h1>Bonjour
-	EcoRide
-	👋</h1>
-<p>Ceci est un test depuis Symfony vers Mailtrap.</p>
+<p>Bonjour
+	{{ pseudo }},</p>
+
+<p>
+	Votre trajet de
+	<strong>{{ adresse_depart }}</strong>
+	à
+	<strong>{{ adresse_arrivee }}</strong>
+	du
+	<strong>{{ date_depart }}</strong>
+	est maintenant terminé.
+</p>
+
+<p>
+	Merci de vous connecter à votre espace EcoRide pour
+	<strong>valider que tout s’est bien passé</strong>,
+				    ou pour
+	<strong>signaler un éventuel problème</strong>.
+</p>
+
+<p>
+	<a href="{{ url('app_account') }}" style="background-color: #2d6a4f; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
+		➤ Valider mon trajet
+	</a>
+</p>
+
+<p>
+	Cette étape est importante pour finaliser la transaction et évaluer votre chauffeur.
+</p>
+
+<br>
+
+<p>
+	<em>L’équipe EcoRide</em>
+</p>
