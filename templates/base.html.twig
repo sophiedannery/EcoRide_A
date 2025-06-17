@@ -31,15 +31,20 @@
 
 		{% include "partials/header.html.twig" %}
 
+
 		{% for label, messages in app.flashes %}
 			<div class="container mt-5 mb-3">
-				<div class="alert alert-{{ label }}">
+				<div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
 					{% for msg in messages %}
-						{{ msg }}
+						<div class="text-center">
+							{{ msg }}
+						</div>
 					{% endfor %}
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Ferme"></button>
 				</div>
 			</div>
 		{% endfor %}
+
 
 		<main class="flex-fill"> {% block body %}{% endblock %}
 			</main>

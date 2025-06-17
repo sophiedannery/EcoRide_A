@@ -25,7 +25,6 @@ class RegistrationController extends AbstractController
             /** @var string $plainPassword */
             $plainPassword = $form->get('plainPassword')->getData();
 
-            // encode the plain password
             $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
 
             $user->setRoles(['ROLE_USER']);
@@ -34,9 +33,9 @@ class RegistrationController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-            // do anything else you need here, like send an email
-
-            return $security->login($user, 'form_login', 'main');
+            $security->login($user, 'form_login', 'main');
+            $this->addFlash('success', '🎉 Vous avez reçu 20 crédits pour votre premier trajet !');
+            return $this->redirectToRoute('app_account');
         }
 
         return $this->render('registration/register.html.twig', [
