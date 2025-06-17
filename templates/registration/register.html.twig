@@ -31,6 +31,19 @@
 					</div>
 
 					<div class="mb-4">
+						{{ form_label(registrationForm.plainPassword.first, null, { label_attr: { class: 'form-label' } }) }}
+						{{ form_widget(registrationForm.plainPassword.first, { attr: { class: 'form-control' } }) }}
+						{{ form_errors(registrationForm.plainPassword.first) }}
+					</div>
+
+					<div class="mb-4">
+						{{ form_label(registrationForm.plainPassword.second, null, { label_attr: { class: 'form-label' } }) }}
+						{{ form_widget(registrationForm.plainPassword.second, { attr: { class: 'form-control' } }) }}
+						{{ form_errors(registrationForm.plainPassword.second) }}
+					</div>
+
+
+					<div class="mb-4">
 						{{ form_label(registrationForm.statut, 'Statut', { label_attr: { class: 'form-label d-block' } }) }}
 						{% for child in registrationForm.statut %}
 							<div class="form-check">
@@ -45,11 +58,6 @@
 						{{ form_errors(registrationForm.statut) }}
 					</div>
 
-					<div class="mb-4">
-						{{ form_label(registrationForm.plainPassword, 'Mot de passe', { label_attr: { class: 'form-label' } }) }}
-						{{ form_widget(registrationForm.plainPassword, { attr: { class: 'form-control' } }) }}
-						{{ form_errors(registrationForm.plainPassword) }}
-					</div>
 
 					<div class="mb-4 form-check">
 						{{ form_widget(registrationForm.agreeTerms, { attr: { class: 'form-check-input' } }) }}
