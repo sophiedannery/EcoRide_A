@@ -81,8 +81,6 @@ final class SearchController extends AbstractController
         $avgRating = $repo->getDriverAverageRating($trip['chauffeur_id']);
         $reviewsCount = count($reviews);
 
-        dump($reviews);
-
         return $this->render('search/details.html.twig', [
             'trip' => $trip,
             'reviews' => $reviews,
