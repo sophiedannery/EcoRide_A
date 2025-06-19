@@ -282,6 +282,62 @@
  .icon {
   margin-bottom: 0.5rem;
  }
+
+
+
+ @media (max-width: 576px) {
+  .hero-heading {
+    font-size: 2rem;
+  }
+
+  h1, h2, h3 {
+    font-size: 1.5rem;
+  }
+
+  .display-3,
+  .display-4,
+  .display-5 {
+    font-size: 2rem;
+  }
+
+  .py-5 {
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+  }
+
+  .px-4 {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+
+  form .form-control {
+    font-size: 1rem;
+    padding: 0.75rem;
+    min-height: 70vh;
+  }
+
+  .btn {
+    font-size: 1.1rem;
+    padding: 0.9rem 1.4rem;
+  }
+}
+
+
+@media (max-width: 991px) {
+  .navbar-collapse {
+    background: white;
+    padding: 1rem;
+  }
+
+  .navbar-nav .nav-item {
+    margin-bottom: 0.5rem;
+  }
+
+  .navbar-nav .btn {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+}
   
   /* .derniers_trajets{
     background-color: #10303e;
