@@ -278,6 +278,10 @@
   font-family: "object-fit: cover;";
   object-fit: cover;
  }
+
+ .icon {
+  margin-bottom: 0.5rem;
+ }
   
   /* .derniers_trajets{
     background-color: #10303e;
