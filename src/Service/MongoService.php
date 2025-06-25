@@ -27,6 +27,11 @@ class MongoService
     public function getPreferences(int $userId): ?array
     {
         $doc = $this->collection->findOne(['user_id' => $userId]);
+
+        if ($doc && isset($doc['preferences'])) {
+            return (array) $doc['preferences'];
+        }
+
         return $doc['preferences'] ?? null;
     }
 }
