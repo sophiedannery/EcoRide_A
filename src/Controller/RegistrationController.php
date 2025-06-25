@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\RegistrationForm;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,8 +16,13 @@ use Symfony\Component\Routing\Attribute\Route;
 class RegistrationController extends AbstractController
 {
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager): Response
-    {
+    public function register(
+        Request $request,
+        UserPasswordHasherInterface $userPasswordHasher,
+        Security $security,
+        EntityManagerInterface $entityManager,
+        LoggerInterface $logger
+    ): Response {
         $user = new User();
         $form = $this->createForm(RegistrationForm::class, $user);
         $form->handleRequest($request);
@@ -37,6 +43,20 @@ class RegistrationController extends AbstractController
             $this->addFlash('success', '🎉 Vous avez reçu 20 crédits pour votre premier trajet !');
             return $this->redirectToRoute('app_account');
         }
+
+
+        if ($form->isSubmitted() && !$form->isValid()) {
+            // 🔍 dump dans les logs Heroku
+            dump((string) $form->getErrors(true, false));
+
+            // 📝 sauvegarde propre des erreurs
+            $errors = [];
+            foreach ($form->getErrors(true, false) as $e) {
+                $errors[] = $e->getMessage();
+            }
+            $logger->error('Inscription invalide', ['errors' => $errors]);
+        }
+
 
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form,
