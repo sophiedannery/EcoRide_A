@@ -10,7 +10,8 @@ class MongoService
 
     public function __construct(string $mongoUrl)
     {
-        $client = new Client($mongoUrl);
+        $client = new Client($mongoUrl, [], ['ssl' => true]);
+
         $this->collection = $client->ecoride->chauffeur_preferences;
     }
 
