@@ -13,12 +13,15 @@ class ForceHttpsSubscriber implements EventSubscriberInterface
     {
         $request = $event->getRequest();
         $host = $request->getHost();
-        $isSecure = $request->isSecure();
+        $uri = $request->getRequestUri();
 
-        $shouldRedirect = false;
+        $proto = $request->headers->get('X-Forwarded-Proto');
+        $isHttps = $proto === 'https';
+
         $targetHost = $host;
+        $shouldRedirect = false;
 
-        if (!$isSecure) {
+        if (!$isHttps) {
             $shouldRedirect = true;
         }
 
@@ -28,9 +31,7 @@ class ForceHttpsSubscriber implements EventSubscriberInterface
         }
 
         if ($shouldRedirect) {
-            $uri = $request->getRequestUri();
             $redirectUrl = 'https://' . $targetHost . $uri;
-
             $event->setResponse(new RedirectResponse($redirectUrl, 301));
         }
     }
