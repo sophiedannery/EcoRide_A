@@ -46,10 +46,8 @@ class RegistrationController extends AbstractController
 
 
         if ($form->isSubmitted() && !$form->isValid()) {
-            // 🔍 dump dans les logs Heroku
-            dump((string) $form->getErrors(true, false));
 
-            // 📝 sauvegarde propre des erreurs
+
             $errors = [];
             foreach ($form->getErrors(true, false) as $e) {
                 $errors[] = $e->getMessage();
