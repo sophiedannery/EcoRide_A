@@ -9,8 +9,19 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 class ForceHttpsSubscriber implements EventSubscriberInterface
 {
+    private string $env;
+
+    public function __construct(string $env)
+    {
+        $this->env = $env;
+    }
+
     public function onKernelRequest(RequestEvent $event)
     {
+        if ($this->env === 'dev') {
+            return;
+        }
+
         $request = $event->getRequest();
         $host = $request->getHost();
         $uri = $request->getRequestUri();
