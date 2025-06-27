@@ -79,7 +79,6 @@
 
 					<div class="text-center m-5">
 						<a href="{{ path('app_vehicule_new')}}" class="btn btn-primary btn-lg px-4 me-md-2">Ajouter un véhicule</a>
-						<a class="btn btn-outline-primary btn-lg px-4 me-md-2" href="{{ path('app_account')}}">Retour</a>
 					</div>
 				</div>
 
@@ -90,22 +89,26 @@
 						{% if user_preferences is defined and user_preferences|length > 0 %}
 							<ul class="list-inline">
 								{% for pref in user_preferences %}
-									<li class="list-inline-item badge bg-info text-dark me-1">
+									<li class="list-inline-item me-1">
 										{% set icon = icons[pref]|default('fa-circle') %}
 										<i class="fa-solid {{ icon }} me-1"></i>
 										{{pref}}</li>
 
 								{% endfor %}
 							</ul>
-							<a href="{{ path('edit_preferences')}}" class="btn btn-outline-primary btn-sm mt-2">Modifier mes préférences</a>
+							<a href="{{ path('edit_preferences')}}" class="btn btn-primary btn-lg px-4 me-md-2">Modifier mes préférences</a>
 
 						{% else %}
-							<a href="{{ path('edit_preferences')}}" class="btn btn-outline-primary btn-sm mt-2">Ajouter mes préférences</a>
+							<a href="{{ path('edit_preferences')}}" class="btn btn-primary btn-lg px-4 me-md-2">Ajouter mes préférences</a>
 						{% endif %}
 					</div>
 				</div>
 
 
+			</div>
+
+			<div>
+				<a class="btn btn-outline-primary btn-lg px-4 me-md-2 my-4" href="{{ path('app_account')}}">Retour</a>
 			</div>
 
 

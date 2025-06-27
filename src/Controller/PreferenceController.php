@@ -33,12 +33,13 @@ class PreferenceController extends AbstractController
 
         if ($request->isMethod('POST')) {
 
-            $prefs = $request->request->all('preferences');
+            $tabac = $request->request->get('tabac');
+            $animaux = $request->request->get('animaux');
+            $optionnelles = $request->request->all('preferences');
 
-            $prefs = array_filter($prefs, fn($p) => !empty($p));
+            $allPreferences = array_filter(array_merge([$tabac, $animaux], $optionnelles), fn($p) => !empty($p));
 
-
-            $mongo->savePreferences($user->getId(), array_values($prefs));
+            $mongo->savePreferences($user->getId(), array_values($allPreferences));
 
             return $this->redirectToRoute('app_vehicule_account');
         }
