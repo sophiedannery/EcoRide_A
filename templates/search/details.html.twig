@@ -92,7 +92,7 @@
 							{% if preferences is empty %}Aucune préférence
 							{% else %}
 								<ul class="card-text text-muted">
-									{% for libelle in preferences %}
+									{% for pref in preferences %}
 										<li><i class="fa-solid {{ icons[pref]|default('fa-circle') }} me-2"></i>
                 {{ labels[pref]|default(pref) }}</li>
 									{% endfor %}
