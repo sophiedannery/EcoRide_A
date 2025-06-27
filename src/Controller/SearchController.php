@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Repository\AvisRepository;
 use App\Repository\TrajetRepository;
+use App\Service\MongoService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -66,8 +67,12 @@ final class SearchController extends AbstractController
 
 
     #[Route('/trajet/{id}', name: 'app_trajet_detail', requirements: ['id' => '\d+'])]
-    public function detail(int $id, TrajetRepository $repo, AvisRepository $avisRepo): Response
-    {
+    public function detail(
+        int $id,
+        TrajetRepository $repo,
+        AvisRepository $avisRepo,
+        MongoService $mongo
+    ): Response {
 
         $trip = $repo->findTripById($id);
         if (empty($trip)) {
@@ -75,9 +80,11 @@ final class SearchController extends AbstractController
         }
 
         $reviews = $repo->getTripReviews($id);
+
         $chauffeurId = $trip['chauffeur_id'];
         $reviews = $avisRepo->findAvisByChauffeur($chauffeurId);
-        $preferences = $repo->getDriverPreferences($trip['chauffeur_id']);
+        // $preferences = $repo->getDriverPreferences($trip['chauffeur_id']);
+        $preferences = $mongo->getPreferences($chauffeurId);
         $avgRating = $repo->getDriverAverageRating($trip['chauffeur_id']);
         $reviewsCount = count($reviews);
 

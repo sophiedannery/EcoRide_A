@@ -100,12 +100,12 @@
 					<p class="text-muted mb-5">Ajouter ou modifier vos préférences de conduite ici</p>
 					<div>
 						{% if user_preferences is defined and user_preferences|length > 0 %}
-							<ul class="list-group mb-4">
+							<ul>
 								{% for pref in user_preferences %}
-									<li class="list-group-item">
+									<li>
 										{% set icon = icons[pref]|default('fa-circle') %}
 										<i class="fa-solid {{ icon }} me-2"></i>
-										{{label[pref]|default(pref)}}</li>
+										{{labels[pref]|default(pref)}}</li>
 
 								{% endfor %}
 							</ul>

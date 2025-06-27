@@ -5,89 +5,105 @@
 
 {% block body %}
 
-	<section class="py-5">
+<section class="py-5">
 
-		<div class="container">
+	<div class="container">
 
-			<div class="row">
+		<div class="row">
 
-				<h1 class="hero-heading mb-5">Détails du trajet</h1>
+			<h1 class="hero-heading mb-5">Détails du trajet</h1>
 
-				<div class="col-lg-3 me-lg-auto">
-					<div class="card boarder-0 shadow mb-6 mb-lg-0">
-						<div class="card-header bg-gray-100 py-4 border-0 text-center">
-							<a class="d-inline-block" href:"#">
-								{% if trip['chauffeur_filename'] %}
-									<div>
-										<img src="{{ asset('uploads/photos/' ~ trip['chauffeur_filename']) }}" alt="Photo de profil de  {{ trip['chauffeur'] }}" style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%;"></div>
-								{% else %}
-									<div>
-										<img src="{{ asset('assets/images/avatar.png') }}" alt="Pas de photo de profil" style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%;"></div>
-								{% endif %}
-							</a>
-							<h5>{{ trip['chauffeur'] }}</h5>
-							<p class="text-muted text-sm mb-0"></p>
-						</div>
-						<div class="card-body p-4">
-							<div class="d-flex align-items-center mb-3">
+			<div class="col-lg-3 me-lg-auto">
+				<div class="card boarder-0 shadow mb-6 mb-lg-0">
+					<div class="card-header bg-gray-100 py-4 border-0 text-center">
+						<a class="d-inline-block" href:"#">
+							{% if trip['chauffeur_filename'] %}
 								<div>
-									{% if avgRating is not null %}
-										<div
-											class="mb-0">
-											{# Affiche jusqu'à 5 étoiles pleines, demi- ou vides #}
-											{% for i in 1..5 %}
-												{% if i <= avgRating|round(0, 'floor') %}
-													<i class="fa-solid fa-star text-warning"></i>
-												{% elseif i - avgRating <= 0.5 %}
-													<i class="fa-solid fa-star-half-stroke text-warning"></i>
-												{% else %}
-													<i class="fa-regular fa-star text-warning"></i>
-												{% endif %}
-											{% endfor %}
-										</div>
-									{% else %}
-										<p class="text-muted mb-0">Pas encore de note</p>
-									{% endif %}
+									<img src="{{ asset('uploads/photos/' ~ trip['chauffeur_filename']) }}" alt="Photo de profil de  {{ trip['chauffeur'] }}" style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%;"></div>
+							{% else %}
+								<div>
+									<img src="{{ asset('assets/images/avatar.png') }}" alt="Pas de photo de profil" style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%;"></div>
+							{% endif %}
+						</a>
+						<h5>{{ trip['chauffeur'] }}</h5>
+						<p class="text-muted text-sm mb-0"></p>
+					</div>
+					<div class="card-body p-4">
+						<div class="d-flex align-items-center mb-3">
+							<div>
+								{% if avgRating is not null %}
+									<div
+										class="mb-0">
+										{# Affiche jusqu'à 5 étoiles pleines, demi- ou vides #}
+										{% for i in 1..5 %}
+											{% if i <= avgRating|round(0, 'floor') %}
+												<i class="fa-solid fa-star text-warning"></i>
+											{% elseif i - avgRating <= 0.5 %}
+												<i class="fa-solid fa-star-half-stroke text-warning"></i>
+											{% else %}
+												<i class="fa-regular fa-star text-warning"></i>
+											{% endif %}
+										{% endfor %}
+									</div>
+								{% else %}
+									<p class="text-muted mb-0">Pas encore de note</p>
+								{% endif %}
+							</div>
+						</div>
+						{% if reviewCount > 0 %}
+							<div class="d-flex align-items-center mb-3">
+								<div class="icon-rounded icon-rounded-sm bg-primary-light flex-shrink-0 me-2">
+									<i class="fa-solid fa-comment"></i>
+								</div>
+								<div>
+									<p class="mb-0">{{ reviewCount }}avis</p>
 								</div>
 							</div>
+						{% endif %}
+						<div class="d-flex align-items-center mb-3"></div><hr><h6>Préférences</h6>
 
-							{% if reviewCount > 0 %}
-								<div class="d-flex align-items-center mb-3">
-									<div class="icon-rounded icon-rounded-sm bg-primary-light flex-shrink-0 me-2">
-										<i class="fa-solid fa-comment"></i>
-									</div>
-									<div>
-										<p class="mb-0">
-											{{ reviewCount }}
-											avis
-										</p>
-									</div>
-								</div>
-							{% endif %}
-							<div class="d-flex align-items-center mb-3"></div>
-							<hr>
-							<h6>Préférences</h6>
-							{% if preferences is empty %}
-								Aucune préférence
+						{% set icons = {
+    'fumeur': 'fa-smoking',
+    'non-fumeur': 'fa-ban-smoking',
+    'animaux autorisés': 'fa-dog',
+    "pas d'animaux": 'fa-shield-dog',
+    'musique oui': 'fa-music',
+    'musique non': 'fa-volume-xmark',
+    'musique un peu': 'fa-volume-low',
+    'discussion oui': 'fa-comments',
+    'discussion non': 'fa-face-zipper',
+    'discussion un peu': 'fa-comment-dots'
+} %}
+
+						{% set labels = {
+    'fumeur': 'Fumeur',
+    'non-fumeur': 'Non-fumeur',
+    'animaux autorisés': 'Animaux autorisés',
+    "pas d'animaux": 'Pas d\'animaux',
+    'musique oui': 'Avec musique',
+    'musique non': 'Silence pendant le trajet',
+    'musique un peu': 'Un peu de musique',
+    'discussion oui': 'Discuter avec les passagers',
+    'discussion non': 'Plutôt silencieux',
+    'discussion un peu': 'Discussion modérée'
+} %}
+
+
+							{% if preferences is empty %}Aucune préférence
 							{% else %}
 								<ul class="card-text text-muted">
 									{% for libelle in preferences %}
-										<li>{{ libelle }}</li>
+										<li><i class="fa-solid {{ icons[pref]|default('fa-circle') }} me-2"></i>
+                {{ labels[pref]|default(pref) }}</li>
 									{% endfor %}
 								</ul>
 							{% endif %}
 						</div>
 					</div>
-
 					<div class="mt-4 text-center">
-						<form method="post" action="{{ path('app_trajet_participer', {id: trip['id_trajet']} ) }}" onsubmit="return confirm('Confirmez-vous votre participation ? Coût : {{ trip.prix}} crédits');">
-							<input type="hidden" name="_token" value="{{ csrf_token('participate' ~ trip['id_trajet']) }}">
-
+						<form method="post" action="{{ path('app_trajet_participer', {id: trip['id_trajet']} ) }}" onsubmit="return confirm('Confirmez-vous votre participation ? Coût : {{ trip.prix}} crédits');"><input type="hidden" name="_token" value="{{ csrf_token('participate' ~ trip['id_trajet']) }}">
 							{% if app.user %}
-								{% set notEnoughCredits = app.user.credits is not null and app.user.credits < trip['prix'] %}
-								<button class="btn btn-success" {% if notEnoughCredits %} disabled title="Crédits insuffisants" {% endif %}>
-									Participer à ce trajet
-								</button>
+								{% set notEnoughCredits = app.user.credits is not null and app.user.credits < trip['prix'] %}<button class="btn btn-success" {% if notEnoughCredits %} disabled title="Crédits insuffisants" {% endif %}>Participer à ce trajet</button>
 								{% if notEnoughCredits %}
 									<p>Crédits insuffisants</p>
 								{% endif %}
@@ -96,35 +112,19 @@
 							{% endif %}
 						</form>
 					</div>
-
 				</div>
-
 				<div class="col-lg-9 ps-lg-5">
-
-
 					<div class="text-block">
 						<p>
 							{% if trip['vehicule_energie'] == 'electrique' %}
 								<span class="badge badge-rounded bg-success p-2 mt-2 text-white">VOYAGE ECOLOGIQUE</span>
 							{% endif %}
 						</p>
-
 					</div>
-
-					<div
-						class="text-block">
-
-						{# <p class="subtitle">blabla</p> #}
-						<h1 class="hero-heading mb-3">
+					<div class="text-block">{# <p class="subtitle">blabla</p> #}<h1 class="hero-heading mb-3">
 							<i class="fa-solid fa-location-dot"></i>
-							{{trip['adresse_depart']}}
-							<i class="fa-solid fa-arrow-right-long"></i>
-							{{trip['adresse_arrivee']}}</h1>
-
-						<hr>
-					</div>
-
-
+							{{trip['adresse_depart']}}<i class="fa-solid fa-arrow-right-long"></i>
+							{{trip['adresse_arrivee']}}</h1><hr></div>
 					<div class="text-block">
 						<h6 class="mb-4">Horaires</h6>
 						<div class="row mb-3">
@@ -132,58 +132,41 @@
 								<p class="text-sm mb-0 me-3">Départ</p>
 								<div class="date-tile ">
 									<div class="text-uppercase">
-										<span class="text-sm">{{ trip['date_depart']|date('d/m/Y') }}</span>
-										<br>
-										<strong class="text-lg">{{ trip['date_depart']|date('H:i') }}</strong>
+										<span class="text-sm">{{ trip['date_depart']|date('d/m/Y') }}</span><br><strong class="text-lg">{{ trip['date_depart']|date('H:i') }}</strong>
 									</div>
 								</div>
-
 							</div>
 							<div class="col-md-6 d-flex align-items-center">
 								<p class="text-sm mb-0 me-3">Arrivée</p>
 								<div class="date-tile ">
 									<div class="text-uppercase">
-										<span class="text-sm">{{ trip['date_arrivee']|date('d/m/Y') }}</span>
-										<br>
-										<strong class="text-lg">{{ trip['date_arrivee']|date('H:i') }}</strong>
+										<span class="text-sm">{{ trip['date_arrivee']|date('d/m/Y') }}</span><br><strong class="text-lg">{{ trip['date_arrivee']|date('H:i') }}</strong>
 									</div>
 								</div>
-
 							</div>
-						</div>
-						<br><br>
-					</div>
-
+						</div><br><br></div>
 					<div class="text-block">
 						<div class="row">
 							<div class="col-sm">
 								<h6>Tarif</h6>
 								<p class="text-muted">
 									<i class="bi bi-coin"></i>
-									{{ trip['prix'] }}
-									crédits</p>
+									{{ trip['prix'] }}crédits</p>
 							</div>
 							<div class="col-sm">
 								<h6>Places restantes</h6>
 								<p class="text-muted">
 									<i class="bi bi-people-fill"></i>
-									{{ trip['places_restantes'] }}
-									place{{ trip['places_restantes'] > 1 ? 's' }}
-									restante{{ trip['places_restantes'] > 1 ? 's' }}</p>
+									{{ trip['places_restantes'] }}place{{ trip['places_restantes'] > 1 ? 's' }}restante{{ trip['places_restantes'] > 1 ? 's' }}</p>
 							</div>
-						</div>
-						<br><br>
-					</div>
-
+						</div><br><br></div>
 					<div class="text-block">
 						<div class="row">
 							<div class="col-sm">
 								<h6>Le véhicule</h6>
 								<p class="text-muted">
 									<i class="fa-solid fa-car-side"></i>
-									{{trip['vehicule_marque']}}
-									{{trip['vehicule_modele']}}
-								</p>
+									{{trip['vehicule_marque']}}{{trip['vehicule_modele']}}</p>
 							</div>
 							<div class="col-sm">
 								<h6>Energie</h6>
@@ -195,25 +178,16 @@
 									{% endif %}
 									{{ trip['vehicule_energie']}}</p>
 							</div>
-						</div>
-						<hr>
-					</div>
-
-
+						</div><hr></div>
 					<div class="text-block mt-5">
-
-						<h5 class="mb-4 ">Les avis de
-							{{ trip['chauffeur'] }}</h5>
+						<h5 class="mb-4 ">Les avis de{{ trip['chauffeur'] }}</h5>
 						{% if reviews is empty %}
 							<p class="subtitle text-sm">Aucun avis pour ce chauffeur</p>
 						{% else %}
 							{% for a in reviews %}
 								<div class="d-flex d-block d-sm-flex review mb-3 mt-1">
 									<div class="text-md-center flex-shrink-0 me-4 me-xl-5">
-										{% if a.photo_passager %}
-											<img class="d-block avatar avatar-xl p-2 mb-2" src="{{ asset('uploads/photos/' ~ a.photo_passager) }}" alt="Photo de {{ a.pseudo_passager}}">
-										{% else %}
-											<img class="d-block avatar avatar-xl p-2 mb-2" src="{{ asset('assets/images/avatar.png') }}" alt="Pas de photo">
+										{% if a.photo_passager %}<img class="d-block avatar avatar-xl p-2 mb-2" src="{{ asset('uploads/photos/' ~ a.photo_passager) }}" alt="Photo de {{ a.pseudo_passager}}">{% else %}<img class="d-block avatar avatar-xl p-2 mb-2" src="{{ asset('assets/images/avatar.png') }}" alt="Pas de photo">
 										{% endif %}
 										<span class="text-uppercase text-muted text-sm">{{ a.date_creation|date('d/m/Y')}}</span>
 									</div>
@@ -234,21 +208,16 @@
 											<p class="text-muted text-sm">{{a.commentaire}}</p>
 										{% endif %}
 									</div>
-								</div>
-								<hr>
-
+								</div><hr>
 							{% endfor %}
 						{% endif %}
-
-
 					</div>
-
 				</div>
 				<div class="text-center mt-5">
 					<a class="btn btn-outline-primary btn-lg px-4 me-md-2" href="/">Retour à l'accueil</a>
 				</div>
 			</div>
 		</div>
-	</div>
 
-</section>{% endblock %}
+	</section>
+{% endblock %}
