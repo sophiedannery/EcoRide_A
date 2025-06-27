@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Service\MongoService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -17,5 +18,33 @@ class PreferenceController extends AbstractController
         $prefs = $mongo->getPreferences(1);
 
         return $this->json(['prefs' => $prefs]);
+    }
+
+
+    #[Route('/preferences/edit', name: 'edit_preferences')]
+    public function edit(
+        Request $request,
+        MongoService $mongo
+    ): Response {
+
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+        $saved = $mongo->getPreferences($user->getId()) ?? [];
+
+        if ($request->isMethod('POST')) {
+
+            $prefs = $request->request->all('preferences');
+
+            $prefs = array_filter($prefs, fn($p) => !empty($p));
+
+
+            $mongo->savePreferences($user->getId(), array_values($prefs));
+
+            return $this->redirectToRoute('app_vehicule_account');
+        }
+
+        return $this->render('preferences/edit.html.twig', [
+            'preferences' => $saved,
+        ]);
     }
 }

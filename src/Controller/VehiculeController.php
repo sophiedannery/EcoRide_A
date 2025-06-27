@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Service\MongoService;
 use App\Entity\Vehicule;
 use App\Form\VehiculeForm;
 use App\Repository\ReservationRepository;
@@ -12,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+
 
 final class VehiculeController extends AbstractController
 {
@@ -45,16 +47,24 @@ final class VehiculeController extends AbstractController
 
     #[Route('/vehicule/vehicule_account', name: 'app_vehicule_account')]
     #[IsGranted('ROLE_USER')]
-    public function vehicules(Request $request, EntityManagerInterface $em, ReservationRepository $reservation_repository, TrajetRepository $trajet_repository): Response
-    {
+    public function vehicules(
+        Request $request,
+        EntityManagerInterface $em,
+        ReservationRepository $reservation_repository,
+        TrajetRepository $trajet_repository,
+        MongoService $mongo
+    ): Response {
 
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
 
         $vehicules = $user->getVehicules();
 
+        $preferences = $mongo->getPreferences($user->getId());
+
         return $this->render('vehicule/vehicule_account.html.twig', [
             'vehicules' => $vehicules,
+            'user_preferences' => $preferences
         ]);
     }
 }

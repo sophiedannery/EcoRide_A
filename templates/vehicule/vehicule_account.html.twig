@@ -5,65 +5,107 @@
 
 {% block body %}
 
+	{% set icons = {
+    'fumeur': 'fa-smoking',
+    'non-fumeur': 'fa-ban-smoking',
+    'animaux autorisés': 'fa-dog',
+    "pas d'animaux": 'fa-shield-dog',
+    'musique oui': 'fa-music',
+    'musique non': 'fa-volume-xmark',
+    'musique un peu': 'fa-volume-low',
+    'discussion oui': 'fa-comments',
+    'discussion non': 'fa-face-zipper',
+    'discussion un peu': 'fa-comment-dots'
+} %}
+
 	<section class="py-5">
 		<div class="container">
-			<h1 class="hero-heading mb-0">Vos véhicules</h1>
-			<p class="text-muted mb-5">Ajouter ou supprimer un véhicule ici</p>
-			<div>
-				{% if vehicules is empty %}
-					<p>Vos véhicule apparaitront ici.</p>
-				{% else %}
-					{% for v in vehicules %}
-						<div class="text-block">
-							<div class="row mb-3">
-								<div class="col-sm-9">
-									<h5>{{ v.marque }}
-										{{ v.modele }}</h5>
+			<div class="row">
+
+				<div class="col-md-8 col-lg-4 ms-lg-auto">
+					<h1 class="hero-heading mb-0">Vos véhicules</h1>
+					<p class="text-muted mb-5">Ajouter ou supprimer un véhicule ici</p>
+					<div>
+						{% if vehicules is empty %}
+							<p>Vos véhicule apparaitront ici.</p>
+						{% else %}
+							{% for v in vehicules %}
+								<div class="text-block">
+									<div class="row mb-3">
+										<div class="col-sm-9">
+											<h5>{{ v.marque }}
+												{{ v.modele }}</h5>
+										</div>
+										<div class="col-sm-3 text-end"></div>
+									</div>
+									<p class="text-sm text-muted">
+										<i class=""></i>
+										<strong>Marque :</strong>
+
+										{{ v.marque }}<br>
+										<i class=""></i>
+										<strong>Modèle :</strong>
+
+										{{ v.modele }}<br>
+										<i class=""></i>
+										<strong>Couleur :</strong>
+										{{ v.couleur }}<br>
+										<i class=""></i>
+										<strong>Energie :</strong>
+										{{ v.energie }}<br>
+										<i class=""></i>
+										<strong>Place{{ v.placesDisponibles > 1 ? 's' : '' }}
+											disponible{{ v.placesDisponibles > 1 ? 's' : '' }}
+											:</strong>
+										{{ v.placesDisponibles }}
+										<br>
+										<i class=""></i>
+										<strong>Immatriculation :</strong>
+										{{ v.immatriculation }}
+										<span class="mx-2">
+											|
+										</span>
+										<i class=""></i>
+										<strong>Date première immatriculation :</strong>
+										{{ v.datePremiereImmatriculation|date('d/m/Y') }}
+									</p>
+									<hr>
 								</div>
-								<div class="col-sm-3 text-end"></div>
-							</div>
-							<p class="text-sm text-muted">
-								<i class=""></i>
-								<strong>Marque :</strong>
 
-								{{ v.marque }}<br>
-								<i class=""></i>
-								<strong>Modèle :</strong>
+							{% endfor %}
 
-								{{ v.modele }}<br>
-								<i class=""></i>
-								<strong>Couleur :</strong>
-								{{ v.couleur }}<br>
-								<i class=""></i>
-								<strong>Energie :</strong>
-								{{ v.energie }}<br>
-								<i class=""></i>
-								<strong>Place{{ v.placesDisponibles > 1 ? 's' : '' }}
-									disponible{{ v.placesDisponibles > 1 ? 's' : '' }}
-									:</strong>
-								{{ v.placesDisponibles }}
-								<br>
-								<i class=""></i>
-								<strong>Immatriculation :</strong>
-								{{ v.immatriculation }}
-								<span class="mx-2">
-									|
-								</span>
-								<i class=""></i>
-								<strong>Date première immatriculation :</strong>
-								{{ v.datePremiereImmatriculation|date('d/m/Y') }}
-							</p>
-							<hr>
-						</div>
+						{% endif %}
+					</div>
 
-					{% endfor %}
+					<div class="text-center m-5">
+						<a href="{{ path('app_vehicule_new')}}" class="btn btn-primary btn-lg px-4 me-md-2">Ajouter un véhicule</a>
+						<a class="btn btn-outline-primary btn-lg px-4 me-md-2" href="{{ path('app_account')}}">Retour</a>
+					</div>
+				</div>
 
-				{% endif %}
-			</div>
+				<div class="col-lg-7 mb-5 mb-lg-0">
+					<h1 class="hero-heading mb-0">Vos préférences</h1>
+					<p class="text-muted mb-5">Ajouter ou modifier vos préférences de conduite ici</p>
+					<div>
+						{% if user_preferences is defined and user_preferences|length > 0 %}
+							<ul class="list-inline">
+								{% for pref in user_preferences %}
+									<li class="list-inline-item badge bg-info text-dark me-1">
+										{% set icon = icons[pref]|default('fa-circle') %}
+										<i class="fa-solid {{ icon }} me-1"></i>
+										{{pref}}</li>
 
-			<div class="text-center m-5">
-				<a href="{{ path('app_vehicule_new')}}" class="btn btn-primary btn-lg px-4 me-md-2">Ajouter un véhicule</a>
-				<a class="btn btn-outline-primary btn-lg px-4 me-md-2" href="{{ path('app_account')}}">Retour</a>
+								{% endfor %}
+							</ul>
+							<a href="{{ path('edit_preferences')}}" class="btn btn-outline-primary btn-sm mt-2">Modifier mes préférences</a>
+
+						{% else %}
+							<a href="{{ path('edit_preferences')}}" class="btn btn-outline-primary btn-sm mt-2">Ajouter mes préférences</a>
+						{% endif %}
+					</div>
+				</div>
+
+
 			</div>
 
 

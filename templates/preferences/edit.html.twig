@@ -1,0 +1,82 @@
+{% extends 'base.html.twig' %}
+{% block title %}Mes Préférences
+{% endblock %}
+
+{% block body %}
+	<section class="py-5">
+		<div class="container">
+			<h1 class="hero-heading mb-4">Modifier mes préférences de conduite</h1>
+			<p class="text-muted">Ces préfèrences permettront aux passagers de mieux comprendre votre style de conduite.</p>
+
+			<form method="post" class="mt-4">
+
+				<fieldset class="mb-5">
+					<legend class="fw-bold mb-3">
+						<i class="fa-solid fa-smoking me-2"></i>Préférences obligatoires</legend>
+
+					<div class="mb-4">
+						<label class="form-label d-block fw-bold">Tabac
+							<span class="text-danger">*</span>
+						</label>
+						<div class="form-check form-check-inline">
+							<input class="form-check-input" type="radio" name="preferences[]" id="fumeur" value="fumeur" {% if 'fumeur' in preferences %} checked {% endif %} required>
+							<label class="form-check-label" for="fumeur">Fumeur</label>
+						</div>
+						<div class="form-check form-check-inline">
+							<input class="form-check-input" type="radio" name="preferences[]" id="non-fumeur" value="non-fumeur" {% if 'non-fumeur' in preferences %} checked {% endif %} required>
+							<label class="form-check-label" for="non-fumeur">Non-fumeur</label>
+						</div>
+					</div>
+
+					<div class="mb-4">
+						<label class="form-label d-block fw-bold">Animaux
+							<span class="text-danger">*</span>
+						</label>
+						<div class="form-check form-check-inline">
+							<input class="form-check-input" type="radio" name="preferences[]" id="animaux-oui" value="animaux autorisés" {% if 'animaux autorisés' in preferences %} checked {% endif %} required>
+							<label class="form-check-label" for="animaux-oui">Animaux autorisés</label>
+						</div>
+						<div class="form-check form-check-inline">
+							<input class="form-check-input" type="radio" name="preferences[]" id="animaux-non" value="pas d'animaux" {% if "pas d'animaux" in preferences %} checked {% endif %} required>
+							<label class="form-check-label" for="animaux-non">Pas d'animaux</label>
+						</div>
+					</div>
+				</fieldset>
+
+				<fieldset class="mb-5">
+					<legend class="fw-bold mb-3">
+						<i class="fa-solid fa-music me-2"></i>Préférences optionnelles</legend>
+
+					<div class="mb-4">
+						<label class="form-label fw-bold" for="musique">
+							<i class="fa-solid fa-music me-2"></i>Ambiance musicale</label>
+						<select name="preferences[]" id="musique" class="form-select">
+							<option value="" disabled selected>Choisissez une ambiance</option>
+							<option value="musique oui" {% if 'musique oui' in preferences %} selected {% endif %}>J’aime avoir de la musique pendant le trajet</option>
+							<option value="musique non" {% if 'musique non' in preferences %} selected {% endif %}>Je préfère le silence</option>
+							<option value="musique un peu" {% if 'musique un peu' in preferences %} selected {% endif %}>Un fond musical léger me convient</option>
+						</select>
+					</div>
+
+					<div class="mb-4">
+						<label class="form-label fw-bold" for="discussion">
+							<i class="fa-solid fa-comments me-2"></i>Interaction avec les passagers</label>
+						<select name="preferences[]" id="discussion" class="form-select">
+							<option value="" disabled selected>Choisissez votre style</option>
+							<option value="discussion oui" {% if 'discussion oui' in preferences %} selected {% endif %}>J’aime discuter avec mes passagers</option>
+							<option value="discussion non" {% if 'discussion non' in preferences %} selected {% endif %}>Je préfère rester silencieux</option>
+							<option value="discussion un peu" {% if 'discussion un peu' in preferences %} selected {% endif %}>Une petite conversation si le moment s’y prête</option>
+						</select>
+					</div>
+				</fieldset>
+
+				<div class="d-flex gap-3">
+					<button type="submit" class="btn btn-primary">
+						<i class="fa-solid fa-save me-2"></i>Enregistrer</button>
+					<a href="{{ path('app_vehicule_account') }}" class="btn btn-outline-secondary">
+						<i class="fa-solid fa-arrow-left me-2"></i>Retour</a>
+				</div>
+			</form>
+		</div>
+	</section>
+{% endblock %}
