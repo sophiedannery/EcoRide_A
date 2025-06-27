@@ -66,9 +66,40 @@
 							<h2>Aucun trajet trouvé</h2>
 
 							{% if nextDate is not null %}
-								<p>Le prochain trajet disponible est prévu le
-									{{ nextDate|date('d/m/Y H:i')}}</p>
-								<a href="{{ path('app_search', {depart: app.request.query.get('depart'), arrivee: app.request.query.get('arrivee'), date: nextDate|date('Y-m-d') }) }}" class="btn btn-outline-primary">Rechercher pour cette date</a>
+
+								<div>
+
+									<p class="fs-5 mt-5">Mais un trajet est disponible le :</p>
+
+									<p class="display-6 fw-bold mb-4" style="color: #007314;">
+										{{ nextTrajet.date_depart|date('d/m/Y') }}
+									</p>
+
+
+									<div class="card mx-auto mb-4 text-start" style="max-width: 500px;">
+										<div class="card-body">
+											<h5 class="card-title">
+												{{ nextTrajet.adresse_depart }}
+												→
+												{{ nextTrajet.adresse_arrivee }}
+											</h5>
+											<p class="card-text mb-1">
+												Chauffeur :
+												<strong>{{ nextTrajet.chauffeur }}</strong><br>
+												Prix :
+												{{ nextTrajet.prix }}
+												crédits<br>
+												Places restantes :
+												{{ nextTrajet.places_restantes }}<br>
+
+											</p>
+										</div>
+									</div>
+
+									<a href="{{ path('app_search', { depart: app.request.query.get('depart'), arrivee: app.request.query.get('arrivee'), date: nextTrajet.date_depart|date('Y-m-d') }) }}" class="btn btn-success btn-lg">
+										Changer ma date
+									</a>
+								</div>
 
 							{% endif %}
 

@@ -52,14 +52,20 @@ final class SearchController extends AbstractController
 
         $trajets = $trajet_repository->searchTrips($from, $to, $date, $eco, $maxPrice, $maxDuration, $minRating);
 
+        $nextTrajet = null;
         $nextDate = null;
         if (empty($trajets)) {
-            $nextDate = $trajet_repository->findNextAvailableTripDate($from, $to, $date);
+            $nextTrajet = $trajet_repository->findNextAvailableTrip($from, $to, $date);
+
+            if ($nextTrajet !== null) {
+                $nextDate = new \DateTimeImmutable($nextTrajet['date_depart']);
+            }
         }
 
 
         return $this->render('search/results.html.twig', [
             'trajets' => $trajets,
+            'nextTrajet' => $nextTrajet,
             'nextDate' => $nextDate,
         ]);
     }

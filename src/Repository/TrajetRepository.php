@@ -210,6 +210,47 @@ class TrajetRepository extends ServiceEntityRepository
         return new \DateTimeImmutable($row['next_date']);
     }
 
+
+
+    public function findNextAvailableTrip(string $from, string $to, \DateTimeInterface $date): ?array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = <<<SQL
+        SELECT 
+            t.id AS id_trajet,
+            t.adresse_depart,
+            t.adresse_arrivee,
+            DATE_FORMAT(t.date_depart, '%Y-%m-%d') AS date_depart,
+            t.prix,
+            t.places_restantes,
+            u.pseudo AS chauffeur,
+            v.energie AS energie
+        FROM trajet AS t
+        JOIN `user` AS u ON t.chauffeur_id = u.id
+        JOIN vehicule AS v ON t.vehicule_id = v.id
+        WHERE 
+        t.adresse_depart = ?
+            AND t.adresse_arrivee = ?
+            AND t.date_depart > ?
+            AND t.places_restantes > 0
+        ORDER BY t.date_depart ASC
+        LIMIT 1
+        SQL;
+
+        $row = $conn->executeQuery($sql, [
+            $from,
+            $to,
+            $date->format('Y-m-d H:i:s'),
+        ])->fetchAssociative();
+
+
+        return $row ?: null;
+    }
+
+
+
+
     public function findTripsByDriver(int $driverId): array
     {
 
