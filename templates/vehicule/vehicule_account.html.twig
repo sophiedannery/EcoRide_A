@@ -5,7 +5,7 @@
 
 {% block body %}
 
-	{% set icons = {
+{% set icons = {
     'fumeur': 'fa-smoking',
     'non-fumeur': 'fa-ban-smoking',
     'animaux autorisés': 'fa-dog',
@@ -18,12 +18,25 @@
     'discussion un peu': 'fa-comment-dots'
 } %}
 
+{% set labels = {
+    'fumeur': 'Fumeur',
+    'non-fumeur': 'Non-fumeur',
+    'animaux autorisés': 'Animaux autorisés',
+    "pas d'animaux": 'Pas d\'animaux',
+    'musique oui': 'Avec musique',
+    'musique non': 'Pas de musique pendant le trajet',
+    'musique un peu': 'Un peu de musique',
+    'discussion oui': 'Discussion avec les passagers',
+    'discussion non': 'Plutôt silencieux',
+    'discussion un peu': 'Discussion modérée'
+} %}
+
 	<section class="py-5">
 		<div class="container">
 			<div class="row">
 
 				<div class="col-md-8 col-lg-4 ms-lg-auto">
-					<h1 class="hero-heading mb-0">Vos véhicules</h1>
+					<h1 class="hero-heading mb-0">{{ vehicules|length > 1 ? 'Mes véhicules' : 'Mon véhicule' }}</h1>
 					<p class="text-muted mb-5">Ajouter ou supprimer un véhicule ici</p>
 					<div>
 						{% if vehicules is empty %}
@@ -78,28 +91,28 @@
 					</div>
 
 					<div class="text-center m-5">
-						<a href="{{ path('app_vehicule_new')}}" class="btn btn-primary btn-lg px-4 me-md-2">Ajouter un véhicule</a>
+						<a href="{{ path('app_vehicule_new')}}" class="btn btn-primary px-4 me-md-2">Ajouter un véhicule</a>
 					</div>
 				</div>
 
 				<div class="col-lg-7 mb-5 mb-lg-0">
-					<h1 class="hero-heading mb-0">Vos préférences</h1>
+					<h1 class="hero-heading mb-0">Mes préférences</h1>
 					<p class="text-muted mb-5">Ajouter ou modifier vos préférences de conduite ici</p>
 					<div>
 						{% if user_preferences is defined and user_preferences|length > 0 %}
-							<ul class="list-inline">
+							<ul class="list-group mb-4">
 								{% for pref in user_preferences %}
-									<li class="list-inline-item me-1">
+									<li class="list-group-item">
 										{% set icon = icons[pref]|default('fa-circle') %}
-										<i class="fa-solid {{ icon }} me-1"></i>
-										{{pref}}</li>
+										<i class="fa-solid {{ icon }} me-2"></i>
+										{{label[pref]|default(pref)}}</li>
 
 								{% endfor %}
 							</ul>
-							<a href="{{ path('edit_preferences')}}" class="btn btn-primary btn-lg px-4 me-md-2">Modifier mes préférences</a>
+							<a href="{{ path('edit_preferences')}}" class="btn btn-primary px-4 me-md-2">Modifier mes préférences</a>
 
 						{% else %}
-							<a href="{{ path('edit_preferences')}}" class="btn btn-primary btn-lg px-4 me-md-2">Ajouter mes préférences</a>
+							<a href="{{ path('edit_preferences')}}" class="btn btn-primary px-4 me-md-2">Ajouter mes préférences</a>
 						{% endif %}
 					</div>
 				</div>
@@ -107,7 +120,7 @@
 
 			</div>
 
-			<div>
+			<div class="text-center">
 				<a class="btn btn-outline-primary btn-lg px-4 me-md-2 my-4" href="{{ path('app_account')}}">Retour</a>
 			</div>
 
