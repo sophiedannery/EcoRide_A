@@ -1,39 +1,40 @@
-<class="bd-modeborderroundedposition-relativepb-3px-4pt-4mb-4mb-sm-0">
-	<div class="tab-content mt-4" id="pills-tabContent">
-		<div class="row g-4">
+<form method="GET" action="{{ path('app_search')}}">
+	<class="bd-modeborderroundedposition-relativepb-3px-4pt-4mb-4mb-sm-0">
+		<div class="tab-content mt-4" id="pills-tabContent">
+			<div class="row g-4">
 
-			<div class="col-md-6 col-lg-4 position-relative">
-				<div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
-					<label id="depart" class="mb-1">
-						<i class="bi bi-geo-alt me-2"></i>
-						Départ</label>
-					<input name="depart" type="text" class="form-control pe-4" required id="depart" value="{{ app.request.query.get('depart') }}">
+				<div class="col-md-6 col-lg-4 position-relative">
+					<div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
+						<label id="depart" class="mb-1">
+							<i class="bi bi-geo-alt me-2"></i>
+							Départ</label>
+						<input name="depart" type="text" class="form-control pe-4" required id="depart" value="{{ app.request.query.get('depart') }}">
+					</div>
+				</div>
+
+				<div class="col-md-6 col-lg-4">
+					<div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
+						<label id="depart" class="mb-1">
+							<i class="bi bi-send me-2"></i>
+							Arrivée</label>
+						<input name="arrivee" type="text" class="form-control pe-4" required id="arrivee" value="{{ app.request.query.get('arrivee') }}">
+					</div>
+				</div>
+				<div class="col-lg-4">
+					<div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
+						<label id="depart" class="mb-1">
+							<i class="bi bi-calendar me-2"></i>
+							Date</label>
+						<input name="date" type="date" class="form-control pe-4" required id="date" value="{{ app.request.query.get('date') }}">
+					</div>
+				</div>
+				<div class="col-12 text-end pt-0">
+					<button type="submit" class="btn btn-primary">Modifier ma recherche
+						<i class="bi bi-arrow-right ps-3 text-white"></i>
+					</button>
 				</div>
 
 			</div>
-
-			<div class="col-md-6 col-lg-4">
-				<div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
-					<label id="depart" class="mb-1">
-						<i class="bi bi-send me-2"></i>
-						Arrivée</label>
-					<input name="arrivee" type="text" class="form-control pe-4" required id="arrivee" value="{{ app.request.query.get('arrivee') }}">
-				</div>
-			</div>
-			<div class="col-lg-4">
-				<div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
-					<label id="depart" class="mb-1">
-						<i class="bi bi-calendar me-2"></i>
-						Date</label>
-					<input name="date" type="date" class="form-control pe-4" required id="date" value="{{ app.request.query.get('date') }}">
-				</div>
-			</div>
-			<div class="col-12 text-end pt-0">
-				<button type="submit" class="btn btn-primary">Modifier ma recherche
-					<i class="bi bi-arrow-right ps-3 text-white"></i>
-				</button>
-			</div>
-
 		</div>
 	</div>
-</div>
+</form>
