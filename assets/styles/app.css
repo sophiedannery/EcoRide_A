@@ -338,7 +338,17 @@
     margin-bottom: 0.5rem;
   }
 }
-  
+
+.form-switch-lg .form-check-input{
+  width: 3rem;
+  height: 1.5rem;
+}
+
+.form-switch-lg .form-check-input:checked {
+  background-position: right center;
+}
+
+
   /* .derniers_trajets{
     background-color: #10303e;
   } */

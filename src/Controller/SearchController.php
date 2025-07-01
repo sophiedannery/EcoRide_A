@@ -52,6 +52,18 @@ final class SearchController extends AbstractController
 
         $trajets = $trajet_repository->searchTrips($from, $to, $date, $eco, $maxPrice, $maxDuration, $minRating);
 
+        foreach ($trajets as &$trajet) {
+            $dateDepart = \DateTime::createFromFormat('Y-m-d H:i', $trajet['date_depart']);
+            $dateArrivee = \DateTime::createFromFormat('Y-m-d H:i', $trajet['date_arrivee']);
+
+            if ($dateDepart && $dateArrivee) {
+                $interval = $dateDepart->diff($dateArrivee);
+                $trajet['duree'] = $interval->format('%h h %i min');
+            } else {
+                $trajet['duree'] = null;
+            }
+        }
+
         $nextTrajet = null;
         $nextDate = null;
         if (empty($trajets)) {
@@ -63,7 +75,7 @@ final class SearchController extends AbstractController
         }
 
 
-        return $this->render('search/results.html.twig', [
+        return $this->render('search/result_v2.html.twig', [
             'trajets' => $trajets,
             'nextTrajet' => $nextTrajet,
             'nextDate' => $nextDate,
@@ -100,6 +112,56 @@ final class SearchController extends AbstractController
             'preferences' => $preferences,
             'avgRating' => $avgRating,
             'reviewCount' => $reviewsCount,
+        ]);
+    }
+
+
+    #[Route('/search-ajax', name: 'app_search_ajax')]
+    public function searchAjax(
+        Request $request,
+        TrajetRepository $repo
+    ): Response {
+
+        $from = $request->query->get('depart', '');
+        $to = $request->query->get('arrivee', '');
+        $date = new \DateTime($request->query->get('date', 'now'));
+
+        $eco = $request->query->getBoolean('eco');
+
+        $maxPriceParam = $request->query->get('maxPrice');
+        $maxPrice = ($maxPriceParam !== null && $maxPriceParam !== '') ? (int) $maxPriceParam : null;
+
+        $durationTimeParam = $request->query->get('maxDurationTime');
+        if ($durationTimeParam !== null && $durationTimeParam !== '') {
+            $dt = \DateTime::createFromFormat('H:i', $durationTimeParam);
+            if ($dt) {
+                $maxDuration = ((int) $dt->format('H')) * 60 +  ((int) $dt->format('i'));
+            } else {
+                $maxDuration = null;
+            }
+        } else {
+            $maxDuration = null;
+        }
+
+        $minRatingParam = $request->query->get('minRating');
+        $minRating = ($minRatingParam !== null && $minRatingParam !== '') ? (float) $minRatingParam : null;
+
+        $trajets = $repo->searchTrips($from, $to, $date, $eco, $maxPrice, $maxDuration, $minRating);
+
+        foreach ($trajets as &$trajet) {
+            $dateDepart = \DateTime::createFromFormat('Y-m-d H:i', $trajet['date_depart']);
+            $dateArrivee = \DateTime::createFromFormat('Y-m-d H:i', $trajet['date_arrivee']);
+
+            if ($dateDepart && $dateArrivee) {
+                $interval = $dateDepart->diff($dateArrivee);
+                $trajet['duree'] = $interval->format('%h h %i min');
+            } else {
+                $trajet['duree'] = null;
+            }
+        }
+
+        return $this->render('partials/results_v2.html.twig', [
+            'trajets' => $trajets,
         ]);
     }
 }

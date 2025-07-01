@@ -1,0 +1,9 @@
+{% for t in trajets %}
+	<div class="mb-4">
+		{% include "partials/card_search_result.html.twig" with {'t': t} %}
+	</div>
+{% else %}
+	<div class="text-center m-5">
+		<h2>Aucun trajet trouvé</h2>
+	</div>
+{% endfor %}

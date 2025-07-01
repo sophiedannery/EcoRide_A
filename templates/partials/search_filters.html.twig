@@ -1,0 +1,32 @@
+<form method="GET" action="{{ path('app_search')}}">
+
+	<div class="rounded-3 shadow p-3 bg-white">
+		<div class="mb-4 px-3">
+			<div class="form-check form-switch" style="--bs-form-switch-width: 3rem; --bs-form-switch-height: 1.5rem;">
+				<input class="form-check-input" type="checkbox" role="switch" name="eco" id="eco" value="1" {{ app.request.query.get('eco') ? 'checked' : '' }}>
+				<label class="form-check-label" for="eco">Voyage écologique</label>
+			</div>
+		</div>
+
+		<div class="mb-4 px-3">
+			<label for="maxPrice" class="form-label">Prix</label>
+			<input type="number" class="form-control" name="maxPrice" min="0" step="1" value="{{app.request.query.get('maxPrice') }}">
+		</div>
+
+		<div class="mb-4 px-3">
+			<label for="maxDurationTime" class="form-label">Durée max</label>
+			<input type="time" class="form-control" name="maxDurationTime" id="maxDurationTime" step="60" value="{{app.request.query.get('maxDurationTime') }}">
+		</div>
+
+		<div class="mb-4 px-3">
+			<label for="minRating" class="form-label">Note minimal</label>
+			<input type="number" class="form-control" name="minRating" id="minRating" min="0" max="5" step="0.5" value="{{app.request.query.get('minRating') }}">
+		</div>
+
+		<div class="px-3 d-flex justify-content-between">
+			<a href="{{ path('app_search', { 'depart': app.request.query.get('depart'), 'arrivee': app.request.query.get('arrivee'), 'date': app.request.query.get('date') })}}" class="">Effacer</a>
+			{# <button type="submit" class="btn btn-primary">Filtrer</button> #}
+		</div>
+	</div>
+
+</form>

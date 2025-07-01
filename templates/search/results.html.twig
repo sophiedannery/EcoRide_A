@@ -4,134 +4,146 @@
 {% endblock %}
 
 {% block body %}
+	<form method="GET" action="{{ path('app_search')}}">
 
-	<section>
-		<div class="container py-5 px-lg-5">
-
-			<div class="row border-bottom mb-4">
-				<div class="col-12">
-					<h1 class="display-4 fw-bold text-serif mb-4">Résultats de votre recherche</h1>
-				</div>
-			</div>
-
-			<div class="row">
-
-				<div class="col-lg-3 pt-3">
-					<form method="GET" action="{{ path('app_search') }}" class="pe-xl-3">
-						<div class="mb-4">
-							<label id="depart" class="form-label">Départ</label>
-							<input name="depart" type="text" class="form-control pe-4" required id="depart" value="{{ app.request.query.get('depart') }}">
+		<section class="py-5">
+			<div class="container">
+				<div class="row">
+					<div
+						class="col-12">
+						{# Affichage recherche mobile #}
+						<div class="d-lg-none bg-light border rounded p-3 mb-3">
+							<p class="mb-1 text-center">
+								<i class="bi bi-search"></i>
+								{{ app.request.query.get('depart')}}
+								<i class="bi bi-arrow-right mx-1"></i>
+								{{ app.request.query.get('arrivee')}}
+							</p>
+							<p class="text-muted text-center">{{ app.request.query.get('date')|date('d/m/Y')}}</p>
+							<button class="btn btn-sm btn-outline-primary w-100" type="button" data-bs-toggle="collapse" data-bs-target="#searchFormCollapse" aria-expanded="true" aria-controls="searchFormCollapse">Modifier</button>
 						</div>
-						<div class="mb-4">
-							<label id="arrivee" class="form-label">Arrivée</label>
-							<input name="arrivee" type="text" class="form-control pe-4" required id="arrivee" value="{{ app.request.query.get('arrivee') }}">
-						</div>
-						<div class="mb-4">
-							<label id="date" class="form-label">Date</label>
-							<input name="date" type="date" class="form-control pe-4" required id="date" value="{{ app.request.query.get('date') }}">
-						</div>
-						<div class="mb-4">
-							<button class="w-100 btn btn-lg btn-primary" type="submit">
-								<i class="bi bi-search text-white"></i>
-								Rechercher</button>
-						</div>
-						<div class="mb-4">
-							<div class="form-check">
-								<input class="form-check-input" type="checkbox" name="eco" id="eco" value="1" {{ app.request.query.get('eco') ? 'checked' : '' }}>
-								<label class="form-check-label" for="eco">Voyage écologique</label>
-							</div>
-						</div>
-						<div class="mb-4">
-							<label for="maxPrice" class="form-label">Prix</label>
-							<input type="number" class="form-control" name="maxPrice" min="0" step="1" value="{{app.request.query.get('maxPrice') }}">
-						</div>
-						<div class="mb-4">
-							<label for="maxDurationTime" class="form-label">Durée max</label>
-							<input type="time" class="form-control" name="maxDurationTime" id="maxDurationTime" step="60" value="{{app.request.query.get('maxDurationTime') }}">
-						</div>
-						<div class="mb-4">
-							<label for="minRating" class="form-label">Note minimal</label>
-							<input type="number" class="form-control" name="minRating" id="minRating" min="0" max="5" step="0.5" value="{{app.request.query.get('minRating') }}">
-						</div>
-						<div class="mb-4">
-							<button type="submit" class="w-100 btn btn-lg btn-outline-primary">Filtrer les résultats</button>
-						</div>
-					</form>
-				</div>
-
-				<div class="col-lg-9">
-
-					{% if trajets is empty %}
-						<div class="text-center m-5">
-							<h2>Aucun trajet trouvé</h2>
-
-							{% if nextDate is not null %}
-
-								<div>
-
-									<p class="fs-5 mt-5">Mais un trajet est disponible le :</p>
-
-									<p class="display-6 fw-bold mb-4" style="color: #007314;">
-										{{ nextTrajet.date_depart|date('d/m/Y') }}
-									</p>
-
-
-									<div class="card mx-auto mb-4 text-start" style="max-width: 500px;">
-										<div class="card-body">
-											<h5 class="card-title">
-												{{ nextTrajet.adresse_depart }}
-												→
-												{{ nextTrajet.adresse_arrivee }}
-											</h5>
-											<p class="card-text mb-1">
-												Chauffeur :
-												<strong>{{ nextTrajet.chauffeur }}</strong><br>
-												Prix :
-												{{ nextTrajet.prix }}
-												crédits<br>
-												Places restantes :
-												{{ nextTrajet.places_restantes }}<br>
-
-											</p>
-										</div>
-									</div>
-
-									<a href="{{ path('app_search', { depart: app.request.query.get('depart'), arrivee: app.request.query.get('arrivee'), date: nextTrajet.date_depart|date('Y-m-d') }) }}" class="btn btn-success btn-lg">
-										Changer ma date
-									</a>
-								</div>
-
-							{% endif %}
-
-
-						</div>
-
-					{% else %}
-
-						{% set resultCount = trajets|length %}
-
-						<div class="d-flex justify-content-between align-items-center flex-column flex-md-row mb-4">
-							<div class="me-3">
-								<p class="mb-3 mb-md-0">
-									<strong>{{ resultCount }}</strong>
-									résultat{{ resultCount > 1 ? 's' : '' }}</p>
-							</div>
-							<div></div>
-						</div>
-						<div class="row">
-
-							{% for t in trajets %}
-								{% include "partials/card_search_result.html.twig" %}
-							{% endfor %}
-
+						{# Bouton modifier recherche #}
+						<div class="collapse d-lg-block" id="searchFormCollapse">
+							{% include "partials/search_trajets.html.twig" %}
 						</div>
 					</div>
-				{% endif %}
+				</div>
 			</div>
 		</section>
 
+		{% if trajets is empty %}
+			<div class="text-center m-5">
+				<h2>Aucun trajet trouvé</h2>
+				{% if nextDate is not null %}
+					<div>
+						<p class="fs-5 mt-5">Mais un trajet est disponible le :</p>
+						<p class="display-6 fw-bold mb-4" style="color: #007314;">
+							{{ nextTrajet.date_depart|date('d/m/Y') }}
+						</p>
+						<div class="card mx-auto mb-4 text-start" style="max-width: 500px;">
+							<div class="card-body">
+								<h5 class="card-title">
+									{{ nextTrajet.adresse_depart }}
+									→
+									{{ nextTrajet.adresse_arrivee }}
+								</h5>
+								<p class="card-text mb-1">
+									Chauffeur :
+									<strong>{{ nextTrajet.chauffeur }}</strong><br>
+									Prix :
+									{{ nextTrajet.prix }}
+									crédits<br>
+									Places restantes :
+									{{ nextTrajet.places_restantes }}<br>
 
-		<div class="text-center m-5">
-			<a class="btn btn-outline-primary btn-lg px-4 me-md-2" href="/">Retour à l'accueil</a>
-		</div>
-	{% endblock %}
+								</p>
+							</div>
+						</div>
+
+						<a href="{{ path('app_search', { depart: app.request.query.get('depart'), arrivee: app.request.query.get('arrivee'), date: nextTrajet.date_depart|date('Y-m-d') }) }}" class="btn btn-success btn-lg">
+							Changer ma date
+						</a>
+					</div>
+				{% endif %}
+			</div>
+		{% else %}
+
+			{# Si trajet : #}
+			<section class="py-5">
+				<div
+					class="container">
+
+					{# Nombre de trajet et bouton filtres #}
+					<div class="row mb-5">
+						<div class="col-12">
+
+							<div class="d-sm-flex justify-content-sm-between align-items-center">
+
+								<div class="mb-3 mb-sm-0">
+									{% set resultCount = trajets|length %}
+									<h1>{{ resultCount }}
+										trajet{{ resultCount > 1 ? 's' : '' }}</h1>
+								</div>
+
+								<button class="btn btn-primary d-xl-none mb-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasSidebar" aria-controls="offcanvasSidebar">
+									<i class="fa-solid fa-sliders-h me-1 text-white"></i>
+									Filtres
+								</button>
+
+							</div>
+
+						</div>
+					</div>
+
+					<div class="row">
+
+						<aside
+							class="col-xl-3 col-xxl-2">
+
+							{# Filtres mobile #}
+							<div class="offcanvas offcanvas-end d-xl-none" tabindex="-1" id="offcanvasSidebar" aria-labelledby="offcanvasSidebarLabel">
+								<div class="offcanvas-header">
+									<h5 class="offcanves-title" id="offcanvasSidebarLabel">Filtres</h5>
+									<button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Fermer"></button>
+								</div>
+								<div class="offcanvas-body">
+									{% include "partials/search_filters.html.twig" %}
+									<div class="d-grid mt-3">
+										<button type="submit" class="btn btn-primary w-100">Filtrer</button>
+									</div>
+								</div>
+							</div>
+
+							{# Filtre desktop #}
+							<div class="d-none d-xl-block">
+								{% include "partials/search_filters.html.twig" %}
+								<div class="d-grid mt-3">
+									<button type="submit" class="btn btn-primary w-100">Filtrer</button>
+								</div>
+							</div>
+
+						</aside>
+
+						{# card trajets #}
+						<div class="col-xl-9 col-xxl-10">
+							<div class="vstack gap-4">
+								{% for t in trajets %}
+									{% include "partials/card_search_result.html.twig" %}
+								{% endfor %}
+							</div>
+						</div>
+
+					</div>
+
+				</div>
+			</section>
+
+		{% endif %}
+
+	</form>
+
+
+	<div class="text-center m-5">
+		<a class="btn btn-outline-primary btn-lg px-4 me-md-2" href="/">Retour à l'accueil</a>
+	</div>
+{% endblock %}
