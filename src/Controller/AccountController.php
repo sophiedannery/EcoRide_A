@@ -12,6 +12,7 @@ use App\Repository\TrajetRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -48,46 +49,63 @@ final class AccountController extends AbstractController
         $form = $this->createForm(ProfileFormType::class, $user);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            /** @var \Symfony\Component\HttpFoundation\File\UploadedFile $photoFile */
+        if ($form->isSubmitted()) {
             $photoFile = $form->get('photoFile')->getData();
 
-            if ($photoFile) {
-                $originalFilename = pathinfo($photoFile->getClientOriginalName(), PATHINFO_FILENAME);
-                $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename . '-' . uniqid() . '.' . $photoFile->guessExtension();
+            if ($photoFile instanceof UploadedFile && !$photoFile->isValid()) {
+                $errors = [
+                    UPLOAD_ERR_INI_SIZE   => 'Le fichier est trop volumineux.',
+                    UPLOAD_ERR_FORM_SIZE  => 'Le fichier est trop volumineux.',
+                    UPLOAD_ERR_PARTIAL    => 'Le fichier a été partiellement téléchargé.',
+                    UPLOAD_ERR_NO_FILE    => 'Aucun fichier n’a été téléchargé.',
+                    UPLOAD_ERR_NO_TMP_DIR => 'Pas de dossier temporaire configuré.',
+                    UPLOAD_ERR_CANT_WRITE => 'Erreur d’écriture du fichier sur le serveur.',
+                    UPLOAD_ERR_EXTENSION  => 'Téléchargement interrompu.',
+                ];
+                $message = $errors[$photoFile->getError()] ?? 'Erreur lors du téléchargement.';
+                $this->addFlash('warning', $message);
 
-                try {
-                    $photoFile->move(
-                        $this->getParameter('user_photos_directory'),
-                        $newFilename
-                    );
-                } catch (FileException $e) {
-                    $this->addFlash('error', 'Une erreur est survenue lors de l\'enregistrement de la photo.');
-                    return $this->redirectToRoute('app_account_edit');
-                }
-
-                $oldFilename = $user->getPhotoFilename();
-                if ($oldFilename) {
-                    $oldFilepath = $this->getParameter('user_photos_directory') . '/' . $oldFilename;
-                    if (file_exists($oldFilepath)) {
-                        @unlink($oldFilepath);
-                    }
-                }
-                $user->setPhotoFilename($newFilename);
+                return $this->redirectToRoute('app_account_infos');
             }
 
-            $em->flush();
+            if ($form->isValid()) {
+                if ($photoFile) {
+                    $originalFilename = pathinfo($photoFile->getClientOriginalName(), PATHINFO_FILENAME);
+                    $safeFilename = $slugger->slug($originalFilename);
+                    $newFilename = $safeFilename . '-' . uniqid() . '.' . $photoFile->guessExtension();
 
-            $this->addFlash('success', 'Votre photo de profil a bien été mise à jour.');
-            return $this->redirectToRoute('app_account_infos');
+                    try {
+                        $photoFile->move(
+                            $this->getParameter('user_photos_directory'),
+                            $newFilename
+                        );
+                    } catch (FileException $e) {
+                        $this->addFlash('warning', 'Une erreur est survenue lors de l\'enregistrement de la photo.');
+                        return $this->redirectToRoute('app_account_infos');
+                    }
+
+                    // Suppression ancienne photo
+                    if ($oldFilename = $user->getPhotoFilename()) {
+                        $oldFilepath = $this->getParameter('user_photos_directory') . '/' . $oldFilename;
+                        if (file_exists($oldFilepath)) {
+                            @unlink($oldFilepath);
+                        }
+                    }
+
+                    $user->setPhotoFilename($newFilename);
+                }
+
+                $em->flush();
+                $this->addFlash('success', 'Votre photo de profil a bien été mise à jour.');
+                return $this->redirectToRoute('app_account_infos');
+            }
         }
-
 
         return $this->render('account/infos.html.twig', [
             'profileForm' => $form->createView(),
         ]);
     }
+
 
 
     #[Route('/account/statut', name: 'app_account_statut')]

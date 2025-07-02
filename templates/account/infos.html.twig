@@ -52,7 +52,16 @@
 
 								Modifier ma photo :</p>
 
-							{{ form_errors(profileForm) }}
+							{# {{ form_errors(profileForm) }} #}
+
+							{% if profileForm.vars.errors|length > 0  %}
+								<div class="alert alert-danger">
+									{% for error in profileForm.vars.errors %}
+										<p>{{error.message}}</p>
+									{% endfor %}
+								</div>
+							{% endif %}
+
 							{{ form_start(profileForm, {
       action: path('app_account_infos'),
       method: 'POST',
