@@ -125,10 +125,20 @@ final class AccountController extends AbstractController
             if (in_array($user->getStatut(), ['chauffeur', 'passager_chauffeur'], true)) {
                 $needsVehicule = $user->getVehicules()->isEmpty();
                 $needsPreferences = $user->getPreferences()->isEmpty();
-                if ($needsVehicule || $needsPreferences) {
-                    $this->addFlash('warning', 'En tant que chauffeur, vous devez ajouter une voiture'
-                        . ($needsVehicule && $needsPreferences ? ' et des préférences.' : ($needsVehicule ? ' puis ajouter une voiture.' : ' puis définir vos préférences.')));
-                    return $this->redirectToRoute($needsVehicule ? 'app_account_vehicule_new' : 'app_account_preferences');
+
+                if ($needsVehicule && $needsPreferences) {
+                    $this->addFlash('warning', 'En tant que chauffeur, vous devez ajouter une voiture et des préférences de conduite.');
+                    return $this->redirectToRoute('app_vehicule_new');
+                }
+
+                if ($needsVehicule) {
+                    $this->addFlash('warning', 'En tant que chauffeur, vous devez ajouter une voiture.');
+                    return $this->redirectToRoute('app_vehicule_new');
+                }
+
+                if ($needsPreferences) {
+                    $this->addFlash('warning', 'En tant que chauffeur, vous devez définir vos préférences de conduite.');
+                    return $this->redirectToRoute('edit_preferences');
                 }
             }
 
@@ -192,7 +202,7 @@ final class AccountController extends AbstractController
             return $this->redirectToRoute('app_account_preferences');
         }
 
-        return $this->render('account/preferences.html.twig', [
+        return $this->render('preferences/edit.html.twig', [
             'form' => $form->createView(),
         ]);
     }
