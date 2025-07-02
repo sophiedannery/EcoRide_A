@@ -10,6 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class VehiculeForm extends AbstractType
 {
@@ -22,23 +23,33 @@ class VehiculeForm extends AbstractType
             ->add('datePremiereImmatriculation', DateType::class, [
                 'widget' => 'single_text',
                 'label' => 'Date de la première immatriculation',
+                'constraints' => [
+                    new Assert\LessThanOrEqual([
+                        'value' => 'today',
+                        'message' => 'Le véhicule doit déjà être immatriculé.',
+                    ]),
+                ],
             ])
             ->add('marque', TextType::class)
             ->add('modele', TextType::class)
             ->add('couleur', TextType::class)
             ->add('placesDisponibles', IntegerType::class, [
                 'label' => 'Nombre de places',
+                'constraints' => [
+                    new Assert\GreaterThanOrEqual([
+                        'value' => 1,
+                    ])
+                ]
             ])
             ->add('energie', ChoiceType::class, [
                 'choices' => [
                     'Essence' => 'essence',
                     'Diesel' => 'diesel',
-                    'Electrique' => 'electrique',
+                    'Électrique' => 'electrique',
                     'Autre' => 'autre',
                 ],
                 'label' => 'Type d\'énergie',
-                'expanded' => true,
-                'multiple' => false,
+                'placeholder' => 'Choisir une énergie'
             ])
         ;
     }

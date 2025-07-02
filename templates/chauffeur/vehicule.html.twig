@@ -1,0 +1,118 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter un véhicule
+{% endblock %}
+
+{% block body %}
+
+
+	<section class="py-5">
+		<div class="container">
+			<p class="subtitle">DEVENIR CHAUFFEUR</p>
+			<h1 class="h2 mb-5">Ajouter un véhicule
+				<span class="text-muted float-end">Étape 1</span>
+			</h1>
+
+			{{ form_start(form) }}
+
+			<div class="row form-block">
+				<div class="col-lg-4">
+					<h4>Le véhicule</h4>
+					<p class="text-muted text-sm"></p>
+				</div>
+				<div class="col-lg-7 ms-auto">
+					<div class="mb-4">
+						{{ form_label(form.marque) }}
+						{{ form_widget(form.marque, {'attr': {'class': 'form-control'}}) }}
+						{{ form_errors(form.marque) }}
+					</div>
+
+					<div class="mb-4">
+						{{ form_label(form.modele) }}
+						{{ form_widget(form.modele, {'attr': {'class': 'form-control'}}) }}
+						{{ form_errors(form.modele) }}
+					</div>
+
+					<div class="mb-4">
+						{{ form_label(form.couleur) }}
+						{{ form_widget(form.couleur, {'attr': {'class': 'form-control'}}) }}
+						{{ form_errors(form.couleur) }}
+					</div>
+
+					<div class="mb-4">
+						{{ form_label(form.energie) }}
+						{{ form_widget(form.energie, {'attr': {'class': 'form-select'}}) }}
+						{{ form_errors(form.energie) }}
+					</div>
+				</div>
+			</div>
+
+
+			<div class="row form-block mt-4">
+				<div class="col-lg-4">
+					<h4>L'immatriculation</h4>
+					<p class="text-muted text-sm"></p>
+				</div>
+				<div class="col-lg-7 ms-auto">
+
+					<div class="mb-4">
+						{{ form_label(form.immatriculation) }}
+						{{ form_widget(form.immatriculation, {'attr': {'class': 'form-control'}}) }}
+						{{ form_errors(form.immatriculation) }}
+					</div>
+
+					<div class="mb-4">
+						{{ form_label(form.datePremiereImmatriculation) }}
+						{{ form_widget(form.datePremiereImmatriculation, {
+    'attr': {
+        'class': 'form-control',
+        'max': "now"|date("Y-m-d")
+    }
+}) }}
+						{{ form_errors(form.datePremiereImmatriculation) }}
+					</div>
+
+				</div>
+			</div>
+			<hr>
+
+			<div class="row form-block mt-4">
+				<div class="col-lg-4">
+					<h4>Les trajets</h4>
+					<p class="text-muted text-sm"></p>
+				</div>
+				<div class="col-lg-7 ms-auto">
+
+					<div class="mb-4">
+						{{ form_label(form.placesDisponibles) }}
+						{{ form_widget(form.placesDisponibles, {
+    'attr': {
+        'class': 'form-control',
+        'min': 1,
+        'value': form.placesDisponibles.vars.value is empty ? 1 : form.placesDisponibles.vars.value
+    }
+}) }}
+						{{ form_errors(form.placesDisponibles) }}
+					</div>
+
+
+				</div>
+			</div>
+
+
+			<div class="row form-block flex-column flex-sm-row">
+				<div class="col text-center text-sm-start"></div>
+				<div class="col text-center text-sm-end">
+					<button class="btn btn-primary mt-3 px-3" type="submit">
+						Suivant
+						<i class="fa-chevron-right fa ms-2 text-white"></i>
+					</button>
+				</div>
+			</div>
+
+			{{ form_end(form) }}
+
+
+		</div>
+	</section>
+{% endblock %}

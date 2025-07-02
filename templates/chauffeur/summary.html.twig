@@ -1,0 +1,135 @@
+{% extends 'base.html.twig' %}
+{% block title %}Confirmation
+{% endblock %}
+
+{% block body %}
+
+
+{% set icons = {
+    'fumeur': 'fa-smoking',
+    'non-fumeur': 'fa-ban-smoking',
+    'animaux autorisés': 'fa-dog',
+    "pas d'animaux": 'fa-shield-dog',
+    'musique oui': 'fa-music',
+    'musique non': 'fa-volume-xmark',
+    'musique un peu': 'fa-volume-low',
+    'discussion oui': 'fa-comments',
+    'discussion non': 'fa-face-zipper',
+    'discussion un peu': 'fa-comment-dots'
+} %}
+
+{% set labels = {
+    'fumeur': 'Fumeur',
+    'non-fumeur': 'Non-fumeur',
+    'animaux autorisés': 'Animaux autorisés',
+    "pas d'animaux": 'Pas d\'animaux',
+    'musique oui': 'Avec musique',
+    'musique non': 'Pas de musique pendant le trajet',
+    'musique un peu': 'Un peu de musique',
+    'discussion oui': 'Discussion avec les passagers',
+    'discussion non': 'Plutôt silencieux',
+    'discussion un peu': 'Discussion modérée'
+} %}
+
+
+
+	<section class="py-5">
+		<div class="container">
+
+			<p class="subtitle">DEVENIR CHAUFFEUR</p>
+			<h1 class="h2 mb-5">Vérifier vos informations
+				<span class="text-muted float-end">Étape 3</span>
+			</h1>
+
+
+			<div>
+				<div class="text-block">
+					<div class="row mb-3">
+						<div class="col-sm-9">
+							<h5>Votre véhicule</h5>
+						</div>
+						<div class="col-sm-3 text-end">
+							<button class="btn btn-link ps-0">
+								<a href="{{ path('app_become_chauffeur_vehicule') }}">MODIFIER</a>
+							</button>
+						</div>
+					</div>
+					<p class="text-sm text-muted">
+						<ul class="list-unstyled">
+							<li>
+								<strong>Marque :</strong>
+								{{ vehicule.marque }}</li>
+							<li>
+								<strong>Modèle :</strong>
+								{{ vehicule.modele }}</li>
+							<li>
+								<strong>Couleur :</strong>
+								{{ vehicule.couleur }}</li>
+							<li>
+								<strong>Immatriculation :</strong>
+								{{ vehicule.immatriculation }}</li>
+							<li>
+								<strong>Places :</strong>
+								{{ vehicule.places }}</li>
+							<li>
+								<strong>Énergie :</strong>
+								{{ vehicule.energie }}</li>
+							<li>
+								<strong>Date première immatriculation :</strong>
+								{{ vehicule.date|date('d/m/Y') }}</li>
+						</ul>
+					</p>
+				</div>
+				<hr>
+
+				<div class="text-block mt-4">
+					<div class="row mb-3">
+						<div class="col-sm-9">
+							<h5>Vos préférences de conduite</h5>
+						</div>
+						<div class="col-sm-3 text-end">
+							<button class="btn btn-link ps-0">
+								<a href="{{ path('app_become_chauffeur_preferences') }}">MODIFIER</a>
+							</button>
+						</div>
+					</div>
+					<p class="text-sm text-muted">
+						<ul class="list-unstyled">
+							{% for pref in preferences %}
+								<li>
+										{% set icon = icons[pref]|default('fa-circle') %}
+										<i class="fa-solid {{ icon }} me-2"></i>
+										{{labels[pref]|default(pref)}}</li>
+							
+							{% endfor %}
+						</ul>
+					</p>
+				</div>
+				<hr>
+
+
+			</div>
+
+			<div class="row form-block flex-column flex-sm-row mt-4">
+				<div class="col text-center text-sm-start">
+					<a href="{{ path('app_become_chauffeur_preferences') }}" class="btn btn-link text-muted">
+						<i class="fa-chevron-left fa me-2"></i>Précédent
+					</a>
+				</div>
+
+				<div class="col text-center text-sm-end">
+				<form method="post">
+					<button class="btn btn-primary mt-3 px-3" type="submit">
+						Devenir chauffeur
+					</button>
+					</form>
+				</div>
+			</div>
+
+
+		</div>
+	</section>
+
+
+	
+{% endblock %}

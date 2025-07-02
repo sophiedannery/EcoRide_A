@@ -3,12 +3,15 @@
 namespace App\Controller;
 
 use App\Entity\Preference;
+use App\Entity\Vehicule;
 use App\Form\ProfileFormType;
 use App\Form\UserPreferenceType;
 use App\Form\UserStatutType;
+use App\Form\VehiculeForm;
 use App\Repository\PreferenceRepository;
 use App\Repository\ReservationRepository;
 use App\Repository\TrajetRepository;
+use App\Service\MongoService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -204,6 +207,140 @@ final class AccountController extends AbstractController
 
         return $this->render('preferences/edit.html.twig', [
             'form' => $form->createView(),
+        ]);
+    }
+
+
+
+
+
+
+
+
+
+    #[Route('/account/devenir-chauffeur', name: 'app_become_chauffeur_vehicule')]
+    #[IsGranted('ROLE_USER')]
+    public function becomeChauffeurVehicule(Request $request): Response
+    {
+        $session = $request->getSession();
+        $vehiculeData = $session->get('vehicule_data', []);
+
+        $vehicule = new Vehicule();
+
+        if ($vehiculeData) {
+            $vehicule->setMarque($vehiculeData['marque'] ?? null);
+            $vehicule->setModele($vehiculeData['modele'] ?? null);
+            $vehicule->setCouleur($vehiculeData['couleur'] ?? null);
+            $vehicule->setImmatriculation($vehiculeData['immatriculation'] ?? null);
+            $vehicule->setPlacesDisponibles($vehiculeData['places'] ?? null);
+            $vehicule->setEnergie($vehiculeData['energie'] ?? null);
+            if (!empty($vehiculeData['date'])) {
+                $vehicule->setDatePremiereImmatriculation(new \DateTime($vehiculeData['date']));
+            }
+        }
+
+        $form = $this->createForm(VehiculeForm::class, $vehicule);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $session = $request->getSession();
+            $session->set('vehicule_data', [
+                'marque' => $vehicule->getMarque(),
+                'modele' => $vehicule->getModele(),
+                'couleur' => $vehicule->getCouleur(),
+                'immatriculation' => $vehicule->getImmatriculation(),
+                'places' => $vehicule->getPlacesDisponibles(),
+                'energie' => $vehicule->getEnergie(),
+                'date' => $vehicule->getDatePremiereImmatriculation()?->format('Y-m-d'),
+            ]);
+            return $this->redirectToRoute('app_become_chauffeur_preferences');
+        }
+
+        return $this->render('chauffeur/vehicule.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+
+
+
+    #[Route('/account/devenir-chauffeur/preferences', name: 'app_become_chauffeur_preferences')]
+    #[IsGranted('ROLE_USER')]
+    public function becomeChauffeurPreferences(Request $request): Response
+    {
+
+        $session = $request->getSession();
+        $preferences = $session->get('preferences_data', []);
+
+        if ($request->isMethod('POST')) {
+            $tabac = $request->request->get('tabac');
+            $animaux = $request->request->get('animaux');
+            $optionnelles = $request->request->all('preferences');
+
+            $allPreferences = array_filter(array_merge([$tabac, $animaux], $optionnelles), fn($p) => !empty($p));
+
+            $session->set('preferences_data', $allPreferences);
+
+            return $this->redirectToRoute('app_become_chauffeur_summary');
+        }
+
+        return $this->render('chauffeur/preferences.html.twig', [
+            'preferences' => $preferences,
+        ]);
+    }
+
+
+    #[Route('/account/devenir-chauffeur/resume', name: 'app_become_chauffeur_summary')]
+    #[IsGranted('ROLE_USER')]
+    public function becomeChauffeurSummary(
+        Request $request,
+        EntityManagerInterface $em,
+        PreferenceRepository $prefRepo,
+        MongoService $mongo
+    ): Response {
+
+        $session = $request->getSession();
+        $vehiculeData = $session->get('vehicule_data');
+        $preferenceData = $session->get('preferences_data');
+
+        if (!$vehiculeData || !$preferenceData) {
+            $this->addFlash('warning', 'Il manque des informations.');
+            return $this->redirectToRoute('app_become_chauffeur_vehicule');
+        }
+
+        if ($request->isMethod('POST')) {
+
+            /** @var \App\Entity\User $user */
+            $user = $this->getUser();
+
+            $vehicule = new Vehicule();
+            $vehicule->setUser($user)
+                ->setMarque($vehiculeData['marque'])
+                ->setModele($vehiculeData['modele'])
+                ->setCouleur($vehiculeData['couleur'])
+                ->setImmatriculation($vehiculeData['immatriculation'])
+                ->setPlacesDisponibles($vehiculeData['places'])
+                ->setEnergie($vehiculeData['energie'])
+                ->setDatePremiereImmatriculation(new \DateTime($vehiculeData['date']));
+            $em->persist($vehicule);
+
+
+            $mongo->savePreferences($user->getId(), $preferenceData);
+
+            $user->setStatut('chauffeur');
+
+            $em->flush();
+
+            $session->remove('vehicule_data');
+            $session->remove('preferences_data');
+
+            $this->addFlash('success', 'Vous êtes maintenant chauffeur !');
+            return $this->redirectToRoute('app_account');
+        }
+
+        return $this->render('chauffeur/summary.html.twig', [
+            'vehicule' => $vehiculeData,
+            'preferences' => $preferenceData,
         ]);
     }
 }

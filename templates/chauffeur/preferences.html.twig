@@ -1,0 +1,108 @@
+{% extends 'base.html.twig' %}
+{% block title %}Préférences de conduite
+{% endblock %}
+
+{% block body %}
+
+	<section class="py-5">
+		<div class="container">
+			<p class="subtitle">DEVENIR CHAUFFEUR</p>
+			<h1 class="h2 mb-5">Définir vos préférences de conduite
+				<span class="text-muted float-end">Étape 2</span>
+			</h1>
+
+
+			<form method="post" class="mt-4">
+				<div class="row form-block">
+					<div class="col-lg-4">
+						<h4>Préférences</h4>
+						<p class="text-muted text-sm">A renseigner obligatoirement</p>
+					</div>
+					<div class="col-lg-7 ms-auto">
+						<div class="mb-4">
+							<label class="form-label d-block fw-bold">
+								<i class="fa-solid fa-smoking me-2"></i>Tabac
+								<span class="text-danger">*</span>
+							</label>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="radio" name="tabac" id="fumeur" value="fumeur" {% if 'fumeur' in preferences %} checked {% endif %} required>
+								<label class="form-check-label" for="fumeur">Fumeur</label>
+							</div>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="radio" name="tabac" id="non-fumeur" value="non-fumeur" {% if 'non-fumeur' in preferences %} checked {% endif %} required>
+								<label class="form-check-label" for="non-fumeur">Non-fumeur</label>
+							</div>
+						</div>
+
+						<div class="mb-4">
+							<label class="form-label d-block fw-bold">
+								<i class="fa-solid fa-dog me-2"></i>Animaux
+								<span class="text-danger">*</span>
+							</label>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="radio" name="animaux" id="animaux-oui" value="animaux autorisés" {% if 'animaux autorisés' in preferences %} checked {% endif %} required>
+								<label class="form-check-label" for="animaux-oui">Animaux autorisés</label>
+							</div>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="radio" name="animaux" id="animaux-non" value="pas d'animaux" {% if "pas d'animaux" in preferences %} checked {% endif %} required>
+								<label class="form-check-label" for="animaux-non">Pas d'animaux</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<hr>
+
+				<div class="row form-block my-4">
+					<div class="col-lg-4">
+						<h4>Préférences optionnelles</h4>
+						<p class="text-muted text-sm"></p>
+					</div>
+					<div class="col-lg-7 ms-auto">
+						<div class="mb-4">
+							<label class="form-label fw-bold" for="musique">
+								<i class="fa-solid fa-music me-2"></i>Ambiance musicale
+							</label>
+							<select name="preferences[]" id="musique" class="form-select">
+								<option value="" disabled selected>Choisissez une ambiance</option>
+								<option value="musique oui" {% if 'musique oui' in preferences %} selected {% endif %}>J’aime avoir de la musique pendant le trajet</option>
+								<option value="musique non" {% if 'musique non' in preferences %} selected {% endif %}>Je préfère le silence</option>
+								<option value="musique un peu" {% if 'musique un peu' in preferences %} selected {% endif %}>Un fond musical léger me convient</option>
+							</select>
+						</div>
+						<div class="mb-4">
+							<label class="form-label fw-bold" for="discussion">
+								<i class="fa-solid fa-comments me-2"></i>Interaction avec les passagers
+							</label>
+							<select name="preferences[]" id="discussion" class="form-select">
+								<option value="" disabled selected>Choisissez votre style</option>
+								<option value="discussion oui" {% if 'discussion oui' in preferences %} selected {% endif %}>J’aime discuter avec mes passagers</option>
+								<option value="discussion non" {% if 'discussion non' in preferences %} selected {% endif %}>Je préfère rester silencieux</option>
+								<option value="discussion un peu" {% if 'discussion un peu' in preferences %} selected {% endif %}>Une petite conversation si le moment s’y prête</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<hr>
+
+
+				<div class="row form-block flex-column flex-sm-row mt-4">
+					<div class="col text-center text-sm-start">
+						<a href="{{ path('app_become_chauffeur_vehicule') }}" class="btn btn-link text-muted">
+							<i class="fa-chevron-left fa me-2"></i>Précédent
+						</a>
+					</div>
+
+					<div class="col text-center text-sm-end">
+						<button class="btn btn-primary mt-3 px-3" type="submit">
+							Suivant
+							<i class="fa-chevron-right fa ms-2 text-white"></i>
+						</button>
+					</div>
+				</div>
+
+			</form>
+		</div>
+	</section>
+
+
+{% endblock %}
