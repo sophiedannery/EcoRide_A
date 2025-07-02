@@ -1,13 +1,16 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Log in!
+{% block title %}Connexion
 {% endblock %}
 
 {% block body %}
 
 
 	<div class="container-fluid px-3">
+
+
 		<div class="row min-vh-100">
+
 
 			<div class="col-md-8 col-lg-6 col-xl-5 d-flex align-items-center">
 
@@ -16,6 +19,14 @@
 					<div class="mb-5">
 						<h1>Bonjour</h1>
 					</div>
+
+					{% if error %}
+						<div class="container mt-4">
+							<div class="alert alert-danger">
+								{{ error.messageKey|trans(error.messageData, 'security') }}
+							</div>
+						</div>
+					{% endif %}
 
 					<form method="post" action="{{ path('app_login') }}">
 						<div class="mb-4">
@@ -36,6 +47,12 @@
 							</button>
 						</div>
 					</form>
+
+					<p class="text-center mt-3">
+						<small class="text-muted text-center">Pas encore de compte ?
+							<a href="{{ path('app_register')}}">Inscrivez-vous</a>
+						</small>
+					</p>
 
 
 				</div>
