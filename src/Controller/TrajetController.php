@@ -85,7 +85,7 @@ final class TrajetController extends AbstractController
         $user = $this->getUser();
 
         if (!in_array($user->getStatut(), ['chauffeur', 'passager_chauffeur'], true)) {
-            $this->addFlash('error', 'Seuls les chauffeurs peuvent créer un trajet.');
+            $this->addFlash('warning', '🚗 Vous devez être Chauffeur pour proposer un trajet.');
             return $this->redirectToRoute('app_account');
         }
 
