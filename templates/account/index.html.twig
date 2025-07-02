@@ -13,8 +13,8 @@
 		<div class="container">
 			<h1 class="hero-heading mb-0">Bonjour
 				{{app.user.pseudo}}</h1>
-			<p class="text-muted mt-3 mb-5">{{app.user.credits}}
-				crédit{{ app.user.credits > 1 ? 's' : ''}}
+			<p class="text-muted mt-3 mb-5">{{app.user.credits ?? 0}}
+				crédit{{ app.user.credits ?? 0 > 1 ? 's' : ''}}
 			</p>
 
 			<p class="text-muted mt-3 mb-5">Gérer votre profil ici.</p>
