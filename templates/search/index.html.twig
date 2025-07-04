@@ -3,6 +3,11 @@
 {% block title %}Covoiturages
 {% endblock %}
 
+{% block hide_header %}{% endblock %}
+{% block hide_footer %}{% endblock %}
+{% block body_class %}p-0
+{% endblock %}
+
 {% block body %}
 
 
@@ -12,6 +17,9 @@
 			<div class="col-md-8 col-lg-6 col-xl-5 d-flex align-items-center">
 
 				<div class="w-100 py-5 px-md-5 px-xxl-6 position-relative">
+
+					<a href="{{ path('app_home') }}" class="btn btn-link text-muted text-decoration-none mb-5">
+						<i class="fa-chevron-left fa me-1"></i>Retour</a>
 
 					<div class="mb-5">
 						<h1>Trouvez un covoiturage</h1>

@@ -1,0 +1,7 @@
+{% if trajets|length > 0 %}
+	{% for t in trajets %}
+		<div>{% include "partials/card_search_result.html.twig" with {'t': t} %}</div>
+	{% endfor %}
+{% else %}
+	<p class="text-center text-muted">Aucun trajet ne correspond à ces critères.</p>
+{% endif %}

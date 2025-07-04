@@ -160,7 +160,7 @@ final class SearchController extends AbstractController
             }
         }
 
-        return $this->render('partials/results_v2.html.twig', [
+        return $this->render('partials/results_filters.html.twig', [
             'trajets' => $trajets,
         ]);
     }

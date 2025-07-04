@@ -1,7 +1,9 @@
-{% for t in trajets %}
-	<div>
-		{% include "partials/card_search_result.html.twig" with {'t': t} %}
-	</div>
+{% if trajets|length > 0 %}
+	{% for t in trajets %}
+		<div>
+			{% include "partials/card_search_result.html.twig" with {'t': t} %}
+		</div>
+	{% endfor %}
 {% else %}
 	<div class="text-center m-5">
 		<h2>Aucun trajet trouvé</h2>
@@ -26,15 +28,13 @@
 							crédits<br>
 							Places restantes :
 							{{ nextTrajet.places_restantes }}<br>
-
 						</p>
 					</div>
 				</div>
-
 				<a href="{{ path('app_search', { depart: app.request.query.get('depart'), arrivee: app.request.query.get('arrivee'), date: nextTrajet.date_depart|date('Y-m-d') }) }}" class="btn btn-success btn-lg">
 					Changer ma date
 				</a>
 			</div>
 		{% endif %}
 	</div>
-{% endfor %}
+{% endif %}
