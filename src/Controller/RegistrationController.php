@@ -46,12 +46,14 @@ class RegistrationController extends AbstractController
 
 
         if ($form->isSubmitted() && !$form->isValid()) {
-
-
             $errors = [];
-            foreach ($form->getErrors(true, false) as $e) {
-                $errors[] = $e->getMessage();
+
+            foreach ($form->getErrors(true, false) as $error) {
+                if ($error instanceof \Symfony\Component\Form\FormError) {
+                    $errors[] = $error->getMessage();
+                }
             }
+
             $logger->error('Inscription invalide', ['errors' => $errors]);
         }
 
