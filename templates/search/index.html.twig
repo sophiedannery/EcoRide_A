@@ -41,7 +41,7 @@
 
 						{# Date #}
 						<div class="form-floating mb-4">
-							<input name="date" type="date" class="form-control" id="date" placeholder="Date" required value="{{ app.request.query.get('date') }}">
+							<input name="date" type="date" class="form-control" id="date" placeholder="Date" required value="{{ app.request.query.get('date') }}" min="{{ "now"|date('Y-m-d') }}">
 							<label for="date" class="form-label">Date</label>
 						</div>
 

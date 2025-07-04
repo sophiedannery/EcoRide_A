@@ -89,7 +89,8 @@ final class SearchController extends AbstractController
         int $id,
         TrajetRepository $repo,
         AvisRepository $avisRepo,
-        MongoService $mongo
+        MongoService $mongo,
+        Request $request,
     ): Response {
 
         $trip = $repo->findTripById($id);
@@ -106,12 +107,16 @@ final class SearchController extends AbstractController
         $avgRating = $repo->getDriverAverageRating($trip['chauffeur_id']);
         $reviewsCount = count($reviews);
 
+
+        $referer = $request->headers->get('referer');
+
         return $this->render('search/details.html.twig', [
             'trip' => $trip,
             'reviews' => $reviews,
             'preferences' => $preferences,
             'avgRating' => $avgRating,
             'reviewCount' => $reviewsCount,
+            'previousUrl' => $referer ?? '/',
         ]);
     }
 
