@@ -3,6 +3,11 @@
 {% block title %}Inscription
 {% endblock %}
 
+{% block hide_header %}{% endblock %}
+{% block hide_footer %}{% endblock %}
+{% block body_class %}p-0
+{% endblock %}
+
 {% block body %}
 
 
@@ -13,13 +18,20 @@
 
 				<div class="w-100 py-5 px-md-5 px-xxl-6 position-relative">
 
+					<a href="{{ path('app_home') }}" class="btn btn-link text-muted text-decoration-none mb-5">
+						<i class="fa-chevron-left fa me-1"></i>Retour</a>
+
 					<div class="mb-5">
 						<h1>Bienvenue</h1>
 					</div>
 
 					{{ form_start(registrationForm, { attr: { class: 'form-validate' } }) }}
+
 					<div class="mb-4">
-						{{ form_label(registrationForm.email, 'Adresse email', { label_attr: { class: 'form-label' } }) }}
+						<label class="form-label" for="email">
+							<i class="fa fa-envelope me-1"></i>
+							Adresse email
+						</label>
 						{{ form_widget(registrationForm.email, { attr: { class: 'form-control' } }) }}
 						{% if registrationForm.email.vars.errors|length > 0 %}
 							<div class="alert alert-danger mt-2 p-2">
@@ -29,13 +41,19 @@
 					</div>
 
 					<div class="mb-4">
-						{{ form_label(registrationForm.pseudo, 'Pseudo', { label_attr: { class: 'form-label' } }) }}
+						<label class="form-label" for="pseudo">
+							<i class="fa-solid fa-user"></i>
+							Pseudo
+						</label>
 						{{ form_widget(registrationForm.pseudo, { attr: { class: 'form-control' } }) }}
 						{{ form_errors(registrationForm.pseudo) }}
 					</div>
 
 					<div class="mb-4">
-						{{ form_label(registrationForm.plainPassword.first, null, { label_attr: { class: 'form-label' } }) }}
+						<label class="form-label">
+							<i class="fa fa-lock me-1"></i>
+							Mot de passe
+						</label>
 						{{ form_widget(registrationForm.plainPassword.first, { attr: { class: 'form-control' } }) }}
 						{% if registrationForm.plainPassword.first.vars.errors|length > 0 %}
 							<div class="alert alert-danger mt-2 p-2">
@@ -45,32 +63,33 @@
 					</div>
 
 					<div class="mb-4">
-						{{ form_label(registrationForm.plainPassword.second, null, { label_attr: { class: 'form-label' } }) }}
+						<label class="form-label">
+							<i class="fa fa-lock me-1"></i>
+							Confirmer le mot de passe
+						</label>
 						{{ form_widget(registrationForm.plainPassword.second, { attr: { class: 'form-control' } }) }}
 						{{ form_errors(registrationForm.plainPassword.second) }}
 					</div>
 
 
 					<div class="mb-4">
-						{{ form_label(registrationForm.statut, 'Statut', { label_attr: { class: 'form-label d-block' } }) }}
+						<label class="form-label d-block">Statut</label>
 						{% for child in registrationForm.statut %}
 							<div class="form-check">
-								{{ form_widget(child, {
-           attr: { class: 'form-check-input' }
-         }) }}
-								{{ form_label(child, null, {
-           label_attr: { class: 'form-check-label' }
-         }) }}
+								{{ form_widget(child, { attr: { class: 'form-check-input' } }) }}
+								<label class="form-check-label">
+									{% if child.vars.value == 'passager' %}
+										<i class="fa-solid fa-suitcase"></i>
+									{% elseif child.vars.value == 'chauffeur' %}
+										<i class="fa fa-car me-1"></i>
+									{% else %}
+										<i class="fa-solid fa-road"></i>
+									{% endif %}
+									{{ child.vars.label }}
+								</label>
 							</div>
 						{% endfor %}
 						{{ form_errors(registrationForm.statut) }}
-					</div>
-
-
-					<div class="mb-4 form-check">
-						{{ form_widget(registrationForm.agreeTerms, { attr: { class: 'form-check-input' } }) }}
-						{{ form_label(registrationForm.agreeTerms, 'J’accepte les conditions', { label_attr: { class: 'form-check-label' } }) }}
-						{{ form_errors(registrationForm.agreeTerms) }}
 					</div>
 
 

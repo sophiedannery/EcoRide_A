@@ -35,10 +35,16 @@
 
 	</head>
 
-	<body style="padding-top: 72px;">
+	<body
+		{% if block('body_class') is defined %} class="{{ block('body_class') }}" {% else %} class="pt-5" {% endif %}>
 
-		<div class="container">
-			{% include "partials/header.html.twig" %}</div>
+		{# <body style="padding-top: 72px;"> #}
+
+
+		{% if block('hide_header') is not defined %}
+			<div class="container">
+				{% include "partials/header.html.twig" %}</div>
+		{% endif %}
 
 
 		{% for label, messages in app.flashes %}
@@ -58,7 +64,9 @@
 		<main class="flex-fill"> {% block body %}{% endblock %}
 			</main>
 
-			{% include "partials/footer.html.twig" %}
+			{% if block('hide_footer') is not defined %}
+				{% include "partials/footer.html.twig" %}
+			{% endif %}
 
 
 			{% block javascripts %}
