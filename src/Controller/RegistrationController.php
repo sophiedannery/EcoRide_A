@@ -23,6 +23,11 @@ class RegistrationController extends AbstractController
         EntityManagerInterface $entityManager,
         LoggerInterface $logger
     ): Response {
+
+        if ($security->getUser()) {
+            return $this->redirectToRoute('app_account');
+        }
+
         $user = new User();
         $form = $this->createForm(RegistrationForm::class, $user);
         $form->handleRequest($request);
