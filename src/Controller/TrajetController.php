@@ -14,6 +14,7 @@ use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -309,5 +310,160 @@ final class TrajetController extends AbstractController
         $this->addFlash('success', 'Trajet terminé. Les passagers peuvent maintenant valider le trajet.');
 
         return $this->redirectToRoute('app_account');
+    }
+
+
+
+    #[Route('/trajet/nouveau/trajet', name: 'app_trajet_nouveau_trajet')]
+    #[IsGranted('ROLE_USER')]
+    public function trajetEtape(
+        Request $request,
+        SessionInterface $session
+    ): Response {
+
+
+        if ($request->isMethod('POST')) {
+            $session->set('trajet_data', [
+                'adresse_depart' => $request->request->get('adresse_depart'),
+                'adresse_arrivee' => $request->request->get('adresse_arrivee'),
+                'date_depart' => $request->request->get('date_depart'),
+                'date_arrivee' => $request->request->get('date_arrivee'),
+            ]);
+
+            return $this->redirectToRoute('app_trajet_nouveau_vehicule');
+        }
+
+        $data = $session->get('trajet_data', []);
+
+        return $this->render('trajet_nouveau/trajet.html.twig', [
+            'data' => $data,
+        ]);
+    }
+
+
+    #[Route('/trajet/nouveau/vehicule', name: 'app_trajet_nouveau_vehicule')]
+    #[IsGranted('ROLE_USER')]
+    public function vehiculeEtape(
+        Request $request,
+        SessionInterface $session,
+        VehiculeRepository $vehiculeRepo
+    ): Response {
+
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+        $vehicules = $vehiculeRepo->findBy(['user' => $user]);
+
+
+        if ($request->isMethod('POST')) {
+
+            $vehiculeId = $request->request->get('vehicule');
+
+            if (!$vehiculeId) {
+                $this->addFlash('warning', 'Veuillez sélectionner un véhicule.');
+                return $this->redirectToRoute('appp_nouveau_trajet_vehicule');
+            }
+
+            $session->set('vehicule_id', $vehiculeId);
+            return $this->redirectToRoute('app_trajet_nouveau_prix');
+        }
+
+        return $this->render('trajet_nouveau/vehicule.html.twig', [
+            'vehicules' => $vehicules,
+            'selected' => $session->get('vehicule_id'),
+        ]);
+    }
+
+
+    #[Route('/trajet/nouveau/prix', name: 'app_trajet_nouveau_prix')]
+    #[IsGranted('ROLE_USER')]
+    public function prixEtape(
+        Request $request,
+        SessionInterface $session,
+        VehiculeRepository $vehiculeRepo
+    ): Response {
+
+        $vehiculeId = $session->get('vehicule_id');
+        $vehicule = $vehiculeRepo->find($vehiculeId);
+
+        if (!$vehicule) {
+            $this->addFlash('warning', 'Aucun véhicule sélectionné.');
+            return $this->redirectToRoute('app_trajet_nouveau_vehicule');
+        }
+
+
+
+        if ($request->isMethod('POST')) {
+            $session->set('prix', $request->request->get('prix'));
+            $session->set('places_restantes', (int) $request->request->get('places_restantes'));
+
+            return $this->redirectToRoute('app_trajet_nouveau_summary');
+        }
+
+
+        return $this->render('trajet_nouveau/prix.html.twig', [
+            'prix' => $session->get('prix'),
+            'places_restantes' => $session->get('places_restantes', $vehicule->getPlacesDisponibles()),
+            'vehicule' => $vehicule,
+        ]);
+    }
+
+
+    #[Route('/trajet/nouveau/resume', name: 'app_trajet_nouveau_summary')]
+    #[IsGranted('ROLE_USER')]
+    public function summaryEtape(
+        Request $request,
+        SessionInterface $session,
+        EntityManagerInterface $em,
+        VehiculeRepository $vehiculeRepo
+    ): Response {
+
+        $data = $session->get('trajet_data');
+        $vehiculeId = $session->get('vehicule_id');
+        $prix = $session->get('prix');
+        $vehicule = $vehiculeRepo->find($vehiculeId);
+        $places = $session->get('places_restantes', $vehicule->getPlacesDisponibles());
+
+
+        if (!$data || !$vehicule || !$prix) {
+            $this->addFlash('warning', 'Il manque des informations.');
+            return $this->redirectToRoute('app_trajet_nouveau_trajet');
+        }
+
+
+
+
+        if ($request->isMethod('POST')) {
+
+            /** @var \App\Entity\User $user */
+            $user = $this->getUser();
+
+            $trajet = new Trajet();
+            $trajet->setAdresseDepart($data['adresse_depart'])
+                ->setAdresseArrivee($data['adresse_arrivee'])
+                ->setDateDepart(new \DateTime($data['date_depart']))
+                ->setDateArrivee(new \DateTime($data['date_arrivee']))
+                ->setPrix($prix)
+                ->setVehicule($vehicule)
+                ->setEnergie($vehicule->getEnergie())
+                ->setChauffeur($user)
+                ->setPlacesRestantes($places)
+                ->setStatut('confirmé');
+
+            $em->persist($trajet);
+            $em->flush();
+
+            $session->remove('trajet_data');
+            $session->remove('vehicule_id');
+            $session->remove('prix');
+
+            $this->addFlash('success', 'Trajet créée avec succès !');
+            return $this->redirectToRoute('app_account');
+        }
+
+        return $this->render('trajet_nouveau/summary.html.twig', [
+            'data' => $data,
+            'vehicule' => $vehicule,
+            'prix' => $prix,
+        ]);
     }
 }

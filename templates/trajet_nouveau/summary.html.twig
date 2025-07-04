@@ -1,0 +1,144 @@
+{% extends 'base.html.twig' %}
+{% block title %}Ajouter un trajet — résumé
+{% endblock %}
+
+
+{% block body %}
+	<section class="py-5">
+		<div class="container">
+
+			<div class="col-12 col-md-8 col-lg-6 mx-auto mt-5">
+
+
+				<p class="subtitle">AJOUTER UN TRAJET</p>
+				<h1 class="h2 mb-5">Résumé de vorte trajet
+					<span class="text-muted float-end">Étape 4</span>
+				</h1>
+
+
+				<div class="row form-block">
+
+					<div class="col-lg-4">
+						<h4>Le trajet</h4>
+					</div>
+
+
+					<div class="col-lg-7 ms-auto">
+						<div class="mb-4">
+							<ul class="list-unstyled">
+								<li>
+									<i class="bi bi-geo-fill text-success"></i>
+									{{ data.adresse_depart }}
+									-
+									<i class="bi bi-geo-alt-fill text-danger"></i>
+									{{ data.adresse_arrivee }}</li>
+
+								<li>
+									Départ le
+									{{ data.date_depart|date('d/m/Y') }}
+									à
+									{{ data.date_depart|date('H:i') }}</li>
+								<li>
+									Arrivée le
+									{{ data.date_arrivee|date('d/m/Y H:i') }}
+									à
+									{{ data.date_depart|date('H:i') }}</li>
+							</ul>
+
+							<div class="text-end">
+								<button class="btn btn-link">
+									<a href="{{ path('app_trajet_nouveau_trajet') }}">MODIFIER</a>
+								</button>
+							</div>
+
+						</div>
+					</div>
+				</div>
+				<hr>
+
+				<div class="row form-block mt-4">
+					<div class="col-lg-4">
+						<h4>Le véhicule</h4>
+					</div>
+					<div class="col-lg-7 ms-auto">
+						<div class="mb-4">
+							<ul class="list-unstyled">
+								<li>
+									{{ vehicule.marque }}
+									{{ vehicule.modele }}
+									- 
+																																																																																																																																																																																																																																	(<em>{{ vehicule.immatriculation }}</em>)</li>
+
+								<li></li>
+								<li>
+									{{ vehicule.placesDisponibles }}
+									place{{ vehicule.placesDisponibles > 1 ? 's' : '' }}
+									disponible{{ vehicule.placesDisponibles > 1 ? 's' : '' }}</li>
+								<li>
+									{% if vehicule.energie == 'electrique' %}
+										<i class="fa-solid fa-leaf me-2"></i>
+										Voyage écologique
+									{% endif %}
+
+								</li>
+							</ul>
+
+							<div class="text-end">
+								<button class="btn btn-link">
+									<a href="{{ path('app_trajet_nouveau_vehicule') }}">MODIFIER</a>
+								</button>
+							</div>
+						</div>
+
+					</div>
+				</div>
+				<hr>
+
+				<div class="row form-block mt-4">
+					<div class="col-lg-4">
+						<h4>Le prix</h4>
+					</div>
+					<div class="col-lg-7 ms-auto">
+						<div class="mb-4">
+							<ul class="list-unstyled">
+								<li>
+									{{ prix }}
+									crédit{{ prix > 1 ? 's' : '' }}
+									par passager<br>
+									<small class="text-muted">
+										({{ prix - 2 }}
+										crédit{{ (prix - 2) > 1 ? 's' : '' }}
+										vous seront versés après commission)</small>
+								</li>
+							</ul>
+
+							<div class="text-end">
+								<button class="btn btn-link">
+									<a href="{{ path('app_trajet_nouveau_prix') }}">MODIFIER</a>
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<hr>
+
+				<div class="row form-block flex-column flex-sm-row mt-4">
+					<div class="col text-center text-sm-start">
+						<a href="{{ path('app_trajet_nouveau_prix') }}" class="btn btn-link text-muted">
+							<i class="fa fa-chevron-left me-2"></i>Précédent
+						</a>
+					</div>
+					<div class="col text-center text-sm-end">
+						<form method="post">
+							<button type="submit" class="btn btn-primary mt-3 px-3">Proposer votre trajet</button>
+						</form>
+					</div>
+				</div>
+			</div>
+
+
+		</div>
+
+
+	</div>
+</section>{% endblock %}

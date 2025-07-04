@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+{% block title %}Ajouter un trajet — étape 1
+{% endblock %}
+{% block body %}
+
+	<section class="py-5">
+		<div class="container">
+
+
+			<div class="col-12 col-md-8 col-lg-6 mx-auto mt-5">
+				<p class="subtitle">AJOUTER UN TRAJET</p>
+				<h1 class="h2 mb-5">Le trajet
+					<span class="text-muted float-end">Étape 1</span>
+				</h1>
+
+				<form id="trajetForm" method="post">
+					<div class="mb-3">
+						<label>Adresse de départ</label>
+						<input type="text" name="adresse_depart" class="form-control" required value="{{ data.adresse_depart|default('') }}">
+					</div>
+					<div class="mb-3">
+						<label>Adresse d'arrivée</label>
+						<input type="text" name="adresse_arrivee" class="form-control" required value="{{ data.adresse_arrivee|default('') }}">
+					</div>
+					<div class="mb-3">
+						<label>Date et heure de départ</label>
+						<input type="datetime-local" id="date_depart" name="date_depart" class="form-control" required min="{{ "now"|date('Y-m-d\\TH:i')}}" value="{{ data.date_depart|default('') }}">
+					</div>
+					<div class="mb-3">
+						<label>Date et heure d'arrivée</label>
+						<input type="datetime-local" id="date_arrivee" name="date_arrivee" class="form-control" required value="{{ data.date_arrivee|default('') }}">
+					</div>
+					<div class="d-flex justify-content-end mt-4">
+						<button type="submit" class="btn btn-primary">Suivant</button>
+					</div>
+				</form>
+
+			</div>
+
+
+		</div>
+	</section>
+{% endblock %}
+{% block javascripts %}
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+const form = document.getElementById('trajetForm');
+
+form.addEventListener('submit', function (event) {
+const dateDepart = new Date(document.getElementById('date_depart').value);
+const dateArrivee = new Date(document.getElementById('date_arrivee').value);
+
+if (dateArrivee < dateDepart) {
+event.preventDefault();
+alert("Vous ne pouvez pas arriver avant d'être parti.");
+}
+});
+});
+	</script>
+{% endblock %}

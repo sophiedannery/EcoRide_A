@@ -6,6 +6,7 @@ use App\Repository\TrajetRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: TrajetRepository::class)]
 class Trajet
@@ -29,9 +30,17 @@ class Trajet
     #[ORM\Column(length: 255)]
     private ?string $adresse_arrivee = null;
 
+
+    #[Assert\NotNull]
+    #[Assert\GreaterThanOrEqual("today", message: "La date de départ doit être aujourd'hui ou ultérieure.")]
     #[ORM\Column]
     private ?\DateTime $date_depart = null;
 
+    #[Assert\NotNull]
+    #[Assert\GreaterThanOrEqual(
+        propertyPath: "date_depart",
+        message: "Vous ne pouvez pas arriver avant d'être parti."
+    )]
     #[ORM\Column]
     private ?\DateTime $date_arrivee = null;
 
