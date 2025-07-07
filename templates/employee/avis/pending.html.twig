@@ -26,30 +26,30 @@
 
 								<div class="col-9 col-lg-4 align-self-center mb-3 mb-lg-0">
 									<h2 class="h5 mb-1">Avis n°
-										{{ a.avis_id }}</h2>
+										{{ a.id }}</h2>
 									<p class="text-sm text-muted">Posté le
-										{{ a.date_creation|date('d/m/Y') }}
+										{{ a.dateCreation|date('d/m/Y') }}
 										à
-										{{ a.date_creation|date('H:i') }}</p>
+										{{ a.dateCreation|date('H:i') }}</p>
 									<h2 class="h5 mb-1">Le trajet
 									</h2>
 									<p class="text-sm text-muted">
-										{{ a.adresse_depart }}
+										{{  a.reservation.trajet.adresseDepart }}
 										→
-										{{ a.adresse_arrivee }}</p>
+										{{  a.reservation.trajet.adresseArrivee }}</p>
 									<p class="text-sm text-muted">
-										{{ a.date_depart|date('d/m/Y') }}
+										{{ a.reservation.trajet.dateDepart|date('d/m/Y') }}
 										à
-										{{ a.date_depart|date('H:i') }}</p>
+										{{ a.reservation.trajet.dateDepart|date('H:i') }}</p>
 									<p class="text-sm text-muted">
 										Réservation n°
-										{{ a.reservation_id }}</p>
+										{{ a.reservation.id }}</p>
 									<p class="text-sm text-muted">
 										Chauffeur :
-										{{ a.chauffeur_pseudo }}</p>
+										{{  a.reservation.trajet.chauffeur.pseudo }}</p>
 									<p class="text-sm text-muted">
 										Passager :
-										{{ a.passager_pseudo }}</p>
+										{{ a.reservation.passager.pseudo }}</p>
 								</div>
 
 								<div class="col-10 ms-auto col-lg-7">
@@ -74,14 +74,14 @@
 								</div>
 
 								<div class="text-center">
-									<form method="post" style="display:inline" action="{{ path('app_employee_moderate_avis', {'id': a.avis_id}) }}" onsubmit="return confirm('Valider cet avis ?');">
-										<input type="hidden" name="_token" value="{{ csrf_token('moderate_avis' ~ a.avis_id) }}">
+									<form method="post" style="display:inline" action="{{ path('app_employee_moderate_avis', {'id': a.id}) }}" onsubmit="return confirm('Valider cet avis ?');">
+										<input type="hidden" name="_token" value="{{ csrf_token('moderate_avis' ~ a.id) }}">
 										<input type="hidden" name="action" value="validate">
 										<button type="submit" class="btn btn-sm btn-success">Valider</button>
 									</form>
 
-									<form method="post" style="display:inline" action="{{ path('app_employee_moderate_avis', {'id': a.avis_id}) }}" onsubmit="return confirm('Refuser cet avis ?');">
-										<input type="hidden" name="_token" value="{{ csrf_token('moderate_avis' ~ a.avis_id) }}">
+									<form method="post" style="display:inline" action="{{ path('app_employee_moderate_avis', {'id': a.id}) }}" onsubmit="return confirm('Refuser cet avis ?');">
+										<input type="hidden" name="_token" value="{{ csrf_token('moderate_avis' ~ a.id) }}">
 										<input type="hidden" name="action" value="reject">
 										<button type="submit" class="btn btn-sm btn-danger">Refuser</button>
 									</form>

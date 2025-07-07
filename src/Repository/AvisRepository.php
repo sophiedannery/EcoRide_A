@@ -17,6 +17,8 @@ class AvisRepository extends ServiceEntityRepository
     }
 
 
+
+
     public function findAvisByChauffeur(int $driverId): array
     {
         $conn = $this->getEntityManager()->getConnection();
@@ -42,6 +44,9 @@ class AvisRepository extends ServiceEntityRepository
 
         return $conn->executeQuery($sql, [$driverId])->fetchAllAssociative();
     }
+
+
+
 
 
     public function findPendingAvis(): array
@@ -71,6 +76,19 @@ class AvisRepository extends ServiceEntityRepository
         SQL;
 
         return $conn->executeQuery($sql)->fetchAllAssociative();
+    }
+
+
+
+    public function findPendingAvisWithComment(): array
+    {
+        return $this->createQueryBuilder('a')
+            ->where('a.statut_validation = :status')
+            ->andWhere('a.commentaire IS NOT NULL')
+            ->andWhere('a.commentaire != \'\'')
+            ->setParameter('status', 'en_attente')
+            ->getQuery()
+            ->getResult();
     }
 
 

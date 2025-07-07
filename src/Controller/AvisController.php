@@ -58,8 +58,8 @@ final class AvisController extends AbstractController
         }
 
         $trajet = $reservation->getTrajet();
-        if ($trajet->getStatut() !== 'validé') {
-            $this->addFlash('warning', 'Vous ne pouvez laisser un avis que lorsqu’un trajet est validé.');
+        if ($trajet->getStatut() !== 'trajet_termine') {
+            $this->addFlash('warning', 'Vous ne pouvez laisser un avis que lorsqu’un trajet est terminé.');
             return $this->redirectToRoute('app_reservation_account');
         }
 
@@ -72,17 +72,24 @@ final class AvisController extends AbstractController
         $avis = new Avis();
         $avis->setReservation($reservation);
         $avis->setDateCreation(new \DateTime());
-        $avis->setStatutValidation('en_attente');
 
         $form = $this->createForm(AvisFormType::class, $avis);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $avis = $form->getData();
+
+            if (empty($avis->getCommentaire())) {
+                $avis->setStatutValidation('validé');
+                $this->addFlash('success', 'Votre avis a été enregistré.');
+            } else {
+                $avis->setStatutValidation('en_attente');
+                $this->addFlash('success', 'Votre avis est en attente de validation.');
+            }
+
             $em->persist($avis);
             $em->flush();
 
-            $this->addFlash('success', 'Votre avis a bien été enregistré et est en attente de validation.');
             return $this->redirectToRoute('app_reservation_account');
         }
 

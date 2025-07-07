@@ -304,23 +304,18 @@ final class ReservationController extends AbstractController
         }
 
         $trajet = $reservation->getTrajet();
-        if ($trajet->getStatut() !== 'trajet_arrivé_a_destination') {
-            $this->addFlash('warning', 'Votre trajet n\'est pas signalé comme terminé par le chauffeur.');
-            return $this->redirectToRoute('app_account_reservations');
-        }
-
-        if ($trajet->getStatut() !== 'trajet_arrivé_a_destination') {
+        if ($trajet->getStatut() !== 'trajet_arrive_a_destination') {
             $this->addFlash('warning', 'Votre trajet n\'est pas signalé comme terminé par le chauffeur.');
             return $this->redirectToRoute('app_account_reservations');
         }
 
 
-        if ($reservation->getStatut() === 'trajet_terminé') {
+        if ($reservation->getStatut() === 'trajet_termine') {
             $this->addFlash('info', 'Vous avez déjà validé ce trajet.');
             return $this->redirectToRoute('app_account_reservations');
         }
 
-        $reservation->setStatut('reservation_terminée');
+        $reservation->setStatut('reservation_terminee');
 
         $prixPayé = $reservation->getCreditsUtilises();
         $commission = 2;
@@ -348,20 +343,20 @@ final class ReservationController extends AbstractController
         $autresReservations = $reservationRepo->findBy(['trajet' => $trajet]);
         $toutValide = true;
         foreach ($autresReservations as $autre) {
-            if ($autre->getStatut() !== 'reservation_terminée') {
+            if ($autre->getStatut() !== 'reservation_terminee') {
                 $toutValide = false;
                 break;
             }
         }
 
         if ($toutValide) {
-            $trajet->setStatut('trajet_terminé');
+            $trajet->setStatut('trajet_termine');
         }
 
         $em->flush();
 
-        $this->addFlash('success', 'Merci pour votre confirmation ! Le chauffeur a été payé, le voyage est terminé.');
-        return $this->redirectToRoute('app_account');
+        $this->addFlash('success', '✨ Trajet validé. Vous pouvez maintenant laisser un avis au chauffeur. ');
+        return $this->redirectToRoute('app_avis_new', ['reservationId' => $reservation->getId()]);
     }
 
 

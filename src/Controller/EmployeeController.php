@@ -35,7 +35,6 @@ final class EmployeeController extends AbstractController
         $signalements = $reservationRepo->findSignaledReservations();
 
 
-
         return $this->render('employee/signalement.html.twig', [
             'signalements' => $signalements,
         ]);
@@ -65,7 +64,7 @@ final class EmployeeController extends AbstractController
             return $this->redirectToRoute('app_employee_signalement');
         }
 
-        $reservation->setStatut('validé');
+        $reservation->setStatut('reservation_termine');
 
         $prixPayé = $reservation->getCreditsUtilises();
         $commission = 2;
@@ -95,14 +94,14 @@ final class EmployeeController extends AbstractController
         $autresReservations = $reservationRepo->findBy(['trajet' => $trajet]);
         $toutValide = true;
         foreach ($autresReservations as $autre) {
-            if ($autre->getStatut() !== 'validé') {
+            if ($autre->getStatut() !== 'reservation_termine') {
                 $toutValide = false;
                 break;
             }
         }
 
         if ($toutValide) {
-            $trajet->setStatut('validé');
+            $trajet->setStatut('trajet_termine');
             $em->persist($trajet);
         }
 
@@ -121,13 +120,11 @@ final class EmployeeController extends AbstractController
 
 
 
-
-
     #[Route('/employee/avis/pending', name: 'app_employee_pending_avis')]
     #[IsGranted('ROLE_EMPLOYEE')]
     public function listePendingAvis(AvisRepository $avisRepo): Response
     {
-        $pendingAvis = $avisRepo->findPendingAvis();
+        $pendingAvis = $avisRepo->findPendingAvisWithComment();
 
         return $this->render('employee/avis/pending.html.twig', [
             'pendingAvis' => $pendingAvis,

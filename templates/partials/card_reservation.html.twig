@@ -14,7 +14,7 @@
 					</div>
 				{% else %}
 					<div class="mb-2">
-						<img src="{{ asset('assets/images/avatar-default.png') }}" alt="Pas de photo" class="rounded-circle" style="width: 60px; height: 60px; object-fit: cover;"/>
+						<img src="{{ asset('assets/images/avatar.png') }}" alt="Pas de photo" class="rounded-circle" style="width: 60px; height: 60px; object-fit: cover;"/>
 						<strong class="ms-3">{{ r.chauffeur_pseudo }}</strong>
 
 					</div>
@@ -64,24 +64,31 @@
 	</div>
 	<div class="text-center">
 		<div class="d-flex justify-content-center gap-2 flex-wrap">
-			{% if r.reservation_statut == 'confirmée' and r.statut_trajet != 'en_cours' and r.statut_trajet != 'terminé' %}
+
+			{% if r.reservation_statut == 'reservation_confirmée' %}
 				<form method='post' action="{{ path('app_reservation_annuler', {'id': r.reservation_id}) }}" onsubmit="return confirm('Voulez-vous vraiment annuler cette réservation ?')">
 					<input type="hidden" name="_token" value="{{ csrf_token('cancel_reservation' ~ r.reservation_id) }}">
 					<button class="btn btn-sm btn-danger">Annuler ma réservation</button>
 				</form>
 			{% endif %}
-			{% if r.reservation_statut == 'confirmée' and r.statut_trajet == 'terminé' %}
 
-				<a href="{{ path('app_reservation_resume', {'id': r.reservation_id}) }}" class="btn btn-sm btn-success">Valider le trajet</a>
 
+			{% if r.reservation_statut == 'reservation_en_cours' %}
+				<button class="btn btn-sm btn-success disabled">Trajet en cours</button>
 			{% endif %}
-			{% if r.statut_trajet == 'validé' %}
+			{% if r.reservation_statut == 'reservation_arrive_a_destination' and r.statut_trajet == 'trajet_arrive_a_destination' %}
+				<a href="{{ path('app_reservation_resume', {'id': r.reservation_id}) }}" class="btn btn-sm btn-success">Valider le trajet</a>
+			{% endif %}
+
+			{% if r.statut_trajet == 'trajet_termine' %}
 				<button class="btn btn-sm btn-success disabled">Trajet terminé</button>
 			{% endif %}
-			{% if r.reservation_statut == 'signalé' %}
+			{% if r.reservation_statut == 'trajet_signale' %}
 				<button class="btn btn-sm btn-warning disabled">Trajet signalé</button>
 			{% endif %}
-			{% if r.statut_trajet == 'validé' and not r.avis %}
+
+
+			{% if r.statut_trajet == 'trajet_termine' and not r.avis %}
 				<a href="{{ path('app_avis_new', {'reservationId': r.reservation_id}) }}" class="btn btn-sm btn-success">Laisser un avis</a>
 			{% endif %}
 		</div>

@@ -35,7 +35,7 @@ final class TrajetController extends AbstractController
 
         $vehicules = $user->getVehicules();
         $history = $reservation_repository->findHistoryByUser($user->getId());
-        $driverTrips = $trajet_repository->findTripByDriverAndStatus($user->getId(), ['trajet_a_venir']);
+        $driverTrips = $trajet_repository->findTripByDriverAndStatus($user->getId(), ['trajet_a_venir', 'trajet_en_cours']);
 
         foreach ($driverTrips as &$trip) {
             $trip->passagers = $reservation_repository->findPassengerPseudoByTrajet($trip->getId());
@@ -266,6 +266,11 @@ final class TrajetController extends AbstractController
 
 
         $trajet->setStatut('trajet_en_cours');
+
+        foreach ($trajet->getReservations() as $reservation) {
+            $reservation->setStatut('reservation_en_cours');
+        }
+
         $em->flush();
         $this->addFlash('success', 'Trajet démarré. Bon voyage !');
 
@@ -299,13 +304,17 @@ final class TrajetController extends AbstractController
             return $this->redirectToRoute('app_account');
         }
 
-        if ($trajet->getStatut() !== 'en_cours') {
+        if ($trajet->getStatut() !== 'trajet_en_cours') {
             $this->addFlash('warning', 'Impossible de clore un trajet qui n\'est pas en cours.');
             return $this->redirectToRoute('app_account');
         }
 
 
-        $trajet->setStatut('trajet_arrivé_a_destination');
+        $trajet->setStatut('trajet_arrive_a_destination');
+
+        foreach ($trajet->getReservations() as $reservation) {
+            $reservation->setStatut('reservation_arrive_a_destination');
+        }
         $em->flush();
 
         $reservations = $reservationRepo->findBy(['trajet' => $trajet]);
@@ -480,7 +489,7 @@ final class TrajetController extends AbstractController
                 ->setEnergie($vehicule->getEnergie())
                 ->setChauffeur($user)
                 ->setPlacesRestantes($places)
-                ->setStatut('confirmé');
+                ->setStatut('trajet_a_venir');
 
             $em->persist($trajet);
             $em->flush();

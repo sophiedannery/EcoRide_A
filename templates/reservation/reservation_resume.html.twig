@@ -4,7 +4,7 @@
 {% endblock %}
 
 {% block body %}
-	<div class="card mx-auto" style="max-width: 600px; margin-top: 2rem;">
+	<div class="card mx-auto" style="max-width: 600px; margin-top: 5rem;">
 		<div class="card-header text-center">
 			<h5>Résumé du trajet</h5>
 		</div>
@@ -18,7 +18,7 @@
 				{{ dateDepart|date('d/m/Y H:i') }}<br>
 				<strong>Chauffeur :</strong>
 				{{ chauffeur.getPseudo() }}<br>
-				<strong>Prix payé :</strong>
+				<strong>Crédits utilisés :</strong>
 				{{ prix }}
 				crédits
 			</p>
