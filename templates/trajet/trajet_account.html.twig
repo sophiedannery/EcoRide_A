@@ -5,15 +5,7 @@
 
 {% block body %}
 
-	{% set now = "now"|date("U") %}
-	{% set upcomingCount = 0 %}
-
-	{% for t in driverTrips %}
-		{% set departTs = t.date_depart|date("U") %}
-		{% if departTs >= now %}
-			{% set upcomingCount = upcomingCount + 1 %}
-		{% endif %}
-	{% endfor %}
+	{% set upcomingCount = driverTrips|length %}
 
 	<section class="py-5">
 		<div class="container">
@@ -37,11 +29,9 @@
 				<div class="list-group shadow-mb-5">
 
 					{% for t in driverTrips %}
-						{% set departTs = (t.date_depart|date("U")) %}
-						{% if departTs >= now %}
-							{% include "partials/card_trajet_account.html.twig" %}
-						{% endif %}
+						{% include "trajet/card_trajet_account.html.twig" %}
 					{% endfor %}
+
 				</div>
 				<nav aria-label="Page trajets"></nav>
 			{% endif %}

@@ -1,0 +1,80 @@
+<div class="list-group-item list-group-item-action p-4">
+
+	<div class="row">
+		<div class="col-lg-4 align-self-center mb-4 mb-lg-0">
+			<div class="d-flex align-items-center mb-3">
+				<h2 class="h5 mb-0">Passagers :</h2>
+				<img>
+			</div>
+			<p class="text-sm text-muted">
+				{% if t.passagers is empty %}
+					<em>Aucun passager</em>
+				{% else %}
+					<div class="d-flex gap-2 flex-wrap">
+						{% for p in t.passagers %}
+							<div class="d-flex align-items-center">
+								{% if p.photoFilename %}
+									<div class="mb-2">
+										<img src="{{ asset('uploads/photos/' ~ p.photoFilename) }}" alt="Photo de profil de {{ p.pseudo }}" class="rounded-circle" style="width: 60px; height: 60px; object-fit: cover;"/>
+										<strong class="ms-3">{{ p.pseudo }}</strong>
+
+									</div>
+								{% else %}
+									<div class="mb-2">
+										<img src="{{ asset('assets/images/avatar.png') }}" alt="Pas de photo" class="rounded-circle" style="width: 60px; height: 60px; object-fit: cover;"/>
+										<strong class="ms-3">{{ p.pseudo }}</strong>
+
+									</div>
+								{% endif %}
+							</div>
+						{% endfor %}
+					</div>
+				{% endif %}
+			</p>
+			{% if t.vehicule.energie == 'electrique' %}
+				<i class="fa-solid fa-leaf"></i>
+				Voyage écologique</li>
+		{% endif %}
+
+	</div>
+
+	<div class="col-lg-8">
+		<div class="row">
+			<div class="col-6 col-md-4 col-lg-3 py-3 mb-3 mb-lg-0">
+				<h6 class="label-heading">DEPART</h6>
+				<p class="text-sm">{{ t.adresseDepart }}
+				</p>
+				<h6 class="label-heading">ARRIVEE</h6>
+				<p class="text-sm">{{ t.adresseArrivee }}</p>
+			</div>
+			<div class="col-6 col-md-4 col-lg-3 py-3">
+				<h6 class="label-heading">DATE</h6>
+				<p class="text-sm">{{ t.dateDepart|date('d-m-Y') }}</p>
+				<h6 class="label-heading">PRIX</h6>
+				<p class="text-sm">{{ t.prix }}
+					crédits</p>
+			</div>
+			<div class="col-6 col-md-4 col-lg-3 py-3">
+				<h6 class="label-heading">HEURE</h6>
+				<p class="text-sm">{{ t.dateDepart|date('H:i') }}</p>
+				<h6 class="label-heading">VEHICULE</h6>
+				<p class="text-sm">{{ t.vehicule.marque }}
+					{{ t.vehicule.modele }}</p>
+			</div>
+
+			<div class="col-12 col-lg-3 align-self-center">
+				<span class="text-primary text-sm text-uppercase me-4 me-lg-0">
+					{% if t.statut == 'trajet_arrive_a_destination' %}
+						<button class="btn btn-sm btn-success" disabled>En attente de validation</button>
+					{% endif %}
+
+					{% if t.statut == 'trajet_termine' %}
+						<button class="btn btn-sm btn-success" disabled>Trajet terminé</button>
+					{% endif %}
+				</span>
+				<br class="d-none d-lg-block">
+			</div>
+
+		</div>
+	</div>
+</div></div>

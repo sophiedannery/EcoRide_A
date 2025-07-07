@@ -1,0 +1,109 @@
+<div class="list-group-item list-group-item-action p-4">
+	<div class="row">
+		<div class="col-lg-4 align-self-center mb-4 mb-lg-0">
+			<div class="d-flex align-items-center mb-3">
+				<h2 class="h5 mb-0">Passagers :</h2>
+				<img>
+			</div>
+			<p class="text-sm text-muted">
+				{% if t.passagers is empty %}
+					<em>Aucun passager</em>
+				{% else %}
+					<div class="d-flex gap-2 flex-wrap">
+						{% for p in t.passagers %}
+							<div class="d-flex align-items-center">
+								{% if p.photoFilename %}
+									<div class="mb-2">
+										<img src="{{ asset('uploads/photos/' ~ p.photoFilename) }}" alt="Photo de profil de {{ p.pseudo }}" class="rounded-circle" style="width: 60px; height: 60px; object-fit: cover;"/>
+										<strong class="ms-3">{{ p.pseudo }}</strong>
+
+									</div>
+								{% else %}
+									<div class="mb-2">
+										<img src="{{ asset('assets/images/avatar.png') }}" alt="Pas de photo" class="rounded-circle" style="width: 60px; height: 60px; object-fit: cover;"/>
+										<strong class="ms-3">{{ p.pseudo }}</strong>
+
+									</div>
+								{% endif %}
+							</div>
+						{% endfor %}
+					</div>
+				{% endif %}
+			</p>
+			{% if t.vehicule.energie == 'electrique' %}
+				<i class="fa-solid fa-leaf"></i>
+				Voyage écologique</li>
+		{% endif %}
+
+	</div>
+	<div class="col-lg-8">
+		<div class="row">
+			<div class="col-6 col-md-4 col-lg-3 py-3 mb-3 mb-lg-0">
+				<h6 class="label-heading">TRAJET</h6>
+				<p class="text-sm">{{ t.adresseDepart }}
+					->
+					{{ t.adresseArrivee }}</p>
+				<h6 class="label-heading">PLACES RESTANTES</h6>
+				<p class="text-sm">{{ t.placesRestantes }}</p>
+			</div>
+			<div class="col-6 col-md-4 col-lg-3 py-3">
+				<h6 class="label-heading">DATE</h6>
+				<p class="text-sm">{{ t.dateDepart|date('d-m-Y') }}</p>
+				<h6 class="label-heading">PRIX</h6>
+				<p class="text-sm">{{ t.prix }}
+					crédits</p>
+			</div>
+			<div class="col-6 col-md-4 col-lg-3 py-3">
+				<h6 class="label-heading">HEURE</h6>
+				<p class="text-sm">{{ t.dateDepart|date('H:i') }}</p>
+				<h6 class="label-heading">VEHICULE</h6>
+				<p class="text-sm">{{ t.vehicule.marque }}
+					{{ t.vehicule.modele }}</p>
+			</div>
+			<div class="col-12 col-lg-3 align-self-center">
+
+
+				<span class="text-primary text-sm text-uppercase me-4 me-lg-0">
+
+
+					{% if t.statut == 'trajet_a_venir' %}
+						<form method='post' action="{{ path('app_trajet_annuler', {'id': t.id}) }}" onsubmit="return confirm('Annuler définitivement ce trajet et rembourser tous les passagers ?')" ;>
+							<input type="hidden" name="_token" value="{{ csrf_token('cancel_trajet' ~ t.id) }}">
+							<button class="btn btn-sm btn-danger">Annuler mon trajet</buton>
+						</form>
+					{% endif %}
+
+				</span>
+				<br class="d-none d-lg-block">
+
+			</div>
+		</div>
+	</div>
+</div>
+<div class="text-center">
+
+	<div class="d-flex justify-content-center gap-2 flex-wrap">
+
+		{% set departDate = t.dateDepart|date('Y-m-d') %}
+		{% set today = 'now'|date('Y-m-d') %}
+
+		{% if t.statut == 'trajet_a_venir' and departDate == today %}
+			<form method='post' action="{{ path('app_trajet_demarrer', {'id': t.id}) }}" onsubmit="return confirm('Voulez-vous démarrer ce trajet ?')" ;>
+				<input type="hidden" name="_token" value="{{ csrf_token('trajet_demarrer' ~ t.id) }}">
+				<button class="btn btn btn-primary">Démarrer</button>
+			</form>
+		{% elseif t.statut == 'trajet_a_venir' and departDate != today %}
+			<button class="btn btn btn-primary" disabled>Démarrer</button>
+		{% endif %}
+
+
+		{% if t.statut == 'trajet_en_cours' %}
+			<form method='post' action="{{ path('app_trajet_arriver', {'id': t.id}) }}" onsubmit="return confirm('Êtes-vous arrivé à destination ?')" ;>
+				<input type="hidden" name="_token" value="{{ csrf_token('trajet_arriver' ~ t.id) }}">
+				<button class="btn btn btn-success">Arrivée à destination</button>
+			</form>
+		{% endif %}
+
+
+	</div>
+</div></div>

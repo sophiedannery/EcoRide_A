@@ -17,6 +17,11 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class ReservationController extends AbstractController
 {
 
+
+
+
+    // AFFICHER LES RESERVATION DANS MON ESPACE
+
     #[Route('/reservation/reservation_account', name: 'app_reservation_account')]
     #[IsGranted('ROLE_USER')]
     public function reservations(Request $request, EntityManagerInterface $em, ReservationRepository $reservation_repository, TrajetRepository $trajet_repository, AvisRepository $avisRepo): Response
@@ -87,6 +92,12 @@ final class ReservationController extends AbstractController
 
 
 
+
+
+
+
+    // PARTICIPER A UN TRAJET
+
     #[Route('/trajet/{id}/participer', name: 'app_trajet_participer', methods: ['POST'])]
     public function participer(int $id, Request $request, TrajetRepository $trajetRepo, EntityManagerInterface $em): Response
     {
@@ -145,7 +156,7 @@ final class ReservationController extends AbstractController
             ->setTrajet($trajet)
             ->setPassager($user)
             ->setDateConfirmation(new \DateTime())
-            ->setStatut('confirmée')
+            ->setStatut('reservation_confirmée')
             ->setCreditsUtilises($prix);
         $em->persist($reservation);
 
@@ -174,6 +185,8 @@ final class ReservationController extends AbstractController
 
 
 
+
+    // ANNULER UNE RESERVATION
 
     #[Route('/reservation/{id}/annuler', name: 'app_reservation_annuler', methods: ['POST'])]
     public function annulerReservation(int $id, Request $request, ReservationRepository $reservationRepo, TrajetRepository $trajetRepo, EntityManagerInterface $em): Response
@@ -226,6 +239,9 @@ final class ReservationController extends AbstractController
 
 
 
+
+    // VALIDER UNE RESERVATION
+
     #[Route('/reservation/{id}/resume', name: 'app_reservation_resume', methods: ['GET'])]
     public function resumeReservation(int $id, ReservationRepository $reservationRepo): Response
     {
@@ -251,7 +267,7 @@ final class ReservationController extends AbstractController
         $dateDepart = $trajet->getDateDepart();
         $prix = $reservation->getCreditsUtilises();
 
-        return $this->render('reservation/resume.html.twig', [
+        return $this->render('reservation/reservation_resume.html.twig', [
             'reservation' => $reservation,
             'trajet' => $trajet,
             'chauffeur' => $chauffeur,
@@ -288,23 +304,23 @@ final class ReservationController extends AbstractController
         }
 
         $trajet = $reservation->getTrajet();
-        if ($trajet->getStatut() !== 'terminé') {
+        if ($trajet->getStatut() !== 'trajet_arrivé_a_destination') {
             $this->addFlash('warning', 'Votre trajet n\'est pas signalé comme terminé par le chauffeur.');
             return $this->redirectToRoute('app_account_reservations');
         }
 
-        if ($trajet->getStatut() !== 'terminé') {
+        if ($trajet->getStatut() !== 'trajet_arrivé_a_destination') {
             $this->addFlash('warning', 'Votre trajet n\'est pas signalé comme terminé par le chauffeur.');
             return $this->redirectToRoute('app_account_reservations');
         }
 
 
-        if ($reservation->getStatut() === 'validé') {
+        if ($reservation->getStatut() === 'trajet_terminé') {
             $this->addFlash('info', 'Vous avez déjà validé ce trajet.');
             return $this->redirectToRoute('app_account_reservations');
         }
 
-        $reservation->setStatut('validé');
+        $reservation->setStatut('reservation_terminée');
 
         $prixPayé = $reservation->getCreditsUtilises();
         $commission = 2;
@@ -332,14 +348,14 @@ final class ReservationController extends AbstractController
         $autresReservations = $reservationRepo->findBy(['trajet' => $trajet]);
         $toutValide = true;
         foreach ($autresReservations as $autre) {
-            if ($autre->getStatut() !== 'validé') {
+            if ($autre->getStatut() !== 'reservation_terminée') {
                 $toutValide = false;
                 break;
             }
         }
 
         if ($toutValide) {
-            $trajet->setStatut('validé');
+            $trajet->setStatut('trajet_terminé');
         }
 
         $em->flush();
@@ -349,6 +365,20 @@ final class ReservationController extends AbstractController
     }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // SIGNALER UN PROBLEME AVEC LA RESERVATION
 
     #[Route('/reservation/{id}/report', name: 'app_reservation_report', methods: ['GET'])]
     public function reportReservation(int $id, ReservationRepository $reservationRepo): Response
@@ -376,7 +406,7 @@ final class ReservationController extends AbstractController
         $dateDepart = $trajet->getDateDepart();
         $prix = $reservation->getCreditsUtilises();
 
-        return $this->render('reservation/report.html.twig', [
+        return $this->render('reservation/reservation_report.html.twig', [
             'reservation' => $reservation,
             'trajet' => $trajet,
             'chauffeur' => $chauffeur,
@@ -419,7 +449,7 @@ final class ReservationController extends AbstractController
             return $this->redirectToRoute('app_reservation_report', ['id' => $id]);
         }
 
-        $reservation->setStatut('signalé');
+        $reservation->setStatut('reservation_signalée');
         $reservation->setCommentaireProbleme($commentaire);
 
         $em->persist($reservation);

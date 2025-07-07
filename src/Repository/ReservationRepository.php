@@ -18,6 +18,9 @@ class ReservationRepository extends ServiceEntityRepository
         parent::__construct($registry, Reservation::class);
     }
 
+
+
+
     public function findHistoryByUser(int $userId): array
     {
         $conn = $this->getEntityManager()->getConnection();
@@ -53,22 +56,24 @@ SQL;
         return $rows;
     }
 
+
+
+    // AFFICHER PASSAGERS DANS ESPACE TRAJET CHAUFFEUR
+
     public function findPassengerPseudoByTrajet(int $trajetId): array
     {
-        $conn = $this->getEntityManager()->getConnection();
+        $qb = $this->createQueryBuilder('r')
+            ->select('u.pseudo', 'u.photoFilename')
+            ->join('r.passager', 'u')
+            ->where('r.trajet = :trajetId')
+            ->setParameter('trajetId', $trajetId);
 
-
-        $sql = <<<'SQL'
-SELECT u.pseudo 
-FROM reservation  r  
-JOIN `user` u ON r.passager_id = u.id 
-WHERE r.trajet_id = ?
-SQL;
-
-        $rows = $conn->executeQuery($sql, [$trajetId])->fetchAllAssociative();
-
-        return array_column($rows, 'pseudo');
+        return $qb->getQuery()->getArrayResult();
     }
+
+
+
+
 
 
     public function findSignaledReservations(): array
@@ -94,7 +99,7 @@ SELECT
         JOIN trajet t ON r.trajet_id = t.id 
         JOIN `user` p ON r.passager_id = p.id
         JOIN `user` c ON t.chauffeur_id = c.id 
-    WHERE r.statut = 'signalé'
+    WHERE r.statut = 'reservation_signalée'
     ORDER BY t.date_depart DESC
 SQL;
 

@@ -16,6 +16,43 @@ class TrajetRepository extends ServiceEntityRepository
         parent::__construct($registry, Trajet::class);
     }
 
+
+
+
+    // AFFICHER TRAJET A VENIR ET HISTORIQUE
+
+    public function findTripByDriverAndStatus(int $driverId, array $statuts): array
+    {
+        return $this->createQueryBuilder('t')
+            ->leftJoin('t.vehicule', 'v')
+            ->addSelect('v')
+            ->where('t.chauffeur = :driver')
+            ->andWhere('t.statut IN (:statuts)')
+            ->setParameter('driver', $driverId)
+            ->setParameter('statuts', $statuts)
+            ->orderBy('t.date_depart', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+
+    // TROUVER TRAJET EXPIRE
+
+    public function findExpiredTripsByDriver(\App\Entity\User $driver, \DateTimeInterface $now): array
+    {
+        return $this->createQueryBuilder('t')
+            ->where('t.chauffeur = :driver')
+            ->andWhere('t.statut = :statut')
+            ->andWhere('t.dateDepart < :now')
+            ->setParameter('driver', $driver)
+            ->setParameter('statut', 'trajet_a_venir')
+            ->setParameter('now', $now)
+            ->getQuery()
+            ->getResult();
+    }
+
+
+
     public function searchTrips(string $from, string $to, \DateTimeInterface $date, bool $eco = false, ?int $maxPrice = null, ?int $maxDuration = null, ?float $minRating = null): array
     {
         $conn = $this->getEntityManager()->getConnection();
@@ -92,6 +129,10 @@ class TrajetRepository extends ServiceEntityRepository
     }
 
 
+
+
+
+
     public function findTripById(int $id): array
     {
         $conn = $this->getEntityManager()->getConnection();
@@ -124,6 +165,10 @@ class TrajetRepository extends ServiceEntityRepository
         return $trip ?: [];
     }
 
+
+
+
+
     public function getTripReviews(int $tripId): array
     {
         $conn = $this->getEntityManager()->getConnection();
@@ -147,6 +192,9 @@ class TrajetRepository extends ServiceEntityRepository
         return $conn->executeQuery($sql, [$tripId])->fetchAllAssociative();
     }
 
+
+
+
     public function getDriverPreferences(int $chauffeurId): array
     {
         $conn = $this->getEntityManager()->getConnection();
@@ -163,6 +211,9 @@ class TrajetRepository extends ServiceEntityRepository
 
         return array_column($rows, 'libelle');
     }
+
+
+
 
     public function getDriverAverageRating(int $chauffeurId): ?float
     {
@@ -183,6 +234,10 @@ class TrajetRepository extends ServiceEntityRepository
 
         return isset($row['avg_rating']) && $row['avg_rating'] !== null ? (float) $row['avg_rating'] : null;
     }
+
+
+
+
 
     public function findNextAvailableTripDate(string $from, string $to, \DateTimeInterface $date): ?\DateTimeImmutable
     {
@@ -273,7 +328,7 @@ class TrajetRepository extends ServiceEntityRepository
         LEFT JOIN vehicule AS v 
             ON t.vehicule_id = v.id
         WHERE t.chauffeur_id = ?
-        AND t.statut <> 'annulé'
+        AND t.statut <> 'trajet_annulé'
         ORDER BY t.date_depart ASC
         SQL;
 
@@ -294,7 +349,7 @@ class TrajetRepository extends ServiceEntityRepository
             DATE(t.date_depart) AS jour,
             COUNT(*) AS total
         FROM trajet t
-        WHERE t.statut = 'confirmé'
+        WHERE t.statut = 'trajet_a_venir'
             AND DATE(t.date_depart) BETWEEN ? AND ?
         GROUP BY DATE (t.date_depart)
         ORDER BY DATE (t.date_depart) ASC
@@ -312,6 +367,12 @@ class TrajetRepository extends ServiceEntityRepository
 
         return $result;
     }
+
+
+
+
+
+
 
 
 

@@ -22,6 +22,9 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class TrajetController extends AbstractController
 {
 
+
+    // VUE TRAJET MON ESPACE
+
     #[Route('/trajet/trajet_account', name: 'app_trajet_account')]
     #[IsGranted('ROLE_USER')]
     public function trajets(Request $request, EntityManagerInterface $em, ReservationRepository $reservation_repository, TrajetRepository $trajet_repository): Response
@@ -32,15 +35,11 @@ final class TrajetController extends AbstractController
 
         $vehicules = $user->getVehicules();
         $history = $reservation_repository->findHistoryByUser($user->getId());
-        $driverTrips = $trajet_repository->findTripsByDriver($user->getId());
+        $driverTrips = $trajet_repository->findTripByDriverAndStatus($user->getId(), ['trajet_a_venir']);
 
         foreach ($driverTrips as &$trip) {
-            $tripId = $trip['id_trajet'];
-            $passagers = $reservation_repository->findPassengerPseudoByTrajet($tripId);
-            $trip['passagers'] = $passagers;
+            $trip->passagers = $reservation_repository->findPassengerPseudoByTrajet($trip->getId());
         }
-
-
 
         return $this->render('trajet/trajet_account.html.twig', [
             'history' => $history,
@@ -60,15 +59,13 @@ final class TrajetController extends AbstractController
 
         $vehicules = $user->getVehicules();
         $history = $reservation_repository->findHistoryByUser($user->getId());
-        $driverTrips = $trajet_repository->findTripsByDriver($user->getId());
+        $driverTrips = $trajet_repository->findTripByDriverAndStatus($user->getId(), ['trajet_arrive_a_destination', 'trajet_termine']);
 
         foreach ($driverTrips as &$trip) {
-            $tripId = $trip['id_trajet'];
+            $tripId = $trip->getId();
             $passagers = $reservation_repository->findPassengerPseudoByTrajet($tripId);
-            $trip['passagers'] = $passagers;
+            $trip->passagers = $passagers;
         }
-
-
 
         return $this->render('trajet/trajet_historique.html.twig', [
             'history' => $history,
@@ -79,56 +76,79 @@ final class TrajetController extends AbstractController
 
 
 
-    #[Route('/trajet/trajet_new', name: 'app_trajet_new')]
-    public function new(Request $request, EntityManagerInterface $em, VehiculeRepository $vehiculeRepo): Response
-    {
+
+    // TRAJET EXPIRE
+
+    #[ROUTE('/trajet/expiration', name: 'app_trajet_expiration')]
+    public function expirationTrajet(
+        EntityManagerInterface $em,
+        TrajetRepository $trajet_repository,
+        MailerInterface $mailer
+    ): Response {
+
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
+        $now = new \DateTime();
 
-        if (!in_array($user->getStatut(), ['chauffeur', 'passager_chauffeur'], true)) {
-            $this->addFlash('warning', '🚗 Vous devez être Chauffeur pour proposer un trajet.');
-            return $this->redirectToRoute('app_account');
-        }
+        $trajets = $trajet_repository->findExpiredTripsByDriver($user, $now);
 
-        $trajet = new Trajet();
+        foreach ($trajets as $trajet) {
 
-        $form = $this->createForm(TrajetType::class, $trajet, [
-            'user' => $user,
-        ]);
-        $form->handleRequest($request);
+            foreach ($trajet->getReservations() as $reservation) {
 
-        if ($form->isSubmitted() && $form->isValid()) {
+                $passager = $reservation->getPassager();
+                $creditsUtilises = $reservation->getCreditsUtilises();
+                $passager->setCredits($passager->getCredits() + $creditsUtilises);
 
-            if (null === $trajet->getVehicule()) {
-                $this->addFlash('warning', 'Vous devez d’abord ajouter un véhicule ou le sélectionner.');
-                return $this->redirectToRoute('app_account_vehicule_new');
+                $email = (new TemplatedEmail())
+                    ->from('team.ecoride@gmail.com')
+                    ->to($passager->getEmail())
+                    ->subject('Trajet expiré')
+                    ->htmlTemplate('emails/expiration-trajet.html.twig')
+                    ->context([
+                        'pseudo' => $passager->getPseudo(),
+                        'adresse_depart' => $trajet->getAdresseDepart(),
+                        'adresse_arrivee' => $trajet->getAdresseArrivee(),
+                        'date_depart' => $trajet->getDateDepart()->format('d/m/Y H:i'),
+                        'credits' => $creditsUtilises,
+                    ]);
+
+                try {
+                    $mailer->send($email);
+                } catch (Exception $e) {
+                }
+
+                $transaction = new Transaction();
+                $transaction
+                    ->setUser($user)
+                    ->setTrajet($trajet)
+                    ->setMontant($creditsUtilises)
+                    ->setType('remboursement_passager_expiration_trajet');
+                $em->persist($transaction);
+
+                foreach ($reservation->getAvis() as $avi) {
+                    $em->remove($avi);
+                }
+
+                $em->remove($reservation);
             }
 
-            // Ajuster prix net pour la plateforme ? (ou stocker la commission ailleurs)
-            // e.g. $trajet->setPrix($trajet->getPrix() - 2);
-
-            $trajet->setStatut('confirmé');
-
-            $trajet->setEnergie($trajet->getVehicule()->getEnergie());
-
-            $trajet->setChauffeur($user)
-                ->setPlacesRestantes($trajet->getVehicule()->getPlacesDisponibles());
-
-            $em->persist($trajet);
-            $em->flush();
-
-            $this->addFlash('success', 'Trajet créé avec succès !');
-            return $this->redirectToRoute('app_account');
+            $trajet->setStatut('trajet_expire');
         }
 
-        return $this->render('trajet/trajet_new.html.twig', [
-            'form' => $form->createView(),
-        ]);
+        $em->flush();
+
+        return new Response('Trajets expirés traités.');
     }
 
 
 
 
+
+
+
+
+    // ANNULER UN TRAJET
 
     #[Route('/trajet/{id}/annuler', name: 'app_trajet_annuler')]
     public function annulerTrajet(
@@ -201,7 +221,7 @@ final class TrajetController extends AbstractController
             $em->remove($reservation);
         }
 
-        $trajet->setStatut('annulé');
+        $trajet->setStatut('trajet_annule');
 
         $em->flush();
         $this->addFlash('success', 'Le trajet a été annulé et tous les passagers remboursés.');
@@ -212,6 +232,12 @@ final class TrajetController extends AbstractController
 
 
 
+
+
+
+
+
+    // DEMARRER UN TRAJET
 
     #[Route('/account/trajet/{id}/demarrer', name: 'app_trajet_demarrer', methods: ['POST'])]
     #[IsGranted('ROLE_USER')]
@@ -233,19 +259,18 @@ final class TrajetController extends AbstractController
         }
 
         $aujourdhui = new \DateTimeImmutable('today');
-        if ($trajet->getStatut() !== 'confirmé' || $trajet->getDateDepart()->format('Y-m-d') !== $aujourdhui->format('Y-m-d')) {
+        if ($trajet->getStatut() !== 'trajet_a_venir' || $trajet->getDateDepart()->format('Y-m-d') !== $aujourdhui->format('Y-m-d')) {
             $this->addFlash('warning', 'Ce trajet n\'est pas encore disponible pour démarrage.');
             return $this->redirectToRoute('app_account');
         }
 
 
-        $trajet->setStatut('en_cours');
+        $trajet->setStatut('trajet_en_cours');
         $em->flush();
         $this->addFlash('success', 'Trajet démarré. Bon voyage !');
 
         return $this->redirectToRoute('app_account');
     }
-
 
 
 
@@ -280,7 +305,7 @@ final class TrajetController extends AbstractController
         }
 
 
-        $trajet->setStatut('terminé');
+        $trajet->setStatut('trajet_arrivé_a_destination');
         $em->flush();
 
         $reservations = $reservationRepo->findBy(['trajet' => $trajet]);
@@ -314,6 +339,14 @@ final class TrajetController extends AbstractController
 
 
 
+
+
+
+
+
+
+    // WIZARD NOUVEAU TRAJET
+
     #[Route('/trajet/nouveau/trajet', name: 'app_trajet_nouveau_trajet')]
     #[IsGranted('ROLE_USER')]
     public function trajetEtape(
@@ -335,7 +368,7 @@ final class TrajetController extends AbstractController
 
         $data = $session->get('trajet_data', []);
 
-        return $this->render('trajet_nouveau/trajet.html.twig', [
+        return $this->render('trajet/trajet_nouveau/trajet.html.twig', [
             'data' => $data,
         ]);
     }
@@ -367,7 +400,7 @@ final class TrajetController extends AbstractController
             return $this->redirectToRoute('app_trajet_nouveau_prix');
         }
 
-        return $this->render('trajet_nouveau/vehicule.html.twig', [
+        return $this->render('trajet/trajet_nouveau/vehicule.html.twig', [
             'vehicules' => $vehicules,
             'selected' => $session->get('vehicule_id'),
         ]);
@@ -400,7 +433,7 @@ final class TrajetController extends AbstractController
         }
 
 
-        return $this->render('trajet_nouveau/prix.html.twig', [
+        return $this->render('trajet/trajet_nouveau/prix.html.twig', [
             'prix' => $session->get('prix'),
             'places_restantes' => $session->get('places_restantes', $vehicule->getPlacesDisponibles()),
             'vehicule' => $vehicule,
@@ -460,7 +493,7 @@ final class TrajetController extends AbstractController
             return $this->redirectToRoute('app_account');
         }
 
-        return $this->render('trajet_nouveau/summary.html.twig', [
+        return $this->render('trajet/trajet_nouveau/summary.html.twig', [
             'data' => $data,
             'vehicule' => $vehicule,
             'prix' => $prix,
