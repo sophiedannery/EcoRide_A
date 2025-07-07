@@ -28,16 +28,24 @@ final class UserController extends AbstractController
 
 
 
+
+
+
+    // ADMIN GERE LES COMPTES EMPLOYEES
+
     #[Route('/admin/employee_edit', name: 'app_employee_edit', methods: ['GET'])]
     public function employeeEdit(UserRepository $userRepository): Response
     {
         $employees = $userRepository->findByRole('ROLE_EMPLOYEE');
 
-        return $this->render('admin/employee_edit.html.twig', [
+        return $this->render('admin/employee_admin_edit.html.twig', [
             'users' => $employees,
         ]);
     }
 
+
+
+    // ADMIN GERE COMPTE UTILISATEUR
 
     #[Route('/admin/user_edit', name: 'app_user_admin_delete', methods: ['GET'])]
     public function userEdit(UserRepository $userRepository): Response
@@ -50,6 +58,11 @@ final class UserController extends AbstractController
     }
 
 
+
+
+
+
+    // ADMIN CREE UN COMPTE 
 
     #[Route('/new', name: 'app_user_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
@@ -82,8 +95,7 @@ final class UserController extends AbstractController
         ]);
     }
 
-
-
+    // ADMIN AFFICHE UN COMPTE
 
     #[Route('/{id}', name: 'app_user_show', methods: ['GET'])]
     public function show(User $user): Response
@@ -92,6 +104,27 @@ final class UserController extends AbstractController
             'user' => $user,
         ]);
     }
+
+
+    // ADMIN SUPPRIME UN COMPTE 
+
+    #[Route('/{id}', name: 'app_user_delete', methods: ['POST'])]
+    public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->getPayload()->getString('_token'))) {
+            $entityManager->remove($user);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Le compte a bien été supprimé.');
+        }
+
+        return $this->redirectToRoute('app_admin', [], Response::HTTP_SEE_OTHER);
+    }
+
+
+
+
+
 
     #[Route('/{id}/edit', name: 'app_user_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, User $user, EntityManagerInterface $entityManager): Response
@@ -109,16 +142,5 @@ final class UserController extends AbstractController
             'user' => $user,
             'form' => $form,
         ]);
-    }
-
-    #[Route('/{id}', name: 'app_user_delete', methods: ['POST'])]
-    public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response
-    {
-        if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($user);
-            $entityManager->flush();
-        }
-
-        return $this->redirectToRoute('app_admin', [], Response::HTTP_SEE_OTHER);
     }
 }

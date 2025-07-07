@@ -69,6 +69,8 @@ final class AdminController extends AbstractController
     }
 
 
+
+
     #[Route('/admin/dashboard', name: 'app_admin_dashboard')]
     #[IsGranted('ROLE_ADMIN')]
     public function dashboard(Request $request, TrajetRepository $trajet_repository): Response
@@ -115,6 +117,11 @@ final class AdminController extends AbstractController
             'startWeek' => $startOfWeek->format('Y-m-d'),
         ]);
     }
+
+
+
+
+
 
     #[Route('/admin/dashboard-credit', name: 'app_admin_dashboard_credit')]
     #[IsGranted('ROLE_ADMIN')]
