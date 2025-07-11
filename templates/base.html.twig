@@ -33,10 +33,7 @@
 
 	</head>
 
-	<body
-		{% if block('body_class') is defined %} class="{{ block('body_class') }}" {% else %} class="pt-5" {% endif %}>
-
-		{# <body style="padding-top: 72px;"> #}
+	<body {% if block('body_class') is defined %} class="{{ block('body_class') }}" {% else %} class="pt-5" {% endif %}>
 
 
 		{% if block('hide_header') is not defined %}
