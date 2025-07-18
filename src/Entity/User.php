@@ -96,14 +96,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Suspension::class, mappedBy: 'user')]
     private Collection $suspensions;
 
-    /**
-     * @var Collection<int, Preference>
-     */
-    #[ORM\ManyToMany(targetEntity: Preference::class, inversedBy: 'user')]
-    #[ORM\JoinTable(name: 'preference_user')]
-    private Collection $preferences;
-
-
 
     public function __construct()
     {
@@ -114,7 +106,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->transactions = new ArrayCollection();
         $this->avis = new ArrayCollection();
         $this->suspensions = new ArrayCollection();
-        $this->preferences = new ArrayCollection();
     }
 
 
@@ -443,33 +434,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             if ($suspension->getUser() === $this) {
                 $suspension->setUser(null);
             }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Preference>
-     */
-    public function getPreferences(): Collection
-    {
-        return $this->preferences;
-    }
-
-    public function addPreference(Preference $preference): static
-    {
-        if (!$this->preferences->contains($preference)) {
-            $this->preferences->add($preference);
-            $preference->addUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removePreference(Preference $preference): static
-    {
-        if ($this->preferences->removeElement($preference)) {
-            $preference->removeUser($this);
         }
 
         return $this;
