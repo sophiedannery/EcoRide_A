@@ -104,14 +104,10 @@ final class ReservationController extends AbstractController
 
         $this->denyAccessUnlessGranted('ROLE_USER');
 
-
-
         if (!$this->isCsrfTokenValid('participate' . $id, $request->request->get('_token'))) {
             $this->addFlash('error', 'Requête invalide, token CSRF non validé.');
             return $this->redirectToRoute('app_trajet_detail', ['id' => $id]);
         }
-
-
 
         $trajet = $trajetRepo->find($id);
 
@@ -128,8 +124,6 @@ final class ReservationController extends AbstractController
             return $this->redirectToRoute('app_trajet_detail', ['id' => $id]);
         }
 
-
-
         $exists = $em->getRepository(Reservation::class)->findOneBy(['trajet' => $trajet, 'passager' => $user]);
 
         if ($exists) {
@@ -141,8 +135,6 @@ final class ReservationController extends AbstractController
             $this->addFlash('error', 'Plus de place disponible sur ce trajet.');
             return $this->redirectToRoute('app_trajet_detail', ['id' => $id]);
         }
-
-
 
         $prix = $trajet->getPrix();
 
@@ -161,9 +153,8 @@ final class ReservationController extends AbstractController
         $em->persist($reservation);
 
         $trajet->setPlacesRestantes($trajet->getPlacesRestantes() - 1);
+
         $user->setCredits($user->getCredits() - $prix);
-
-
 
         $transaction = new Transaction();
         $transaction
@@ -176,7 +167,6 @@ final class ReservationController extends AbstractController
         $em->flush();
 
         $this->addFlash('success', 'Votre réservation est confirmée !');
-
 
         return $this->redirectToRoute('app_account');
     }
