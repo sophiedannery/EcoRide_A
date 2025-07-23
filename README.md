@@ -243,7 +243,7 @@ Les identifiants de test sont disponibles dans le **manuel d'utilisation** fourn
 
 ## Ressources supplémentaires
 
-- 🎨 [Charte graphique](link)
+- 🎨 [Charte graphique](https://github.com/sophiedannery/EcoRide_A/blob/master/docs/EcoRide%20-%20Charte%20Graphique.pdf)
 - 🧩 [Diagramme de séquence](https://github.com/sophiedannery/EcoRide_A/blob/master/docs/Diagramme%20de%20s%C3%A9quence.pdf)
 - 🧩 [Diagramme de cas d'utilisation](https://github.com/sophiedannery/EcoRide_A/blob/master/docs/Diagramme%20d'utilisation.pdf)
 - 🧩 [Diagramme de classe](https://github.com/sophiedannery/EcoRide_A/blob/master/docs/Diagramme%20de%20classe.pdf)
