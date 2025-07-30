@@ -156,7 +156,7 @@ final class ReservationController extends AbstractController
             ->setTrajet($trajet)
             ->setPassager($user)
             ->setDateConfirmation(new \DateTime())
-            ->setStatut('reservation_confirmée')
+            ->setStatut('reservation_confirmee')
             ->setCreditsUtilises($prix);
         $em->persist($reservation);
 
@@ -444,7 +444,7 @@ final class ReservationController extends AbstractController
             return $this->redirectToRoute('app_reservation_report', ['id' => $id]);
         }
 
-        $reservation->setStatut('reservation_signalée');
+        $reservation->setStatut('reservation_signalee');
         $reservation->setCommentaireProbleme($commentaire);
 
         $em->persist($reservation);

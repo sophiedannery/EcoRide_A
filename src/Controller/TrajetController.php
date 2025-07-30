@@ -322,7 +322,7 @@ final class TrajetController extends AbstractController
         $trajet->setStatut('trajet_arrive_a_destination');
 
         foreach ($trajet->getReservations() as $reservation) {
-            $reservation->setStatut('reservation_arrive_a_destination');
+            $reservation->setStatut('reservation_arrivee_a_destination');
         }
         $em->flush();
 

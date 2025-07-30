@@ -27,7 +27,7 @@
 				<p>Vous réservations apapraîtront ici.</p>
 			{% else %}
 
-				<div class="d-flex justify-content-between align-items-center flex-column flex-lg-row mb-5">
+				<div class="d-flex justify-content-between align-items-center flex-column flex-lg-row mb-2 mb-md-5">
 					<div class="me-3">
 						<p class="mb-3 mb-lg-0">Vous avez
 							<strong>{{ upcomingCount}}
@@ -40,13 +40,13 @@
 					{% for r in history %}
 						{% set departTs = (r.date_depart|date("U")) %}
 						{% if departTs >= now %}
-							{% include "partials/card_reservation.html.twig" %}
+							{% include "reservation/card_reservation.html.twig" %}
 						{% endif %}
 					{% endfor %}
 				{% endif %}
 
 				<div class="text-center m-5">
-					<a href="{{ path('app_search_index')}}" class="btn btn-primary btn-lg px-4 me-md-2">Rechercher un trajet</a>
+					<a href="{{ path('app_search_index')}}" class="btn btn-primary btn-lg px-4 me-md-2 mb-2">Rechercher un trajet</a>
 					<a class="btn btn-outline-primary btn-lg px-4 me-md-2" href="{{ path('app_account')}}">Retour</a>
 				</div>
 			</div>
