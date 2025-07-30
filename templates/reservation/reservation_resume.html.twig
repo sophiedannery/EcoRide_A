@@ -4,40 +4,47 @@
 {% endblock %}
 
 {% block body %}
-	<div class="card mx-auto" style="max-width: 600px; margin-top: 5rem;">
-		<div class="card-header text-center">
-			<h5>Résumé du trajet</h5>
-		</div>
-		<div class="card-body">
-			<p>
-				<strong>De :</strong>
-				{{ adresseDepart }}<br>
-				<strong>À :</strong>
-				{{ adresseArrivee }}<br>
-				<strong>Date :</strong>
-				{{ dateDepart|date('d/m/Y H:i') }}<br>
-				<strong>Chauffeur :</strong>
-				{{ chauffeur.getPseudo() }}<br>
-				<strong>Crédits utilisés :</strong>
-				{{ prix }}
-				crédits
-			</p>
+	<div class="container py-5">
+		<div class="row justify-content-center">
+			<div class="col-12 col-md-10 col-lg-8 col-xl-6">
 
-			<hr>
+				<div class="card shadow-sm">
+					<div class="card-header text-center">
+						<h5 class="mb-0">Résumé du trajet</h5>
+					</div>
 
-			<p>Le trajet s'est-il bien passé ?</p>
+					<div class="card-body">
+						<p class="mb-4">
+							<strong>De :</strong>
+							{{ adresseDepart }}<br>
+							<strong>À :</strong>
+							{{ adresseArrivee }}<br>
+							<strong>Date :</strong>
+							{{ dateDepart|date('d/m/Y H:i') }}<br>
+							<strong>Chauffeur :</strong>
+							{{ chauffeur.getPseudo() }}<br>
+							<strong>Crédits utilisés :</strong>
+							{{ prix }}
+							crédits
+						</p>
 
-			<div class="d-flex justify-content-between">
-				<form method="post" action="{{ path('app_reservation_finalize', {'id': reservation.getId()}) }}">
-					<input type="hidden" name="_token" value="{{ csrf_token('reservation_finalize' ~ reservation.getId()) }}">
-					<button type="submit" class="btn btn-success">
-						Oui, tout s'est bien passé
-					</button>
-				</form>
+						<hr>
 
-				<a href="{{ path('app_reservation_report', {'id': reservation.getId()}) }}" class="btn btn-danger">
-					Signaler un problème
-				</a>
+						<p class="mb-4">Le trajet s'est-il bien passé ?</p>
+
+						<div class="d-flex flex-column flex-sm-row justify-content-between gap-2">
+							<form method="post" action="{{ path('app_reservation_finalize', {'id': reservation.getId()}) }}" class="w-100">
+								<input type="hidden" name="_token" value="{{ csrf_token('reservation_finalize' ~ reservation.getId()) }}">
+								<button type="submit" class="btn btn-success w-100">Oui, tout s'est bien passé</button>
+							</form>
+
+							<a href="{{ path('app_reservation_report', {'id': reservation.getId()}) }}" class="btn btn-danger w-100">
+								Signaler un problème
+							</a>
+						</div>
+					</div>
+				</div>
+
 			</div>
 		</div>
 	</div>

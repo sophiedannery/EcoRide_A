@@ -71,11 +71,13 @@ final class SearchController extends AbstractController
 
             if ($nextTrajet !== null) {
                 $nextDate = new \DateTimeImmutable($nextTrajet['date_depart']);
+                $nextTrajet['chauffeur_filename'] = $nextTrajet['chauffeur_filename'] ?? null;
+                $nextTrajet['avg_rating'] = $trajet_repository->getDriverAverageRating(($nextTrajet['chauffeur_id'] ?? 0));
             }
         }
 
 
-        return $this->render('search/result_v2.html.twig', [
+        return $this->render('search/result/result.html.twig', [
             'trajets' => $trajets,
             'nextTrajet' => $nextTrajet,
             'nextDate' => $nextDate,
@@ -109,7 +111,7 @@ final class SearchController extends AbstractController
 
         $referer = $request->headers->get('referer');
 
-        return $this->render('search/details.html.twig', [
+        return $this->render('search/result/details.html.twig', [
             'trip' => $trip,
             'reviews' => $reviews,
             'preferences' => $preferences,
@@ -164,7 +166,7 @@ final class SearchController extends AbstractController
             }
         }
 
-        return $this->render('partials/results_filters.html.twig', [
+        return $this->render('search/result/results_filters.html.twig', [
             'trajets' => $trajets,
         ]);
     }

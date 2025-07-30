@@ -383,7 +383,7 @@ final class ReservationController extends AbstractController
         $reservation = $reservationRepo->find($id);
         if (!$reservation) {
             $this->addFlash('error', 'Réservation introuvable');
-            return $this->redirectToRoute('app_account_reservations');
+            return $this->redirectToRoute('app_reservation_account');
         }
 
         /** @var \App\Entity\User $user */
@@ -391,7 +391,7 @@ final class ReservationController extends AbstractController
 
         if ($reservation->getPassager()->getId() !== $user->getId()) {
             $this->addFlash('error', 'Vous ne pouvez pas signaler cette réservation.');
-            return $this->redirectToRoute('app_account_reservations');
+            return $this->redirectToRoute('app_reservation_account');
         }
 
         $trajet = $reservation->getTrajet();
@@ -419,14 +419,14 @@ final class ReservationController extends AbstractController
 
         if (!$this->isCsrfTokenValid('reservation_signal' . $id, $request->request->get('_token'))) {
             $this->addFlash('error', 'Token invalide.');
-            return $this->redirectToRoute('app_account_reservations');
+            return $this->redirectToRoute('app_reservation_account');
         }
 
         /** @var Reservation|null $reservation */
         $reservation = $reservationRepo->find($id);
         if (!$reservation) {
             $this->addFlash('error', 'Réservation introuvable');
-            return $this->redirectToRoute('app_account_reservations');
+            return $this->redirectToRoute('app_reservation_account');
         }
 
         /** @var \App\Entity\User $user */
@@ -434,7 +434,7 @@ final class ReservationController extends AbstractController
 
         if ($reservation->getPassager()->getId() !== $user->getId()) {
             $this->addFlash('error', 'Vous ne pouvez pas signaler cette réservation.');
-            return $this->redirectToRoute('app_account_reservations');
+            return $this->redirectToRoute('app_reservation_account');
         }
 
 
@@ -451,6 +451,6 @@ final class ReservationController extends AbstractController
         $em->flush();
 
         $this->addFlash('success', 'Votre signalement a bien été pris en compte. Notre équipe vous recontactera rapidement.');
-        return $this->redirectToRoute('app_account_reservations');
+        return $this->redirectToRoute('app_reservation_account');
     }
 }

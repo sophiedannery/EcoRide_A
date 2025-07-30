@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Espace Employée
+{% block title %}Espace Employé
 {% endblock %}
 
 {% block body %}
@@ -8,9 +8,9 @@
 
 	<section class="py-5">
 		<div class="container">
-			<h1 class="hero-heading mb-0">Bonjour
+			<h1 class="hero-heading mb-0 mt-3 mt-md-0">Bonjour
 				{{app.user.pseudo}}</h1>
-			<p class="text-muted mt-3 mb-5">Gérer votre profil ici.</p>
+			<p class="text-muted mt-3 mb-5">Contribuez à une expérience de covoiturage fiable.</p>
 			<div class="row">
 
 				<div class="col-12 col-sm-6 mb-4">
@@ -22,7 +22,7 @@
 							<h5 class="card-title mb-3">
 								<a class="text-decoration-none text-dark stretched-link" href="{{ path('app_employee_signalement')}}">Les trajets</a>
 							</h5>
-							<p class="text-muted card-text text-sm">Géstion des trajets signalés</p>
+							<p class="text-muted card-text text-sm">Gestion des trajets signalés</p>
 						</div>
 					</div>
 				</div>

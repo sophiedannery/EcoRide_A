@@ -34,11 +34,6 @@ final class VehiculeController extends AbstractController
             $em->persist($vehicule);
             $em->flush();
 
-            if (in_array($user->getStatut(), ['chauffeur', 'passager_chauffeur'], true) && $user->getPreferences()->isEmpty()) {
-                $this->addFlash('warning', 'Vous devez maintenant définir vos préférences de conduite.');
-                return $this->redirectToRoute('edit_preferences');
-            }
-
             $this->addFlash('success', 'Véhicule ajouté avec succès !');
             return $this->redirectToRoute('app_account');
         }

@@ -36,10 +36,12 @@
 
 						<!-- Infos avec icônes -->
 						<div class="text-start mt-4 card-account">
-							<p>
-								<i class="fa-solid fa-comments me-2 fa-account"></i>
-								{{ reviewCount }}
-								avis</p>
+							{% if not isPassengerOnly %}
+								<p>
+									<i class="fa-solid fa-comments me-2 fa-account"></i>
+									{{ reviewCount }}
+									avis</p>
+							{% endif %}
 
 							<p>
 								<i class="fa-solid fa-coins me-2 fa-account"></i>

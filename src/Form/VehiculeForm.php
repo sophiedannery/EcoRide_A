@@ -48,8 +48,10 @@ class VehiculeForm extends AbstractType
                     'Électrique' => 'electrique',
                     'Autre' => 'autre',
                 ],
-                'label' => 'Type d\'énergie',
-                'placeholder' => 'Choisir une énergie'
+                'label' => 'Énergie',
+                'placeholder' => 'Choisir une énergie',
+                'expanded' => true,
+                'multiple' => false,
             ])
         ;
     }
