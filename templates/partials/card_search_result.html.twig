@@ -1,14 +1,16 @@
-<div class="card border">
-	<div class="card-body p-4 pb-0">
-		<div class="row g-4 align-item-center">
+<div class="card border {% if t.energie == 'électrique' %}  border-success {% endif %}">
 
-			<div class="col-md-3">
+	<div class="card-body p-4 pb-0 {% if t.energie == 'électrique' %} bg-success bg-opacity-10 {% endif %} ">
+
+		<div class="row g-4 align-item-center ">
+
+			<div class="col-md-3 text-center">
 				{% if t.chauffeur_filename %}
 					<img src="{{ asset('uploads/photos/' ~ t.chauffeur_filename) }}" alt="Photo de {{ t.chauffeur }}" class="rounded-circle" style="width: 80px; height: 80px; object-fit: cover;">
 				{% else %}
 					<img src="{{ asset('assets/images/avatar.png') }}" alt="Pas de photo" class="rounded-circle" style="width: 80px; height: 80px; object-fit: cover; opacity: 0.5;">
 				{% endif %}
-				<h6 class="mt-2 ms-1">{{ t.chauffeur }}</h6>
+				<h2 class="mt-2 ms-1">{{ t.chauffeur }}</h2>
 				<h6>
 					{% if t.avg_rating > 0 %}
 						<div class="mb-2">
@@ -43,32 +45,32 @@
 					<i class="bi bi-geo-alt-fill text-danger"></i>
 					{{t.adresse_arrivee}}</p>
 			</div>
-			<div class="col-sm-4 col-md-3">
-				<h4>
 
+			<div class="col-sm-4 col-md-3">
+				<p>
+					<i class="fa-solid fa-users me-2"></i>
+					{{ t.places_restantes}}
+					place{{ t.places_restantes > 1 ? 's' : '' }}
+				</p>
+				<p>
+					<i class="fa-solid fa-clock me-2"></i>
+					{{t.duree}}
+				</p>
+				<p>
+					<i class="fa-solid fa-coins me-2"></i>
 					{{ t.prix}}
 					crédits
-					<i class="fa-solid fa-coins"></i>
-				</h4>
-				<a href="{{path('app_trajet_detail', {id: t.id_trajet} ) }}" class="btn btn-primary my-3 w-100">Détails</a>
+				</p>
+				<p class="text-success {{ t.energie != 'électrique' ? 'd-none' : '' }}">
+					<i class="fa-solid fa-leaf me-2"></i>Voyage écologique
+				</p>
+
 			</div>
 
+			<div class="col-12 text-center mt-2">
+				<a href="{{path('app_trajet_detail', {id: t.id_trajet} ) }}" class="btn btn-outline-primary my-3">Détails</a>
+			</div>
 
 		</div>
 	</div>
-	<div class="card-footer">
-		<div class="bg-light p-2 rounded-2">
-			<ul class="list-inline d-sm-flex justify-content-sm-between mb-0 mx-4">
-				<li class="list-inline-item text-success {{ t.energie != 'electrique' ? 'd-none' : '' }}">
-					<i class="fa-solid fa-leaf"></i>
-					Voyage écologique</li>
-				<li class="list-inline-item">{{ t.places_restantes}}
-					place{{ t.places_restantes > 1 ? 's' : '' }}</li>
-				<li class="list-inline-item">Durée :
-					{{t.duree}}</li>
-
-			</ul>
-		</div>
-	</div>
-
 </div>

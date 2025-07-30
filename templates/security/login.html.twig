@@ -10,16 +10,9 @@
 
 {% block body %}
 
-
 	<div class="container-fluid">
-
-
 		<div class="row min-vh-100">
-
-
 			<div class="col-md-8 col-lg-6 col-xl-5 d-flex align-items-center">
-
-
 				<div class="w-100 py-5 px-md-5 px-xxl-6 position-relative">
 
 					<a href="{{ path('app_home') }}" class="btn btn-link text-muted text-decoration-none mb-5">
@@ -48,7 +41,7 @@
 							<input type="password" id="password" name="_password" class="form-control" autocomplete="current-password" required>
 						</div>
 
-						<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+						<input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
 
 						<div class="d-grid gap-2">
 							<button class="btn btn-lg btn-primary" type="submit">
@@ -57,11 +50,14 @@
 						</div>
 					</form>
 
-					<p class="text-center mt-3">
-						<small class="text-muted text-center">Pas encore de compte ?
-							<a href="{{ path('app_register')}}">Inscrivez-vous ici</a>
-						</small>
-					</p>
+					<div class="text-center mt-4">
+						<small class="mb-1 text-muted">Pas encore de compte ?</small>
+						<h5>
+							<a id="lien-inscription" href="{{ path('app_register')}}">
+								<u>Inscrivez-vous ici</u>
+							</a>
+						</h5>
+					</div>
 
 
 				</div>

@@ -102,7 +102,6 @@ final class SearchController extends AbstractController
 
         $chauffeurId = $trip['chauffeur_id'];
         $reviews = $avisRepo->findAvisByChauffeur($chauffeurId);
-        // $preferences = $repo->getDriverPreferences($trip['chauffeur_id']);
         $preferences = $mongo->getPreferences($chauffeurId);
         $avgRating = $repo->getDriverAverageRating($trip['chauffeur_id']);
         $reviewsCount = count($reviews);

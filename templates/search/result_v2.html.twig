@@ -30,30 +30,11 @@
 
 	<section>
 		<div class="container">
-
-			<div class="row mb-5">
-				<div class="col-12">
-					<div class="d-sm-flex justify-content-sm-between align-items-center">
-						<div class="mb-3 mb-sm-0">
-							{% set resultCount = trajets|length %}
-							<h1>{{ resultCount }}
-								trajet{{ resultCount > 1 ? 's' : '' }}
-								pour
-								{{ app.request.query.get('depart')}}
-								<i class="bi bi-arrow-right mx-1"></i>
-								{{ app.request.query.get('arrivee')}}</h1>
-						</div>
-					</div>
-				</div>
-			</div>
-
 			<div class="row">
 
 				<div class="col-xl-4 col-xxl-3">
-
-					<form method="GET" action="{{ path('app_search')}}">
-						<div class="collapse d-lg-block rounded-3 shadow p-3 bg-white mb-5">
-							<h4 class="mb-3">Ma recherche</h4>
+					<div class="collapse d-lg-block rounded-3 shadow p-3 bg-white mb-5">
+						<form method="GET" action="{{ path('app_search')}}">
 							<div class="mb-4 px-3">
 								<div class="form-check">
 									<label id="depart" class="mb-1">
@@ -80,17 +61,12 @@
 							</div>
 							<div class="col-12 text-center pt-0">
 								<button type="submit" class="btn btn-primary">Modifier ma recherche
-									<i class="bi bi-arrow-right ps-3 text-white"></i>
 								</button>
 							</div>
-						</div>
-					</form>
+						</form>
 
-
-					{# FILTRES #}
-					<form id="filterFormDesktop">
-						<div class="rounded-3 shadow p-3 bg-white mb-5">
-							<h4 class="mb-3">Filtres</h4>
+						<form id="filterFormDesktop" class="mt-5">
+							<h6 class="mb-5 text-center">Filtrez vos résultats</h6>
 							<input type="hidden" name="depart" value="{{ app.request.query.get('depart') }}">
 							<input type="hidden" name="arrivee" value="{{ app.request.query.get('arrivee') }}">
 							<input type="hidden" name="date" value="{{ app.request.query.get('date') }}">
@@ -104,53 +80,55 @@
 								</div>
 							</div>
 							<div class="mb-4 px-3">
-								<div class="flex items-center space-x-2">
+								<div class="d-flex align-items-center gap-2">
+									<input class="form-control" style="max-width: 100px;" type="number" name="maxPrice" min="0">
 									<i class="fa-solid fa-coins"></i>
-									<label for="maxPrice" class="form-label">Prix max</label>
+									<label for="maxPrice" class="form-label">Prix</label>
 								</div>
-								<input class="form-control" type="number" name="maxPrice" min="0">
-							</div>
-							<div class="mb-4 px-3">
-								<div class="flex items-center space-x-2">
-									<i class="fa-solid fa-hourglass-start"></i>
-									<label for="maxDurationTime" class="form-label">Durée max</label>
-								</div>
-								<input class="form-control" type="time" name="maxDurationTime" step="60">
-							</div>
-							<div class="mb-4 px-3">
-								<div class="flex items-center space-x-2">
-									<i class="fa-solid fa-star"></i>
-									<label for="minRating" class="form-label">Note minimal</label>
-								</div>
-								<input class="form-control" type="number" name="minRating" min="0" max="5" step="0.5">
 							</div>
 
-							<div>
+							<div class="mb-4 px-3">
+								<div class="d-flex align-items-center gap-2">
+									<input class="form-control" style="max-width: 100px;" type="time" name="maxDurationTime" step="60">
+									<i class="fa-solid fa-hourglass-start"></i>
+									<label for="maxDurationTime" class="form-label">Durée</label>
+								</div>
+							</div>
+							<div class="mb-4 px-3">
+								<div class="d-flex align-items-center gap-2">
+									<input class="form-control" style="max-width: 100px;" type="number" name="minRating" min="0" max="5" step="0.5">
+									<i class="fa-solid fa-star"></i>
+									<label for="minRating" class="form-label">Note</label>
+								</div>
+							</div>
+
+							<div class="text-center">
 								<a class="btn btn-link text-decoration-none text-muted" href="{{ path('app_search', { depart: app.request.query.get('depart'), arrivee: app.request.query.get('arrivee'), date: app.request.query.get('date') }) }}" class="btn btn-sm btn-link text-decoration-none">
 									Effacer
 								</a>
 							</div>
-						</div>
-
-
-					</form>
-
-
+						</form>
+					</div>
 				</div>
 
 				<div class="col-xl-8 col-xxl-9">
-					<div class="vstack gap-4" id="resultsContainer">
-
-
+					<div class="d-sm-flex justify-content-sm-between align-items-center">
+						<div class="mb-3 mb-sm-0">
+							{% set resultCount = trajets|length %}
+							<h3>{{ resultCount }}
+								trajet{{ resultCount > 1 ? 's' : '' }}
+								pour
+								{{ app.request.query.get('depart')}}
+								<i class="bi bi-arrow-right mx-1"></i>
+								{{ app.request.query.get('arrivee')}}</h3>
+						</div>
+					</div>
+					<div class="vstack gap-4 mt-4" id="resultsContainer">
 						{% include "partials/results_v2.html.twig" %}</div>
 				</div>
 
 			</div>
-
-
 		</div>
-
-
 	</section>
 
 

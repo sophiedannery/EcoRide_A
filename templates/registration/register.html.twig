@@ -73,7 +73,7 @@
 
 
 					<div class="mb-4">
-						<label class="form-label d-block">Statut</label>
+						<label class="form-label d-block">Choisissez un statut :</label>
 						{% for child in registrationForm.statut %}
 							<div class="form-check">
 								{{ form_widget(child, { attr: { class: 'form-check-input' } }) }}
@@ -100,11 +100,15 @@
 					</div>
 					{{ form_end(registrationForm) }}
 
-					<p class="text-center mt-3">
-						<small class="text-muted text-center">Déjà inscrit ?
-							<a href="{{ path('app_login')}}">Connectez-vous</a>
-						</small>
-					</p>
+
+					<div class="text-center mt-4">
+						<small class="mb-1 text-muted">Déjà inscrit ?</small>
+						<h5>
+							<a id="lien-inscription" href="{{ path('app_login')}}">
+								<u>Connectez-vous ici</u>
+							</a>
+						</h5>
+					</div>
 
 				</div>
 

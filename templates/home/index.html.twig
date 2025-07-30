@@ -3,53 +3,73 @@
 {% block title %}EcoRide
 {% endblock %}
 
+{% block body_class %}{% endblock %}
+
 {% block body %}
-	<section class="bgimage">
-		<div class="container px-3 py-4">
 
-			<div class="row align-items-center g-lg-5 py-5">
+	<!-- =========================================
+																																												SECTION 1
+																																							==============================================-->
 
-				<div class="col-lg-7 text-center text-lg-start ">
-					<h1 class="display-4 fw-bold lh-1 text-white mb-3 ">Voyagez malin,<br>Voyagez vert.</h1>
+	<section class="bgimage d-flex flex-column align-items-center justify-content-center">
+
+		<div class="container mb-5 ">
+			<div class="row mb-5">
+				<div class="col-lg-8">
+					<h1 class="display-4 text-white mb-0 text-center text-lg-start">Voyagez malin<br>Voyagez vert</h1>
 				</div>
-
-				<div class="col-12 col-sm-10 col-lg-4 mx-auto">
-
-					<form method="GET" action="{{ path('app_search') }}" class="p-4 p-md-4  border-0 rounded-4 shadow bg-body-tertiary">
-
-						<div class="form-floating mb-3 ">
-							<input name="depart" type="text" class="form-control" required id="depart">
-							<label id="depart">Départ</label>
-						</div>
-
-						<div class="form-floating mb-3">
-							<input name="arrivee" type="text" class="form-control" required id="arrivee">
-							<label id="arrivee">Arrivée</label>
-						</div>
-
-						<div class="form-floating mb-3">
-							<input name="date" type="date" class="form-control" required id="date">
-							<label id="date">Date</label>
-						</div>
-
-						<button class="w-100 btn btn-lg btn-primary" type="submit">Rechercher</button>
-
-					</form>
-
-				</div>
-
 			</div>
+		</div>
+
+		<div class="container mt-3">
+			<div class="search-bar p-3 bg-body-tertiary shadow rounded-4">
+				<form method="GET" action="{{ path('app_search') }}">
+
+					<div class="row g-3">
+
+						<div class="col-12 col-md-6 col-lg-4">
+							<input name="depart" type="text" class="form-control" required id="depart" placeholder="Départ">
+							<label for="depart" class="visually-hidden">Départ</label>
+						</div>
+
+						<div class="col-12 col-md-6 col-lg-3">
+							<input name="arrivee" type="text" class="form-control" required id="arrivee" placeholder="Arrivée">
+							<label for="arrivee" class="visually-hidden">Arrivée</label>
+
+						</div>
+
+						<div class="col-12 col-md-6 col-lg-3">
+							<input name="date" type="date" class="form-control" required id="date" placeholder="Date">
+							<label for="date" class="visually-hidden">Date</label>
+
+						</div>
+
+						<div class="col-12 col-md-6 col-lg-2 d-grid">
+							<button class="w-100 btn btn-lg btn-primary" type="submit">Rechercher</button>
+						</div>
+
+					</div>
+				</form>
+			</div>
+
 		</div>
 	</section>
 
+	<!--
+																	=========================================
+																				SECTION 2
+																	============================================= 
+																-->
 
-	<!--Paragraphe 1-->
-	<section class="container col-xxl-8 px-4 py-5">
-		<div class="row flex-lg-row-reverse align-items-center g-5 py-5">
-			<div class="col-10 col-sm-8 col-lg-6">
-				<img src="/assets/images/Vecteur.jpg" class="img-fluid w-100 d-block d-lg-none" alt="Bootstrap Themes" width="500" loading="lazy">
+	<section class="container col-xxl-8 px-4 py-4">
+		<div class="row flex-lg-row-reverse align-items-center g-5">
+
+			<div class="col-10 col-sm-8 col-lg-6 d-none d-lg-block">
+				<img src="/assets/images/vecteur4.png" class="img-fluid w-100 d-block" alt="Bootstrap Themes" width="500" loading="lazy">
 			</div>
+
 			<div class="col-lg-6">
+				<h6>Se déplacer autrement</h6>
 				<h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">EcoRide</h1>
 				<p class="lead">
 					Bienvenue sur la plateforme de covoiturage dédiée à la mobilité écologique et durable.
@@ -61,68 +81,107 @@
 					<a class="btn btn-primary btn-lg px-4 me-md-2" href="{{ path('app_search_index')}}">Je découvre</a>
 				</div>
 			</div>
+
 		</div>
 	</section>
 
-	<!--Paragraphe 2-->
+	{# =========================================
+					SECTION 3
+				============================================== #}
 	<section class="container px-4 py-3" id="custom-cards">
 		<div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-3">
+
 			<div class="col">
-				<div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg cardtest1 hover-animate">
+				<div class="card-accueil card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg cardtest1">
 					<div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
-						<h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold text-white">Une mobilité plus verte</h3>
-						<p>EcoRide réduit votre empreinte carbonne en facilitant les trajets partagés en voiture électrique. Chaque voyage contribue à préserver l'environnement et à promouvoir une mobilité plus verte.</p>
+						<h3 class="pt-3 mt-3 mb-4 display-6 text-white">Une mobilité plus verte</h3>
+						<p class="card-text">EcoRide réduit votre empreinte carbonne en facilitant les trajets partagés en voiture électrique. Chaque voyage contribue à préserver l'environnement et à promouvoir une mobilité plus verte.</p>
 					</div>
 				</div>
 			</div>
+
 			<div class="col">
-				<div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg cardtest2 hover-animate">
+				<div class="card-accueil card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg cardtest2">
 					<div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
-						<h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold text-white">Une communauté engagée</h3>
-						<p>Trouvez des centaines de covoiturages grâce une communauté engagée où conducteurs et passagers partagent bien plus qu'un trajet.</p>
+						<h3 class="pt-3 mt-3 mb-4 display-6 text-white">Une communauté engagée</h3>
+						<p class="card-text">Trouvez des centaines de covoiturages grâce une communauté engagée où conducteurs et passagers partagent bien plus qu'un trajet.</p>
 					</div>
 				</div>
 			</div>
+
 			<div class="col">
-				<div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg cardtest3 hover-animate">
+				<div class="card-accueil card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg cardtest3">
 					<div class="d-flex flex-column h-100 p-5 pb-3 text-shadow-1">
-						<h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold text-white">Accessible et économique</h3>
-						<p>Voyager avec EcoRide, c'est faire des économies tout en roulant responsable. Réduisez vos frais de déplacement en partageant les coûts.</p>
+						<h3 class="pt-3 mt-3 mb-4 display-6 text-white">Une économie accessible</h3>
+						<p class="card-text">Voyager avec EcoRide, c'est faire des économies tout en roulant responsable. Réduisez vos frais de déplacement en partageant les coûts.</p>
 					</div>
 				</div>
 			</div>
+
 		</div>
 	</section>
 
-	<!-- Paragraphe 3 -->
+
+	<!-- =========================================
+					SECTION 4
+					==============================================-->
 	<section class="container col-xxl-8 px-4 py-5">
-		<div class="row flex-lg-row-reverse align-items-center g-5 py-5">
-			<div class="col-lg-6">
-				<h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">L'électrique en avant</h1>
-				<p class="lead">Sur
-					<strong>EcoRide</strong>, vous pouvez facilement sélectionner des trajets en voiture électrique grâce à notre filtre de recherche.
-					<br>En quelques clics, affichez uniquement les trajets réalisés avec des véhicules électriques, pour voyager de manière plus écologique et économique.</p>
-			</div>
-			<div class="col-10 col-sm-8 col-lg-6">
-				<img src="/assets/images/image (19).jpg" class="d-block mx-lg-auto img-fluid rounded" alt="Bootstrap Themes" width="700" height="500" loading="lazy">
-			</div>
+		<div class="text-center">
+			<h6>Où le partage rencontre l'écologie</h6>
+			<h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">L'électrique en avant</h1>
 		</div>
-	</section>
-
-
-	<!--Paragraphe 5-->
-	<section class="bgimage2">
-		<div class="container col-xl-10 col-xxl-8 px-4 py-5 ">
-			<div class="row align-items-center g-lg-5 py-5">
-				<div class="col-lg-7 text-center text-lg-start ">
-					<h3 class="display-3 fw-bold text-serif text-shadow mb-3 text-white">20 crédits offerts à votre inscription</h3>
-					<p class="text-white">C'est notre façon de vous dire
-						<strong>merci</strong>
-						de faire le choix d'une mobilité plus écologique et responsable</p>
-					<a class="btn btn-primary" href="{{ path('app_register')}}">Je m'inscris</a>
+		<div class="row pt-5">
+			<div class="col-12 col-sm-6 col-lg-3 px-4 text-center text-md-start">
+				<div>
+					<i class="fa-elec fa-solid fa-bolt-lightning"></i>
+					<h1 class="pt-3">7 456</h1>
+					<p>C’est le nombre de trajets réalisés en véhicule électrique cette année sur EcoRide, preuve que la mobilité bas-carbonne séduit de plus en plus.</p>
+				</div>
+			</div>
+			<div class="col-12 col-sm-6 col-lg-3 px-4 text-center text-md-start">
+				<div>
+					<i class="fa-elec fa-solid fa-leaf"></i>
+					<h1 class="pt-3">1,2 tonnes</h1>
+					<p>C’est la quantité de CO2 économisée par an en covoiturant en électrique plutôt qu’en roulant seul en thermique.</p>
+				</div>
+			</div>
+			<div class="col-12 col-sm-6 col-lg-3 px-4 text-center text-md-start">
+				<div>
+					<i class="fa-elec fa-solid fa-users"></i>
+					<h1 class="pt-3">89 %</h1>
+					<p>C’est le nombre d’utilisateurs qui choisissent le filtre “véhicule électrique” pour privilégier des trajets encore plus respectueux de la planète.</p>
+				</div>
+			</div>
+			<div class="col-12 col-sm-6 col-lg-3 px-4 text-center text-md-start">
+				<div>
+					<i class="fa-elec fa-solid fa-car-side"></i>
+					<h1 class="pt-3">3 543</h1>
+					<p>
+						C’est le nombre de véhicules électriques actifs sur EcoRide, offrant un large choix pour vos trajets verts.</p>
 				</div>
 			</div>
 		</div>
 	</section>
 
+
+	<!-- =========================================
+						SECTION 5
+								==============================================-->
+	<section>
+		<div class="container my-5 ">
+			<div class="p-5 text-center text-lg-start rounded-3 bgimage2 text-white d-flex flex-column justify-content-center">
+				<h1 class=" text-white">20 crédits offerts à votre inscription</h1>
+				<p class="col-lg-8 fs-5 text-white">
+					C'est notre façon de vous dire
+					<strong>merci</strong>
+					de faire le choix d'une mobilité plus écologique et responsable
+				</p>
+				<div class="d-flex justify-content-center justify-content-lg-start gap-2 mb-5">
+					<a href="{{ path('app_register')}}" class="d-inline-flex align-items-center btn btn-primary btn-lg px-4">
+						Je m'inscris
+					</a>
+				</div>
+			</div>
+		</div>
+	</section>
 {% endblock %}
