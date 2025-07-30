@@ -39,6 +39,11 @@ final class TrajetController extends AbstractController
 
         foreach ($driverTrips as &$trip) {
             $trip->passagers = $reservation_repository->findPassengerPseudoByTrajet($trip->getId());
+
+            $nbPassagers = count($trip->passagers);
+            $prix = $trip->getPrix();
+
+            $trip->creditsGagnes = $nbPassagers * max(0, $prix - 2);
         }
 
         return $this->render('trajet/trajet_account.html.twig', [
@@ -65,6 +70,10 @@ final class TrajetController extends AbstractController
             $tripId = $trip->getId();
             $passagers = $reservation_repository->findPassengerPseudoByTrajet($tripId);
             $trip->passagers = $passagers;
+            $nbPassagers = count($trip->passagers);
+            $prix = $trip->getPrix();
+
+            $trip->creditsGagnes = $nbPassagers * max(0, $prix - 2);
         }
 
         return $this->render('trajet/trajet_historique.html.twig', [
@@ -313,7 +322,7 @@ final class TrajetController extends AbstractController
         $trajet->setStatut('trajet_arrive_a_destination');
 
         foreach ($trajet->getReservations() as $reservation) {
-            $reservation->setStatut('reservation_arrive_a_destination');
+            $reservation->setStatut('reservation_arrivee_a_destination');
         }
         $em->flush();
 

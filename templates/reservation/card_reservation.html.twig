@@ -5,7 +5,7 @@
 				<h2 class="h5 mb-0">Chauffeur</h2>
 				<img>
 			</div>
-			<p class="text-sm text-muted">
+			<div class="text-sm text-muted">
 				{% if r.chauffeur_photo %}
 					<div class="mb-2">
 						<img src="{{ asset('uploads/photos/' ~ r.chauffeur_photo) }}" alt="Photo de profil de {{ r.chauffeur_pseudo }}" class="rounded-circle" style="width: 60px; height: 60px; object-fit: cover;"/>
@@ -19,7 +19,7 @@
 
 					</div>
 				{% endif %}
-			</p>
+			</div>
 		</div>
 		<div class="col-lg-8">
 			<div class="row">
@@ -65,7 +65,7 @@
 	<div class="text-center">
 		<div class="d-flex justify-content-center gap-2 flex-wrap">
 
-			{% if r.reservation_statut == 'reservation_confirmée' %}
+			{% if r.reservation_statut == 'reservation_confirmee' %}
 				<form method='post' action="{{ path('app_reservation_annuler', {'id': r.reservation_id}) }}" onsubmit="return confirm('Voulez-vous vraiment annuler cette réservation ?')">
 					<input type="hidden" name="_token" value="{{ csrf_token('cancel_reservation' ~ r.reservation_id) }}">
 					<button class="btn btn-sm btn-danger">Annuler ma réservation</button>
@@ -76,14 +76,14 @@
 			{% if r.reservation_statut == 'reservation_en_cours' %}
 				<button class="btn btn-sm btn-success disabled">Trajet en cours</button>
 			{% endif %}
-			{% if r.reservation_statut == 'reservation_arrive_a_destination' and r.statut_trajet == 'trajet_arrive_a_destination' %}
+			{% if r.reservation_statut == 'reservation_arrivee_a_destination' and r.statut_trajet == 'trajet_arrive_a_destination' %}
 				<a href="{{ path('app_reservation_resume', {'id': r.reservation_id}) }}" class="btn btn-sm btn-success">Valider le trajet</a>
 			{% endif %}
 
 			{% if r.statut_trajet == 'trajet_termine' %}
 				<button class="btn btn-sm btn-success disabled">Trajet terminé</button>
 			{% endif %}
-			{% if r.reservation_statut == 'trajet_signale' %}
+			{% if r.reservation_statut == 'reservation_signalee' %}
 				<button class="btn btn-sm btn-warning disabled">Trajet signalé</button>
 			{% endif %}
 
@@ -91,6 +91,7 @@
 			{% if r.statut_trajet == 'trajet_termine' and not r.avis %}
 				<a href="{{ path('app_avis_new', {'reservationId': r.reservation_id}) }}" class="btn btn-sm btn-success">Laisser un avis</a>
 			{% endif %}
+
 		</div>
 	</div>
 </div>

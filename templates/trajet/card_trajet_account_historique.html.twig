@@ -50,9 +50,9 @@
 			<div class="col-6 col-md-4 col-lg-3 py-3">
 				<h6 class="label-heading">DATE</h6>
 				<p class="text-sm">{{ t.dateDepart|date('d-m-Y') }}</p>
-				<h6 class="label-heading">PRIX</h6>
-				<p class="text-sm">{{ t.prix }}
-					crédits</p>
+				<h6 class="label-heading">TOTAL</h6>
+				<p class="text-sm">{{ t.creditsGagnes }}
+					crédit{{ t.creditsGagnes > 1 ? 's'}}</p>
 			</div>
 			<div class="col-6 col-md-4 col-lg-3 py-3">
 				<h6 class="label-heading">HEURE</h6>

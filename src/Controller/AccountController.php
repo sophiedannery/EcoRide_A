@@ -8,6 +8,7 @@ use App\Form\ProfileFormType;
 use App\Form\UserPreferenceType;
 use App\Form\UserStatutType;
 use App\Form\VehiculeForm;
+use App\Repository\AvisRepository;
 use App\Repository\PreferenceRepository;
 use App\Repository\ReservationRepository;
 use App\Repository\TrajetRepository;
@@ -26,14 +27,22 @@ final class AccountController extends AbstractController
 {
     #[Route('/account', name: 'app_account')]
     #[IsGranted('ROLE_USER')]
-    public function index(Request $request, EntityManagerInterface $em, ReservationRepository $reservation_repository, TrajetRepository $trajet_repository): Response
+    public function index(AvisRepository $avisRepo, TrajetRepository $trajetRepo): Response
     {
 
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
 
+        $avgRating = $trajetRepo->getDriverAverageRating($user->getId());
+        $reviews = $avisRepo->findAvisByChauffeur($user->getId());
+        $reviewsCount = count($reviews);
+
+
+
         return $this->render('account/index.html.twig', [
             'user' => $user,
+            'moyenne_note' => $avgRating,
+            'reviewCount' => $reviewsCount,
         ]);
     }
 

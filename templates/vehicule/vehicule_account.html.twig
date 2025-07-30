@@ -1,6 +1,6 @@
 {# templates/account/trajet_new.html.twig #}
 {% extends 'base.html.twig' %}
-{% block title %}Mes véhicules
+{% block title %}Ma conduite
 {% endblock %}
 
 {% block body %}
@@ -31,75 +31,104 @@
     'discussion un peu': 'Discussion modérée'
 } %}
 
-	<section class="py-5">
-		<div class="container">
-			<div class="row">
 
-				<div class="col-md-8 col-lg-4 ms-lg-auto">
-					<h1 class="hero-heading mb-0">{{ vehicules|length > 1 ? 'Mes véhicules' : 'Mon véhicule' }}</h1>
-					<p class="text-muted mb-5">Ajouter ou supprimer un véhicule ici</p>
-					<div>
+
+<section class="py-5 mt-3 mt-md-5">
+
+		<div class="container ">
+
+			<div class="row justify-content-center">
+				
+				<div class="col-lg-7 mb-5 mb-lg-0 ">
+
+					<h1 class="hero-heading mb-2">{{ vehicules|length > 1 ? 'Mes véhicules' : 'Mon véhicule' }}</h1>
+					<p class="text-muted mb-5">Ajouter un supprimer un véhicule.</p>
+
+					<div class="text-block">
+					
 						{% if vehicules is empty %}
+
 							<p>Vos véhicule apparaitront ici.</p>
+
 						{% else %}
-							{% for v in vehicules %}
-								<div class="text-block">
-									<div class="row mb-3">
-										<div class="col-sm-9">
-											<h5>{{ v.marque }}
+
+						{% for v in vehicules %}
+
+						<div class="row align-items-center mb-3">
+							<div class="col-12 col-sm-8">
+								<h5 class="mb-2 mb-sm-0"> {{ v.marque }}
 												{{ v.modele }}</h5>
-										</div>
-										<div class="col-sm-3 text-end"></div>
-									</div>
-									<p class="text-sm text-muted">
-										<i class=""></i>
-										<strong>Marque :</strong>
-
-										{{ v.marque }}<br>
-										<i class=""></i>
-										<strong>Modèle :</strong>
-
-										{{ v.modele }}<br>
-										<i class=""></i>
-										<strong>Couleur :</strong>
-										{{ v.couleur }}<br>
-										<i class=""></i>
-										<strong>Energie :</strong>
-										{{ v.energie }}<br>
-										<i class=""></i>
-										<strong>Place{{ v.placesDisponibles > 1 ? 's' : '' }}
-											disponible{{ v.placesDisponibles > 1 ? 's' : '' }}
-											:</strong>
-										{{ v.placesDisponibles }}
-										<br>
-										<i class=""></i>
-										<strong>Immatriculation :</strong>
-										{{ v.immatriculation }}
-										<span class="mx-2">
-											|
-										</span>
-										<i class=""></i>
-										<strong>Date première immatriculation :</strong>
-										{{ v.datePremiereImmatriculation|date('d/m/Y') }}
-									</p>
-									<hr>
-								</div>
-
-							{% endfor %}
-
+							</div>
+							<div class="link-update col-12 col-sm-4 text-sm-end text-start">
+								<a href="#">SUPPRIMER</a>
+							</div>
+						</div>
+							
+						<div>
+							<p class="text-sm text-muted mb-1">
+								<strong>Marque :</strong>
+											{{ v.marque }}</p>
+							<p class="text-sm text-muted mb-1">
+								<strong>Modèle :</strong>
+											{{ v.modele }}</p>
+							<p class="text-sm text-muted mb-1">
+								<strong>Couleur :</strong>
+											{{ v.couleur }}</p>
+							<p class="text-sm text-muted mb-1">
+								<strong>Energie :</strong>
+											{{ v.energie }}
+							</p>
+							<p class="text-sm text-muted mb-1">
+								<strong>Place{{ v.placesDisponibles > 1 ? 's' : '' }}
+												disponible{{ v.placesDisponibles > 1 ? 's' : '' }}
+												:</strong>
+											{{ v.placesDisponibles }}</p>
+							<p class="text-sm text-muted mb-1">
+								<strong>Immatriculation :</strong>
+											{{ v.immatriculation }}
+											<span class="mx-2">
+												|
+											</span>
+											<i class=""></i>
+											<strong>Date première immatriculation :</strong>
+											{{ v.datePremiereImmatriculation|date('d/m/Y') }}</p>
+							<hr>
+						</div>
+						
+						{% endfor %}
 						{% endif %}
-					</div>
 
-					<div class="text-center m-5">
+						<div class="text-center m-5">
 						<a href="{{ path('app_vehicule_new')}}" class="btn btn-primary px-4 me-md-2">Ajouter un véhicule</a>
-					</div>
-				</div>
+						</div>
+					
 
-				<div class="col-lg-7 mb-5 mb-lg-0">
-					<h1 class="hero-heading mb-0">Mes préférences</h1>
-					<p class="text-muted mb-5">Ajouter ou modifier vos préférences de conduite ici</p>
-					<div>
-						{% if user_preferences is defined and user_preferences|length > 0 %}
+					</div>
+
+					
+				
+
+					<h1 class="hero-heading mb-2">Mes préférences</h1>
+					<p class="text-muted mb-5">Ajouter ou modifier vos préférences de conduite.</p>
+
+					<div class="text-block">
+					
+						{% if user_preferences is not defined and user_preferences|length == 0 %}
+
+							<p>Vos préférences apparaitront ici.</p>
+
+						{% else %}
+						
+						<div class="row align-items-center mb-3">
+							<div class="col-12 col-sm-8">
+								<h5 class="mb-2 mb-sm-0">Je préfère : </h5>
+							</div>
+							<div class="link-update col-12 col-sm-4 text-sm-end text-start">
+								<a href="{{ path('edit_preferences')}}">MODIFIER</a>
+							</div>
+						</div>
+							
+						<div>
 							<ul>
 								{% for pref in user_preferences %}
 									<li>
@@ -109,25 +138,41 @@
 
 								{% endfor %}
 							</ul>
-							<a href="{{ path('edit_preferences')}}" class="btn btn-primary px-4 me-md-2">Modifier mes préférences</a>
-
-						{% else %}
-							<a href="{{ path('edit_preferences')}}" class="btn btn-primary px-4 me-md-2">Ajouter mes préférences</a>
+							<hr>
+						</div>
+						
 						{% endif %}
+
+						
 					</div>
+					
 				</div>
 
-
 			</div>
-
-			<div class="text-center">
-				<a class="btn btn-outline-primary btn-lg px-4 me-md-2 my-4" href="{{ path('app_account')}}">Retour</a>
+					
+	
+				
+				
+			<div class="text-center m-5">
+				<a class="btn btn-outline-primary btn-lg px-4 me-md-2" href="{{ path('app_account')}}">Retour</a>
 			</div>
-
-
+				
+				
 		</div>
+</section>
 
-	</section>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 {% endblock %}

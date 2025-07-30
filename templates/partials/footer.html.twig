@@ -1,22 +1,28 @@
-<footer class="position-relative z-index-10 d-print-none">
+<footer class="position-relative z-index-10 d-print-none" style="background-color: var(--primary);">
+
 	<div class="py-4 fw-light">
-		<div class="container">
+		<div class="container ">
 			<div class="row align-items-center">
+
 				<div class="col-md-6 text-center text-md-start">
-					<p class="text-sm mb-md-0">
+					<p class="text-sm mb-md-0 text-white">
 						<a href="{{ path('app_contact')}}">
-							{% include "icones/mail.svg.twig" %}
 							team.ecoride@gmail.com</a>
 					</p>
 				</div>
+
 				<div class="col-md-6">
-					<ul class="list-inline mb-0 mt-2 mt-md-0 text-center text-md-end">
-						<li class="list-inline-item">
-							<a href="{{ path('app_legal')}}">Mentions légales</a>
+					<ul class="list-unstyles mb-0 small  mt-2 mt-md-0 text-center text-md-end">
+						<li class="list-inline-item text-white text-center">
+							<a class="d-block" href="{{ path('app_legal')}}">Mentions légales</a>
+							<a class="d-block" href="{{ path('app_cgu')}}">CGU</a>
+							<a class="d-block" href="{{ path('app_politique_conf')}}">Politique de confidentialité</a>
 						</li>
 					</ul>
 				</div>
+
 			</div>
 		</div>
 	</div>
+
 </footer>

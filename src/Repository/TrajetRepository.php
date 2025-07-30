@@ -105,7 +105,7 @@ class TrajetRepository extends ServiceEntityRepository
         ];
 
         if ($eco) {
-            $sql .= " AND v.energie = 'electrique'";
+            $sql .= " AND v.energie = 'électrique'";
         }
 
         if ($maxPrice !== null) {
@@ -276,7 +276,8 @@ class TrajetRepository extends ServiceEntityRepository
             t.id AS id_trajet,
             t.adresse_depart,
             t.adresse_arrivee,
-            DATE_FORMAT(t.date_depart, '%Y-%m-%d') AS date_depart,
+           t.date_depart AS date_depart,
+           t.date_arrivee AS date_arrivee,
             t.prix,
             t.places_restantes,
             u.pseudo AS chauffeur,
@@ -349,8 +350,8 @@ class TrajetRepository extends ServiceEntityRepository
             DATE(t.date_depart) AS jour,
             COUNT(*) AS total
         FROM trajet t
-        WHERE t.statut = 'trajet_a_venir'
-            AND DATE(t.date_depart) BETWEEN ? AND ?
+        -- WHERE t.statut = 'trajet_a_venir'
+        WHERE DATE(t.date_depart) BETWEEN ? AND ?
         GROUP BY DATE (t.date_depart)
         ORDER BY DATE (t.date_depart) ASC
         SQL;

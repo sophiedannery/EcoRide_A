@@ -7,7 +7,7 @@
 
 	{% set upcomingCount = driverTrips|length %}
 
-	<section class="py-5">
+	<section class="py-5 mt-3 mt-md-0">
 		<div class="container">
 			<div class="d-flex justify-content-between align-items-end mb-5">
 				<h1 class="hero-heading mb-0">Vos trajets à venir</h1>
@@ -18,7 +18,7 @@
 				<p>Vos trajets apparaitront ici</p>
 			{% else %}
 
-				<div class="d-flex justify-content-between align-items-center flex-column flex-lg-row mb-5">
+				<div class="d-flex justify-content-between align-items-center flex-column flex-lg-row mb-2 mb-md-5">
 					<div class="me-3">
 						<p class="mb-3 mb-lg-0">Vous avez
 							<strong>{{ upcomingCount}}
