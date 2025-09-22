@@ -253,7 +253,7 @@ Les identifiants de test sont disponibles dans le [Manuel d'utilisation](https:/
 ### Diagramme
 
 - 🧩 [Diagramme de séquence](https://github.com/sophiedannery/EcoRide_A/blob/master/docs/Diagrammes%20UML/Diagramme%20de%20s%C3%A9quence.pdf)
-- 🧩 [Diagramme de cas d'utilisation](https://github.com/sophiedannery/EcoRide_A/blob/master/docs/Diagramme%20d'utilisation.pdf)
+- 🧩 [Diagramme de cas d'utilisation](https://github.com/sophiedannery/EcoRide_A/blob/master/docs/Diagrammes%20UML/Diagramme%20d'utilisation.pdf)
 - 🧩 [Diagramme de classe](https://github.com/sophiedannery/EcoRide_A/blob/master/docs/Diagrammes%20UML/Diagramme%20de%20classe.pdf)
 
 ### Documentation
