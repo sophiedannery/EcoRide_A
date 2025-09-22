@@ -248,13 +248,13 @@ Les identifiants de test sont disponibles dans le [Manuel d'utilisation](https:/
 - 🎨 [Charte graphique](https://github.com/sophiedannery/EcoRide_A/blob/master/docs/Maquettes%20et%20charte%20graphique/EcoRide%20-%20Charte%20Graphique.pdf)
 - 🖼️ [Wireframes](https://github.com/sophiedannery/EcoRide_A/blob/master/docs/Maquettes%20et%20charte%20graphique/EcoRide%20-%20Wireframes.pdf)
 - 💻 [Mockups - Desktop](https://github.com/sophiedannery/EcoRide_A/blob/master/docs/Maquettes%20et%20charte%20graphique/EcoRide%20-%20Mockups%20-%20Desktop.pdf)
-- 📱 [Mockups - Mobile](link)
+- 📱 [Mockups - Mobile](https://github.com/sophiedannery/EcoRide_A/blob/master/docs/Maquettes%20et%20charte%20graphique/EcoRide%20-%20Mockups%20-%20Mobile.pdf)
 
 ### Diagramme
 
-- 🧩 [Diagramme de séquence](https://github.com/sophiedannery/EcoRide_A/blob/master/docs/Diagramme%20de%20s%C3%A9quence.pdf)
+- 🧩 [Diagramme de séquence](https://github.com/sophiedannery/EcoRide_A/blob/master/docs/Diagrammes%20UML/Diagramme%20de%20s%C3%A9quence.pdf)
 - 🧩 [Diagramme de cas d'utilisation](https://github.com/sophiedannery/EcoRide_A/blob/master/docs/Diagramme%20d'utilisation.pdf)
-- 🧩 [Diagramme de classe](https://github.com/sophiedannery/EcoRide_A/blob/master/docs/Diagramme%20de%20classe.pdf)
+- 🧩 [Diagramme de classe](https://github.com/sophiedannery/EcoRide_A/blob/master/docs/Diagrammes%20UML/Diagramme%20de%20classe.pdf)
 
 ### Documentation
 
