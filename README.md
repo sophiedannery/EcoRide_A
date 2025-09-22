@@ -239,7 +239,7 @@ Il est possible d'adapter les identifiants, mot de passe, crédits et autre selo
 
 ## Identifiants de test
 
-Les identifiants de test sont disponibles dans le [Manuel d'utilisation](https://github.com/sophiedannery/EcoRide_A/blob/master/docs/EcoRide%20-%20Charte%20Graphique.pdf).
+Les identifiants de test sont disponibles dans le [Manuel d'utilisation](https://github.com/sophiedannery/EcoRide_A/blob/master/docs/Manuel%20d'utilisation/EcoRide%20-%20Manuel%20d'utilisation.pdf).
 
 ## Ressources supplémentaires
 
