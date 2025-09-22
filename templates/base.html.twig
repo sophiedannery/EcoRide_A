@@ -35,7 +35,7 @@
 
 	</head>
 
-	<body {% if block('body_class') is defined %} class="{{ block('body_class') }}" {% else %} class="pt-5" {% endif %}>
+	<body {% if block('body_class') is defined %} class="{{ block('body_class') }}" {% else %} class="pt-5" {% endif %} data-turbo="false">
 
 
 		{% if block('hide_header') is not defined %}
