@@ -243,7 +243,14 @@ Les identifiants de test sont disponibles dans le [Manuel d'utilisation](https:/
 
 ## Ressources supplémentaires
 
-- 🎨 [Charte graphique](https://github.com/sophiedannery/EcoRide_A/blob/master/docs/EcoRide%20-%20Charte%20Graphique.pdf)
+### Visuels
+
+- 🎨 [Charte graphique](https://github.com/sophiedannery/EcoRide_A/blob/master/docs/Maquettes%20et%20charte%20graphique/EcoRide%20-%20Charte%20Graphique.pdf)
+- 🖼️ [Wireframes](https://github.com/sophiedannery/EcoRide_A/blob/master/docs/Maquettes%20et%20charte%20graphique/EcoRide%20-%20Wireframes.pdf)
+- 🖼️ [Mockups](link)
+
+### Diagramme
+
 - 🧩 [Diagramme de séquence](https://github.com/sophiedannery/EcoRide_A/blob/master/docs/Diagramme%20de%20s%C3%A9quence.pdf)
 - 🧩 [Diagramme de cas d'utilisation](https://github.com/sophiedannery/EcoRide_A/blob/master/docs/Diagramme%20d'utilisation.pdf)
 - 🧩 [Diagramme de classe](https://github.com/sophiedannery/EcoRide_A/blob/master/docs/Diagramme%20de%20classe.pdf)
