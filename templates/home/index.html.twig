@@ -39,7 +39,7 @@
 						</div>
 
 						<div class="col-12 col-md-6 col-lg-3">
-							<input name="date" type="date" class="form-control" required id="date" placeholder="Date">
+							<input name="date" type="date" class="form-control" required id="date" placeholder="Date" min="{{ "now"|date('Y-m-d') }}">
 							<label for="date" class="visually-hidden">Date</label>
 
 						</div>
