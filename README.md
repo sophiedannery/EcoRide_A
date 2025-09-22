@@ -262,4 +262,4 @@ Les identifiants de test sont disponibles dans le [Manuel d'utilisation](https:/
 
 ### Gestion de projet
 
-- 🛠️ [Gestion de projet](https://github.com/sophiedannery/EcoRide_A/blob/master/docs/Documentation%20technique/EcoRide%20-%20Documentation%20technique.pdf)
+- 📊 [Gestion de projet](https://github.com/sophiedannery/EcoRide_A/blob/master/docs/Gestion%20de%20projet/EcoRide%20-%20Gestion%20de%20projet.pdf)
