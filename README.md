@@ -208,7 +208,7 @@ Toutes les requêtes sont redirigées vers l'URL https://ecoride-app.fr.
 
 ### schema.sql
 
-Ce fichier contient **le script de création des tables** nécessaires au fonctionnement de l'application.
+Le fichier [schema.sql](https://github.com/sophiedannery/EcoRide_A/blob/master/db/schema.sql) contient **le script de création des tables** nécessaires au fonctionnement de l'application.
 
 Tables créées : `user`, `vehicule`, `trajet`, `reservation`, `avis`, `suspension`, `transaction`
 
@@ -220,7 +220,7 @@ mysql -u root -p ecoride < schema.sql
 
 ### data.sql
 
-Ce fichier contient **un jeu de données** permettant de tester l'application. Il comprend notamment :
+Le fichier [data.sql](https://github.com/sophiedannery/EcoRide_A/blob/master/db/data.sql) contient **un jeu de données** permettant de tester l'application. Il comprend notamment :
 
 - des utilisateurs avec différents rôles (admin, employé, utilisateur)
 - des véhicules et trajets (écologiques ou non)
