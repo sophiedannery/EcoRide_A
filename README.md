@@ -247,7 +247,8 @@ Les identifiants de test sont disponibles dans le [Manuel d'utilisation](https:/
 
 - 🎨 [Charte graphique](https://github.com/sophiedannery/EcoRide_A/blob/master/docs/Maquettes%20et%20charte%20graphique/EcoRide%20-%20Charte%20Graphique.pdf)
 - 🖼️ [Wireframes](https://github.com/sophiedannery/EcoRide_A/blob/master/docs/Maquettes%20et%20charte%20graphique/EcoRide%20-%20Wireframes.pdf)
-- 🖼️ [Mockups](link)
+- 💻 [Mockups - Desktop](https://github.com/sophiedannery/EcoRide_A/blob/master/docs/Maquettes%20et%20charte%20graphique/EcoRide%20-%20Mockups%20-%20Desktop.pdf)
+- 📱 [Mockups - Mobile](link)
 
 ### Diagramme
 
